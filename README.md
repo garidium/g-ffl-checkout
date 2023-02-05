@@ -1,4 +1,4 @@
-# g-ffl_wc_plugin
+# g-ffl-api
 g-FFL WooCommerce Plugin
 
 g-FFL API WooCommerce Plugin
