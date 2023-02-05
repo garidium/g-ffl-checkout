@@ -193,7 +193,7 @@ class g_ffl_Api_Admin
                             </td>
                         </tr>
                         <tr valign="top">
-                            <th scope="row">Location on Form:</th>
+                            <th scope="row">Form Location:</th>
 
                             <td>
                                 <select name="ffl_init_map_location">
