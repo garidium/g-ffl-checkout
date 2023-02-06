@@ -177,13 +177,6 @@ class g_ffl_Api_Admin
                                 </div>
                             </td>
                         </tr>
-
-                        <tr valign="top">
-                            <th scope="row">Google Maps API Key:</th>
-                            <td><input type="text" style="width: 30%" name="ffl_api_gmaps_option"
-                                       value="<?php echo esc_attr(get_option('ffl_api_gmaps_option')); ?>"/>
-                            </td>
-                        </tr>
                         <tr valign="top">
                             <th scope="row">Checkout Message:</th>
                             <td>

@@ -576,25 +576,33 @@
     "use strict";
 
     function r() {
-        for (var t in d) d.hasOwnProperty(t) && d[t].setMap(null);
-        for (var n = 0; n < g.length; n++) g[n].setMap(null);
-        for (var e = 0; e < y.length; e++) y[e].setMap(null);
+        for (var t in d) d.hasOwnProperty(t) && d[t].remove();
+        for (var n = 0; n < g.length; n++) g[n].remove();
+        for (var e = 0; e < y.length; e++) y[e].remove();
         d = [], g = [], y = []
     }
     function i(t, n, e) {
-        var r = l,
-            i = new google.maps.Marker({
+        var r = l
+        /*
+        var i = new google.maps.Marker({
                 position: n,
                 map: r,
                 icon: "https://garidium.s3.amazonaws.com/images/map_pin.png",
                 title: e.list_name
-            });
+                });
+        */
+        var i = new mapboxgl.Marker()
+            .setLngLat([n.lng, n.lat])
+            .setPopup(t)
+            .addTo(r);
+
         var phone = e.voice_phone;
         if ((phone+"").length == 10){
             var phone_sects = phone.match(/^(\d{3})(\d{3})(\d{4})$/);
             phone = phone_sects[1] + '-' + phone_sects[2] + '-' + phone_sects[3];
         }
-        d[e.license_number] = i, g.push(i), null === localStorage.getItem("mapCenter") && localStorage.setItem("mapCenter", !0), i.addListener("click", function() {
+
+        d[e.license_number] = i, g.push(i), null === localStorage.getItem("mapCenter") && localStorage.setItem("mapCenter", !0), i.getElement().addEventListener("click", function() {
             t.setContent('<div id="bodyContent"><h3>' + e.list_name + "</h3>"+ (e.ffl_on_file?"<font color=#09bb00>Preferred Dealer: We have a signed copy of the FFL</font>":"<font color=red>To process your order we will need a signed copy of the FFL from this dealer</font>") + "<br><br><p>" + e.premise_street + "<br>" + e.premise_city + "<br/>" + phone + "<br/>" + (e.email!=undefined?e.email:"") + "</p></div>"), t.open(r, i), f.setSelected({
                 data: e
             }), document.getElementById(e.license_number).scrollIntoView()
@@ -625,9 +633,7 @@
             g = void 0 === h ? "" : h,
             m = t.cBack;
         if (p = void 0 === m ? "" : m, "" === s) return alert("Please define your g-FFL API key!"), !1;
-        if ("" === g) return alert("Please define your own Google API key!"), !1;
-        var I = document.createElement("script");
-        I.type = "text/javascript", I.src = "https://maps.googleapis.com/maps/api/js?key=" + g + "&callback=FFL.initGMap", document.body.appendChild(I);
+
         var M = document.getElementById(e);
         if (void 0 === M) {
             document.createElement("div").id = "ffl_container", M = document.getElementById("ffl_container")
@@ -663,9 +669,7 @@
                     if (t.data.Error!=null || (t.data.original && 400 === t.data.original.status)) return alert("No FFL's found, Please check your inputs and try again."), !1;
                     localStorage.removeItem("mapCenter");
                     var n, e = t.data,
-                        r = new google.maps.InfoWindow({
-                            content: ""
-                        }),
+                        r = new mapboxgl.Popup().setHTML(""),
                         o = 0;
                     for (var a in e) {
                         var s = e[a],
@@ -693,26 +697,19 @@
                             var phone_sects = s.voice_phone.match(/^(\d{3})(\d{3})(\d{4})$/);
                             phone = phone_sects[1] + '-' + phone_sects[2] + '-' + phone_sects[3];
                         }
+                        
                         var p = encodeURIComponent(JSON.stringify(s)),
                             g = "<div id=" + s.license_number + '><button class="ffl-list-div" data-marker-id=' + s.license_number + " data-content=" + p + ">" + s.list_name + "  " + (s.ffl_on_file?"<img align=right height=25 width=25 title='FFL On-File' src='https://garidium.s3.amazonaws.com/images/ffl_on_file.png'>":"<img align=right height=25 width=25 title='We need a signed copy of the FFL emailed to us' src='https://garidium.s3.amazonaws.com/images/ffl_required.png'>") + "<br>" + s.premise_street + ", " + s.premise_city + "<br>" + phone+ (s.email!=undefined?" | <a target=_blank href='mailto:" + s.email + "'>" + s.email + "</a>":"") + "</button></div>";
                         b.insertAdjacentHTML("beforeend", g)
                     }
                     for (var m = document.getElementsByClassName("ffl-list-div"), I = 0; I < m.length; I++) m[I].addEventListener("click", function(t) {
-                        return google.maps.event.trigger(d[this.getAttribute("data-marker-id")], "click"), t.preventDefault(), t.stopPropagation(), !1
+                        //return google.maps.event.trigger(d[this.getAttribute("data-marker-id")], "click"), t.preventDefault(), t.stopPropagation(), !1
                     });
-                    var M = l;
-                    M.setCenter(n);
-                    var w = parseFloat(2.5 * j.value) / 3963.1676 * 6378100;
-                    c.radiusCircle = new google.maps.Circle({
-                        strokeColor: "#452aff",
-                        strokeOpacity: 0,
-                        strokeWeight: 2,
-                        fillColor: "#38a6ff",
-                        fillOpacity: 0,
-                        map: M,
-                        center: n,
-                        radius: w
-                    }), M.fitBounds(c.radiusCircle.getBounds()), M.setZoom(11), y.push(c.radiusCircle), document.getElementById("ffl-list").classList.remove("ffl-hide")
+                }
+                if (t.data.length > 0){
+                    b.classList.remove("ffl-hide");
+                }else{
+                    alert("No FFL's found for Zip, check the zip code or expand the radius.")
                 }
             }, function(t) {
                 if (422 === t.response.status || 400 === t.response.status) return alert(t.response.data.message), !1;
@@ -720,14 +717,38 @@
             }), t.preventDefault(), t.stopPropagation(), !1
         })
     }, f.initGMap = function() {
-        var t = new google.maps.Map(document.getElementById("ffl-map"), {
-            center: {
-                lat: 25.761681,
-                lng: -80.191788
-            },
-            zoom: 8
+         var JavaScript = {
+           load: function(src, callback) {
+             var script = document.createElement('script'),
+                 loaded;
+             script.setAttribute('src', src);
+             if (callback) {
+               script.onreadystatechange = script.onload = function() {
+                 if (!loaded) {
+                   callback();
+                 }
+                 loaded = true;
+               };
+             }
+             document.getElementsByTagName('head')[0].appendChild(script);
+             var I2 = document.createElement("link");
+             I2.setAttribute("href", "https://api.mapbox.com/mapbox-gl-js/v2.12.0/mapbox-gl.css");
+             I2.setAttribute("rel", "stylesheet");
+             document.getElementsByTagName('head')[0].appendChild(I2);
+           }
+         };
+         var t;
+         JavaScript.load("https://api.mapbox.com/mapbox-gl-js/v2.12.0/mapbox-gl.js", function() {
+            mapboxgl.accessToken = 'pk.eyJ1IjoiZ2FyaWRpdW0iLCJhIjoiY2xjeTRjejZvMDJwbzNybW9ibzl3czk4YSJ9.rhu5z5oPkJd_my9zpKgU7g';
+            t = new mapboxgl.Map({
+                container: 'ffl-map', // container ID
+                style: 'mapbox://styles/garidium/clds8orfo000q01udg0o23pp5', // style URL
+                center: [-78.16847, 38.21885], // starting position [lng, lat]
+                zoom: 14 // starting zoom
+            });
+            l = t
         });
-        l = t
+        
     }, f.chunkArr = function(t) {
         for (var n = t.arr, e = t.chunkSize, r = [], i = 0, o = n.length; i < o; i += e) r.push(n.slice(i, i + e));
         return r
@@ -736,22 +757,8 @@
         h = n, p(h)
     }, f.getSelected = function() {
         return h
-    }, f.geoCodeInit = function(t) {
-        var n = t.res,
-            e = t.dataG,
-            r = t.infowindow;
-        (new google.maps.Geocoder).geocode({
-            address: n
-        }, function(t, o) {
-            o === google.maps.GeocoderStatus.OK ? i(r, t[0].geometry.location, e) : o === google.maps.GeocoderStatus.OVER_QUERY_LIMIT ? setTimeout(function() {
-                f.geoCodeInit({
-                    res: n,
-                    dataG: e,
-                    infowindow: r
-                })
-            }, 100) : console.log("Geocode was not successful for the following reason:" + o)
-        })
-    }, n.a = f
+    }, 
+    n.a = f
 }, function(t, n, e) {
     t.exports = e(16)
 }, function(t, n, e) {
@@ -2010,6 +2017,8 @@
         return r.isObject(t) && !0 === t.isAxiosError
     }
 }, function(t, n) {
-    ht = '<style>\n    @import url(\'https://fonts.googleapis.com/css2?family=Open+Sans&display=swap\');\n\n    .ffl-hide {\n        display: none;\n    }\n\n    .spinner {\n        margin: 100px auto 0;\n        width: 70px;\n        text-align: center;\n    }\n\n    .spinner > div {\n        width: 18px;\n        height: 18px;\n        background-color: #333;\n        border-radius: 100%;\n        display: inline-block;\n        -webkit-animation: sk-bouncedelay 1.4s infinite ease-in-out both;\n        animation: sk-bouncedelay 1.4s infinite ease-in-out both;\n    }\n\n    .spinner .bounce1 {\n        -webkit-animation-delay: -0.32s;\n        animation-delay: -0.32s;\n    }\n\n    .spinner .bounce2 {\n        -webkit-animation-delay: -0.16s;\n        animation-delay: -0.16s;\n    }\n\n    @-webkit-keyframes sk-bouncedelay {\n        0%,\n        80%,\n        100% {\n            -webkit-transform: scale(0)\n        }\n        40% {\n            -webkit-transform: scale(1.0)\n        }\n    }\n\n    @keyframes sk-bouncedelay {\n        0%,\n        80%,\n        100% {\n            -webkit-transform: scale(0);\n            transform: scale(0);\n        }\n        40% {\n            -webkit-transform: scale(1.0);\n            transform: scale(1.0);\n        }\n    }\n\n    .spinner-bg {\n        width: 100%;\n        height: 100%;\n        background: #fff;\n        opacity: 0.8;\n        position: absolute;\n        z-index: 99;\n        padding-top: 15%;\n    }\n\n    .content {\n        margin: 0 auto;\n        max-width: 100%;\n        margin-bottom: 20px;\n        line-height: 1.6em;\n        text-align: center;\n    }\n\n    .content label {\n        float: left;\n        font-family: \'Open Sans\', sans-serif;\n    }\n\n    .ffl-list-container {\n        display: flex;\n        justify-content: flex-start;\n        align-items: center;\n        width: 100%;\n    }\n\n    #ffl-list {\n        height: 200px;\n        overflow-y: scroll;\n        scroll-behavior: smooth;\n        overflow-x: hidden;\n        padding: 0 5px 0 0;\n        margin: 0 0 10px 0;\n        width: 100%;\n    }\n\n    #ffl-list::-webkit-scrollbar-track {\n        -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);\n        border-radius: 10px;\n        background-color: #F5F5F5;\n    }\n\n    #ffl-list::-webkit-scrollbar {\n        width: 12px;\n        background-color: #F5F5F5;\n    }\n\n    #ffl-list::-webkit-scrollbar-thumb {\n        border-radius: 10px;\n        -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, .3);\n        background-color: #333;\n    }\n\n    #ffl-list div button {\n font-size: 13px;line-height: 20px;font-weight:normal;padding: 5px;border: solid gray 0.2px;background: #fff;color: #333;display: block;width: 100%;border: 1px solid rgb(204, 204, 204);border-radius: 4px;text-align: left;}\n\n    #ffl-map {\n        height: 50vh;\n        margin-top: 1%;\n        margin-bottom: 30px;\n        width: 100%;\n    }\n\n    .ffl-map-resize {\n        width: 100%;\n        position: relative;\n        overflow: hidden;\n    }\n\n    .ffl-inner-map {\n        height: 100%;\n        width: 100%;\n        position: absolute;\n        top: 0px;\n        left: 0px;\n        background-color: rgb(229, 227, 223);\n    }\n\n    .ffl-map-full {\n        width: 100%;\n    }\n\n\n    /** BigCommerce Updates **/\n\n    #ffl_container {\n        background-color: #fff;\n        margin-top: 20px;\n    }\n\n    #ffl-zip-code {\n        -webkit-appearance: none;\n        -moz-appearance: none;\n        appearance: none;\n        background-color: #fff;\n        box-shadow: inset 0 1px 1px #ebebeb;\n        border: 1px solid #ebebeb;\n        color: #000;\n        display: block;\n        -moz-osx-font-smoothing: grayscale;\n        -webkit-font-smoothing: antialiased;\n        font-smoothing: antialiased;\n        height: 45px;\n        margin: 0;\n        padding: 10px;\n        transition: all 100ms ease-out;\n        width: 100%;\n        -webkit-border-radius: 0px;\n        -moz-border-radius: 0px;\n        border-radius: 0px;\n        font-size: 12px;\n        font-family: \'Open Sans\', sans-serif;\n    }\n\n    #ffl-radius {\n        border: 1px solid #d9d9d9;\n        color: #333;\n        cursor: pointer;\n        height: 45px;\n        width: 100%;\n        background: #fff;\n        font-size: 12px;\n        font-family: \'Open Sans\', sans-serif;\n    }\n\n    #ffl-search {\n        height: 45px;\n        font-family: \'Open Sans\', sans-serif;\n        display: block;\n        cursor: pointer;\n        font-size: 12px !important;\n        width: 100%;\n        border-radius: 4px;\n        outline: none;\n        padding: 10px;\n    }\n\n    .selectedFFLDivButton {\n  border:solid black 1.5px !important;      background: #EEEEEE !important;\n        color: #000 !important;\n    }\n\n    /* The Modal (background) */\n\n    .modalFFL {\n        display: none;\n        /* Hidden by default */\n        position: fixed;\n        /* Stay in place */\n        z-index: 99999;\n        /* Sit on top */\n        padding-top: 100px;\n        /* Location of the box */\n        left: 0;\n        top: 0;\n        width: 100%;\n        /* Full width */\n        height: 100%;\n        /* Full height */\n        overflow: auto;\n        /* Enable scroll if needed */\n        background-color: rgb(0, 0, 0);\n        /* Fallback color */\n        background-color: rgba(0, 0, 0, 0.4);\n        /* Black w/ opacity */\n    }\n\n    /* Modal Content */\n\n    .modalFFL-content {\n        background-color: #fefefe;\n        margin: auto;\n        border: 10px solid #888;\n        width: 50%;\n        padding: 50px;\n        vertical-align: middle;\n        font-size: 18px;\n    }\n\n    /* The Close Button */\n\n    .modal-close {\n        color: #aaaaaa;\n        float: right;\n        font-size: 28px;\n        font-weight: bold;\n        position: relative;\n        top: -45px;\n        right: -25px;\n    }\n\n    .modal-close:hover,\n    .modal-close:focus {\n        color: #000;\n        text-decoration: none;\n        cursor: pointer;\n    }\n\n    /** WooCommerce Updates **/\n\n    .ffl-dealer-heading {\n        text-align: left;\n    }\n\n    .popup-img {\n        width: 280px;\n        margin: 30px auto;\n        display: block;\n    }\n\n    #add_payment_method #payment,\n    .woocommerce-cart #payment,\n    .woocommerce-checkout #payment {\n        clear: both;\n    }\n\n    .notice {\n        text-align: left;\n        font-size: 14px;\n        line-height: 24px;\n        font-weight: 500;\n        padding: 10px;\n        margin-bottom: 0;\n        background: #ffffcc;\n        border-radius: 4px;\n    }\n\n    /* Last Update */\n\n    * {\n        box-sizing: border-box;\n    }\n\n    .columns {\n        display: flex;\n        justify-content: center;\n        align-items: baseline;padding-bottom: 5px !important;\n    }\n\n    .column {\n        flex: 1;\n        margin: 2px;\n    }\n\n    .column:first-child {\n        margin-left: 0;\n    }\n\n    .column:last-child {\n        margin-right: 0;\n    }\n\n    .modal-float-left {\n        float: left;\n        display: inline;\n        width: 48%;\n        margin-right: 10px;\n        padding-top: 80px;\n    }\n\n    .modal-float-right {\n        float: right;\n        display: contents;\n        width: 48%;\n    }\n\n    @media (min-width: 320px) and (max-width: 480px) {\n        #ffl-map {\n            width: 100%;\n            float: left;\n        }\n\n        #ffl-list div button {\n            background: #fff;\n            color: #333;\n            display: block;\n            width: 100%;\n            padding: 15px 10px;\n            border: 1px solid rgb(204, 204, 204);\n            border-radius: 4px;\n            margin-bottom: 5px;\n            text-align: left;\n            outline: none;\n        }\n\n        #ffl-list {\n            width: 100%;\n            padding: 0 5px 0 0px;\n        }\n\n        body,\n        html {\n            overflow-x: hidden;\n        }\n\n        .modalFFL-content {\n            width: 100%;\n        }\n\n        .modal-float-left {\n            float: left;\n            display: inline;\n            width: 100%;\n            padding-top: 0px;\n        }\n\n        .modal-float-right {\n            float: right;\n            display: contents;\n            width: 100%;\n        }\n    }\n\n    @media (min-width: 481px) and (max-width: 767px) {\n        .ffl-map-resize {\n            width: 91%;\n        }\n    }\n\n    @media (min-width: 768px) and (max-width: 1024px) {\n        .ffl-map-resize {\n            width: 69%;\n        }\n    }\n\n    @media (max-width: 1280px) {\n        .modal-float-left {\n            width: 100%;\n            padding-top: 10px;\n        }\n        #ffl_container .modalFFL-content {\n            height: 65vh;\n        }\n    }\n\n    .dsbSearch {\n        pointer-events: none;\n    }\n</style>\n\x3c!--<div class="spinner-bg">\n<div class="spinner">\n<div class="bounce1"></div>\n<div class="bounce2"></div>\n<div class="bounce3"></div>\n</div>\n</div>--\x3e\n\n<div class="content">\n    <h3 class="ffl-dealer-heading">Select your preferred FFL Dealer</h3>\n    <p style="margin-bottom:10px !important;" class="notice"><span class="ffl_checkout_notice"><b>Federal law dictates that your online firearms purchase must be delivered to a federally licensed firearms dealer (FFL) before you can take possession</b>. This process is called a Transfer. Enter your zip code, radius, and FFL name (optional), then click the Find button to get a list of FFL dealers in your area.\n        Select the FFL dealer you want the firearm shipped to. <b><u>Before Checking Out, Contact your selected FFL dealer to confirm they are currently accepting transfers</u>. You can also confirm transfer costs.</b>.</span></p>\n <div class="columns">\n        <div class="column">\n            <label for="ffl-zip-code">Zip Code:</label><input autocomplete="off" type="text" id="ffl-zip-code" placeholder="Zip Code" class="">\n        </div>\n\n        <div class="column">\n            <label for="ffl-radius">Radius:</label>\n            <select id="ffl-radius">\n                <option value="5" selected="">5 Miles</option>\n                <option value="10">10 Miles</option>\n                <option value="25">25 Miles</option>\n                <option value="50">50 Miles</option>\n                <option value="100">100 Miles</option>\n            </select>\n        </div>\n\n <div class="column">\n            <a id="ffl-search" class="button alt">Find</a>\n        </div>       \n    </div><div class="columns">\n  <div class="column">         <label width="100%" for="ffl-name-search">FFL Name (optional): </label>\n<br>            <input autocomplete="off" type="text" id="ffl-name-search" placeholder=""  style="width:100% !important;">\n        </div></div>\n\n\n</div>\n\n        <div class="ffl-list-container">\n    <ul id="ffl-list" style="height:300px !important;" class="ffl-hide">\n\n    </ul>\n</div>\n\n<div id="ffl-map" class="ffl-map-resize">\n    <div class="ffl-inner-map">\n    </div>\n</div>\n\n\n\x3c!-- The Modal --\x3e\n<div id="modalFFL" class="modalFFL" style="display: none;">\n\n    \x3c!-- Modal content --\x3e\n    <div class="modalFFL-content">\n        <span class="modal-close">×</span>\n        <div class="modal-float-left">\n            <p>You have chosen your address as a shipping address for a firearm product. Unfortunately, we are not able\n                to ship the firearms directly to your address. Please select the closest FFL from the map using your zip\n                code.</p></div></div></div>'
+    ht = '<style>\n    @import url(\'https://fonts.googleapis.com/css2?family=Open+Sans&display=swap\'); \n\n    .ffl-hide {\n        display: none;\n    }\n\n    .spinner {\n        margin: 100px auto 0;\n        width: 70px;\n        text-align: center;\n    }\n\n    .spinner > div {\n        width: 18px;\n        height: 18px;\n        background-color: #333;\n        border-radius: 100%;\n        display: inline-block;\n        -webkit-animation: sk-bouncedelay 1.4s infinite ease-in-out both;\n        animation: sk-bouncedelay 1.4s infinite ease-in-out both;\n    }\n\n    .spinner .bounce1 {\n        -webkit-animation-delay: -0.32s;\n        animation-delay: -0.32s;\n    }\n\n    .spinner .bounce2 {\n        -webkit-animation-delay: -0.16s;\n        animation-delay: -0.16s;\n    }\n\n    @-webkit-keyframes sk-bouncedelay {\n        0%,\n        80%,\n        100% {\n            -webkit-transform: scale(0)\n        }\n        40% {\n            -webkit-transform: scale(1.0)\n        }\n    }\n\n    @keyframes sk-bouncedelay {\n        0%,\n        80%,\n        100% {\n            -webkit-transform: scale(0);\n            transform: scale(0);\n        }\n        40% {\n            -webkit-transform: scale(1.0);\n            transform: scale(1.0);\n        }\n    }\n\n    .spinner-bg {\n        width: 100%;\n        height: 100%;\n        background: #fff;\n        opacity: 0.8;\n        position: absolute;\n        z-index: 99;\n        padding-top: 15%;\n    }\n\n    .content {\n        margin: 0 auto;\n        max-width: 100%;\n        margin-bottom: 20px;\n        line-height: 1.6em;\n        text-align: center;\n    }\n\n    .content label {\n        float: left;\n        font-family: \'Open Sans\', sans-serif;\n    }\n\n    .ffl-list-container {\n        display: flex;\n        justify-content: flex-start;\n        align-items: center;\n        width: 100%;\n    }\n\n    #ffl-list {\n        height: 200px;\n        overflow-y: scroll;\n        scroll-behavior: smooth;\n        overflow-x: hidden;\n        padding: 0 5px 0 0;\n        margin: 0 0 10px 0;\n        width: 100%;\n    }\n\n    #ffl-list::-webkit-scrollbar-track {\n        -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);\n        border-radius: 10px;\n        background-color: #F5F5F5;\n    }\n\n    #ffl-list::-webkit-scrollbar {\n        width: 12px;\n        background-color: #F5F5F5;\n    }\n\n    #ffl-list::-webkit-scrollbar-thumb {\n        border-radius: 10px;\n        -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, .3);\n        background-color: #333;\n    }\n\n    #ffl-list div button {\n font-size: 13px;line-height: 20px;font-weight:normal;padding: 5px;border: solid gray 0.2px;background: #fff;color: #333;display: block;width: 100%;border: 1px solid rgb(204, 204, 204);border-radius: 4px;text-align: left;}\n\n    #ffl-map {\n        height: 50vh;\n        margin-top: 1%;\n        margin-bottom: 30px;\n        width: 100%;\n    }\n\n    .ffl-map-resize {\n        width: 100%;\n        position: relative;\n        overflow: hidden;\n    }\n\n    .ffl-map-full {\n        width: 100%;\n    }\n\n\n    /** BigCommerce Updates **/\n\n    #ffl_container {\n        background-color: #fff;\n        margin-top: 20px;\n    }\n\n    #ffl-zip-code {\n        -webkit-appearance: none;\n        -moz-appearance: none;\n        appearance: none;\n        background-color: #fff;\n        box-shadow: inset 0 1px 1px #ebebeb;\n        border: 1px solid #ebebeb;\n        color: #000;\n        display: block;\n        -moz-osx-font-smoothing: grayscale;\n        -webkit-font-smoothing: antialiased;\n        font-smoothing: antialiased;\n        height: 45px;\n        margin: 0;\n        padding: 10px;\n        transition: all 100ms ease-out;\n        width: 100%;\n        -webkit-border-radius: 0px;\n        -moz-border-radius: 0px;\n        border-radius: 0px;\n        font-size: 12px;\n        font-family: \'Open Sans\', sans-serif;\n    }\n\n    #ffl-radius {\n        border: 1px solid #d9d9d9;\n        color: #333;\n        cursor: pointer;\n        height: 45px;\n        width: 100%;\n        background: #fff;\n        font-size: 12px;\n        font-family: \'Open Sans\', sans-serif;\n    }\n\n    #ffl-search {\n        height: 45px;\n        font-family: \'Open Sans\', sans-serif;\n        display: block;\n        cursor: pointer;\n        font-size: 12px !important;\n        width: 100%;\n        border-radius: 4px;\n        outline: none;\n        padding: 10px;\n    }\n\n    .selectedFFLDivButton {\n  border:solid black 1.5px !important;      background: #EEEEEE !important;\n        color: #000 !important;\n    }\n\n    /* The Modal (background) */\n\n    .modalFFL {\n        display: none;\n        /* Hidden by default */\n        position: fixed;\n        /* Stay in place */\n        z-index: 99999;\n        /* Sit on top */\n        padding-top: 100px;\n        /* Location of the box */\n        left: 0;\n        top: 0;\n        width: 100%;\n        /* Full width */\n        height: 100%;\n        /* Full height */\n        overflow: auto;\n        /* Enable scroll if needed */\n        background-color: rgb(0, 0, 0);\n        /* Fallback color */\n        background-color: rgba(0, 0, 0, 0.4);\n        /* Black w/ opacity */\n    }\n\n    /* Modal Content */\n\n    .modalFFL-content {\n        background-color: #fefefe;\n        margin: auto;\n        border: 10px solid #888;\n        width: 50%;\n        padding: 50px;\n        vertical-align: middle;\n        font-size: 18px;\n    }\n\n    /* The Close Button */\n\n    .modal-close {\n        color: #aaaaaa;\n        float: right;\n        font-size: 28px;\n        font-weight: bold;\n        position: relative;\n        top: -45px;\n        right: -25px;\n    }\n\n    .modal-close:hover,\n    .modal-close:focus {\n        color: #000;\n        text-decoration: none;\n        cursor: pointer;\n    }\n\n    /** WooCommerce Updates **/\n\n    .ffl-dealer-heading {\n        text-align: left;\n    }\n\n    .popup-img {\n        width: 280px;\n        margin: 30px auto;\n        display: block;\n    }\n\n    #add_payment_method #payment,\n    .woocommerce-cart #payment,\n    .woocommerce-checkout #payment {\n        clear: both;\n    }\n\n    .notice {\n        text-align: left;\n        font-size: 14px;\n        line-height: 24px;\n        font-weight: 500;\n        padding: 10px;\n        margin-bottom: 0;\n        background: #ffffcc;\n        border-radius: 4px;\n    }\n\n    /* Last Update */\n\n    * {\n        box-sizing: border-box;\n    }\n\n    .columns {\n        display: flex;\n        justify-content: center;\n        align-items: baseline;padding-bottom: 5px !important;\n    }\n\n    .column {\n        flex: 1;\n        margin: 2px;\n    }\n\n    .column:first-child {\n        margin-left: 0;\n    }\n\n    .column:last-child {\n        margin-right: 0;\n    }\n\n    .modal-float-left {\n        float: left;\n        display: inline;\n        width: 48%;\n        margin-right: 10px;\n        padding-top: 80px;\n    }\n\n    .modal-float-right {\n        float: right;\n        display: contents;\n        width: 48%;\n    }\n\n    @media (min-width: 320px) and (max-width: 480px) {\n        #ffl-map {\n            width: 100%;\n            float: left;\n        }\n\n        #ffl-list div button {\n            background: #fff;\n            color: #333;\n            display: block;\n            width: 100%;\n            padding: 15px 10px;\n            border: 1px solid rgb(204, 204, 204);\n            border-radius: 4px;\n            margin-bottom: 5px;\n            text-align: left;\n            outline: none;\n        }\n\n        #ffl-list {\n            width: 100%;\n            padding: 0 5px 0 0px;\n        }\n\n        body,\n        html {\n            overflow-x: hidden;\n        }\n\n        .modalFFL-content {\n            width: 100%;\n        }\n\n        .modal-float-left {\n            float: left;\n            display: inline;\n            width: 100%;\n            padding-top: 0px;\n        }\n\n        .modal-float-right {\n            float: right;\n            display: contents;\n            width: 100%;\n        }\n    }\n\n    @media (min-width: 481px) and (max-width: 767px) {\n        .ffl-map-resize {\n            width: 91%;\n        }\n    }\n\n    @media (min-width: 768px) and (max-width: 1024px) {\n        .ffl-map-resize {\n            width: 69%;\n        }\n    }\n\n    @media (max-width: 1280px) {\n        .modal-float-left {\n            width: 100%;\n            padding-top: 10px;\n        }\n        #ffl_container .modalFFL-content {\n            height: 65vh;\n        }\n    }\n\n    .dsbSearch {\n        pointer-events: none;\n    }\n</style>\n\x3c!--<div class="spinner-bg">\n<div class="spinner">\n<div class="bounce1"></div>\n<div class="bounce2"></div>\n<div class="bounce3"></div>\n</div>\n</div>--\x3e\n\n<div class="content">\n    <h3 class="ffl-dealer-heading">Select your preferred FFL Dealer</h3>\n    <p style="margin-bottom:10px !important;" class="notice"><span class="ffl_checkout_notice"><b>Federal law dictates that your online firearms purchase must be delivered to a federally licensed firearms dealer (FFL) before you can take possession</b>. This process is called a Transfer. Enter your zip code, radius, and FFL name (optional), then click the Find button to get a list of FFL dealers in your area.\n        Select the FFL dealer you want the firearm shipped to. <b><u>Before Checking Out, Contact your selected FFL dealer to confirm they are currently accepting transfers</u>. You can also confirm transfer costs.</b>.</span></p>\n <div class="columns">\n        <div class="column">\n            <label for="ffl-zip-code">Zip Code:</label><input autocomplete="off" type="text" id="ffl-zip-code" placeholder="Zip Code" class="" value="34983">\n        </div>\n\n        <div class="column">\n            <label for="ffl-radius">Radius:</label>\n            <select id="ffl-radius">\n                <option value="5" selected="">5 Miles</option>\n                <option value="10">10 Miles</option>\n                <option value="25">25 Miles</option>\n                <option value="50">50 Miles</option>\n                <option value="100">100 Miles</option>\n            </select>\n        </div>\n\n <div class="column">\n            <a id="ffl-search" class="button alt">Find</a>\n        </div>       \n    </div><div class="columns">\n  <div class="column">         <label width="100%" for="ffl-name-search">FFL Name (optional): </label>\n<br>            <input autocomplete="off" type="text" id="ffl-name-search" placeholder=""  style="width:100% !important;">\n        </div></div>\n\n\n</div>\n\n        <div class="ffl-list-container">\n    <ul id="ffl-list" style="height:300px !important;" class="ffl-hide">\n\n    </ul>\n</div>\n\n<div id="ffl-map" class="ffl-map-resize"></div>\n\n\n\x3c!-- The Modal --\x3e\n<div id="modalFFL" class="modalFFL" style="display: none;">\n\n    \x3c!-- Modal content --\x3e\n    <div class="modalFFL-content">\n        <span class="modal-close">×</span>\n        <div class="modal-float-left">\n            <p>You have chosen your address as a shipping address for a firearm product. Unfortunately, we are not able\n                to ship the firearms directly to your address. Please select the closest FFL from the map using your zip\n                code.</p></div></div></div>'
     t.exports = ht
 }]);
+
+FFL.initGMap()
