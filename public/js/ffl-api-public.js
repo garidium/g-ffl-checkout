@@ -141,11 +141,11 @@ function getSelected(data) {
 		'Phone: ' + data.voice_phone;
 	if (data.email != null)
 		 orderCommentText += ' | Email : ' + data.email;
-	if (data.ffl_on_file)
+	if (data.ffl_on_file){
 		 fflshort = data.license_number.replaceAll("-","");
 		 fflshort = fflshort.substring(0,3) + fflshort.substring(10,15);
 		 orderCommentText += ' | FFL On-File: ' + fflshort;
-
+	}
 	orderComment.readOnly = true;
 	setNativeValue(orderComment,orderCommentText);
 
