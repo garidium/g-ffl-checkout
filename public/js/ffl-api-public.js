@@ -20,13 +20,9 @@ function initFFLJs(fKey,gKey,message,hook) {
 	// set the checkout message
 	jQuery('.ffl_checkout_notice').html(wMes);
 	
-	let modal = jQuery("#modalFFL");
-	jQuery('.modal-close').next().html(wMes);
-
-	//modal.css('display','block');
-
-	jQuery(document).on('click','.modal-close',function () {
-		jQuery("#modalFFL").css('display','none');
+	jQuery("#ffl-map").ready(
+		function(){
+			 FFL.initGMap();
 	});
 
 	jQuery('.woocommerce-shipping-fields__field-wrapper').find('input').val(null);
@@ -47,7 +43,6 @@ function initFFLJs(fKey,gKey,message,hook) {
 			jQuery(document).on('click',"#wizard .actions a", function(e) {
 
 				if(localStorage.getItem("selectedFFL") === null) {
-					jQuery("#modalFFL").css('display','block');
 					jQuery("#wizard .actions a[href='#next']").prop('href','#');
 					e.preventDefault();
 					e.stopPropagation();
@@ -72,7 +67,6 @@ function initFFLJs(fKey,gKey,message,hook) {
 		function(e) {
 
 			if(localStorage.getItem("selectedFFL") === null) {
-				jQuery("#modalFFL").css('display','block');
 				e.preventDefault();
 				e.stopPropagation();
 				return false;
@@ -89,15 +83,13 @@ function initFFLJs(fKey,gKey,message,hook) {
 
 		} );
 
-
-
 	jQuery("#shipping_country").val(null).trigger('change');
 	jQuery("#order_comments").val(null).text(null);
 
 }
 
 function getSelected(data) {
-
+	alert("IN HERE BOZO");
 	jQuery("#shipping_country").prop("disabled",false);
 	jQuery("#shipping_state").prop("disabled",false);
 
