@@ -604,9 +604,9 @@
             }
 
             d[e.license_number] = i, g.push(i), null === localStorage.getItem("mapCenter") && localStorage.setItem("mapCenter", !0), i.getElement().addEventListener("click", function() {
-                t.setContent('<div id="bodyContent"><h3>' + e.list_name + "</h3>"+ (e.ffl_on_file?"<font color=#09bb00>Preferred Dealer: We have a signed copy of the FFL</font>":"<font color=red>To process your order we will need a signed copy of the FFL from this dealer</font>") + "<br><br><p>" + e.premise_street + "<br>" + e.premise_city + "<br/>" + phone + "<br/>" + (e.email!=undefined?e.email:"") + "</p></div>"), t.open(r, i), f.setSelected({
-                    data: e
-                }), document.getElementById(e.license_number).scrollIntoView()
+                t.setHTML('<div id="bodyContent"><h3>' + e.list_name + "</h3>"+ (e.ffl_on_file?"<font color=#09bb00>Preferred Dealer: We have a signed copy of the FFL</font>":"<font color=red>To process your order we will need a signed copy of the FFL from this dealer</font>") + "<br><br><p>" + e.premise_street + "<br>" + e.premise_city + "<br/>" + phone + "<br/>" + (e.email!=undefined?e.email:"") + "</p></div>");
+                f.setSelected({data: e});
+                document.getElementById(e.license_number).scrollIntoView();
             })
         }
 
@@ -671,8 +671,8 @@
                 if (document.getElementById("ffl-map").classList.remove("ffl-map-full"), document.getElementById("ffl-map").classList.add("ffl-map-resize"), N.classList.remove("dsbSearch"), 200 === t.status) {
                     if (t.data.Error!=null || (t.data.original && 400 === t.data.original.status)) return alert("No FFL's found, Please check your inputs and try again."), !1;
                     localStorage.removeItem("mapCenter");
+                    const r = new mapboxgl.Popup({ offset: 25 }).setHTML("");
                     var n, e = t.data,
-                        r = new mapboxgl.Popup().setHTML(""),
                         o = 0;
                     var count = 0;
                     var bounds = null;
@@ -684,13 +684,6 @@
                                 lat: parseFloat(s.lat),
                                 lng: parseFloat(s.lng)
                             }, s)
-                        } else {
-                            var h = u.split(" ").join("+");
-                            f.geoCodeInit({
-                                res: h,
-                                dataG: s,
-                                infowindow: r
-                            })
                         }
                         0 === o && (n = {
                             lat: parseFloat(s.lat),
@@ -711,7 +704,6 @@
                         
                         var lat = parseFloat(s.lat);
                         var lng = parseFloat(s.lng);
-                        console.log(lat,lng);
                         if (lat > 0 && lng < 0){
                             var coord = new mapboxgl.LngLat(lng,lat)
                             if (count == 0){
@@ -733,6 +725,11 @@
                     });  
 
                     for (var m = document.getElementsByClassName("ffl-list-div"), I = 0; I < m.length; I++) m[I].addEventListener("click", function(t) {
+                        var a3 = d[this.getAttribute("data-marker-id")];
+                        var data = this.getAttribute("data-content")
+                        l.flyTo({center: [a3._lngLat.lng, a3._lngLat.lat], zoom: 15});
+                        t.preventDefault();t.stopPropagation();
+                        getSelected(JSON.parse(decodeURIComponent(data)));
                         //l.fire('click', [-118.3214,34.0318])
                         //return google.maps.event.trigger(d[this.getAttribute("data-marker-id")], "click"), t.preventDefault(), t.stopPropagation(), !1
                     });

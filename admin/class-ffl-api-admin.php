@@ -214,10 +214,11 @@ class g_ffl_Api_Admin
                     <?php submit_button(); ?>
             </div>
             <div class="postbox" style="padding: 10px;margin-top: 10px">
-                <h4 style="color: red">You just need to enable the checkbox from your woocommerce product's general
-                    settings if your product requires FFL Shipment.</h4>
-                <p>Example:</p>
+                <h3 style="color: blue">To show the FFL form on a checkout page you need to enable the "Requires FFL Shipment" checkbox on your woocommerce product's general settings view. You can also do this in bulk on your main products page by using the bulk action drop-down. See the screenshots below for reference. This setting can also be set via the API by adjusting the products meta-data attribute.</h4>
+                <p>Single Product Example:</p>
                 <img src="<?php echo plugin_dir_url(__FILE__) . 'images/example.png' ?>">
+                <p>Bulk Update Example:</p>
+                <img src="<?php echo plugin_dir_url(__FILE__) . 'images/example2.png' ?>">
             </div>
             </form>
         </div>
