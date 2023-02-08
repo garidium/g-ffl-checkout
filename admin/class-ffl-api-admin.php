@@ -214,10 +214,10 @@ class g_ffl_Api_Admin
                     <?php submit_button(); ?>
             </div>
             <div class="postbox" style="padding: 10px;margin-top: 10px">
-                <h3 style="color: blue">Single Product Update Example:</h3>    
+                <h3 style="color: blue">Single Product Update Example</h3>    
                 <p>To show the FFL form on a checkout page you need to enable the "Requires FFL Shipment" checkbox on your woocommerce product's general settings view. You can also do this in bulk on your main products page by using the bulk action drop-down. See the screenshots below for reference. This setting can also be set via the API by adjusting the products meta-data attribute.</p>
                 <img src="<?php echo plugin_dir_url(__FILE__) . 'images/example.png' ?>">
-                <h3 style="color: blue">Bulk Update Example:</h3>
+                <h3 style="color: blue">Bulk Update Example</h3>
                 <p>To mass update products, you can go to the main products page and use the bulk actions features. You can add and remove the "Needs FFL Shipment" setting from here.</p>
                 <img src="<?php echo plugin_dir_url(__FILE__) . 'images/example2.png' ?>">
                 <h3 style="color: blue">FFL List and Map Styling Adjustments</h3>
