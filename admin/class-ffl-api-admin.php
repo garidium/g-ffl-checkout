@@ -214,11 +214,25 @@ class g_ffl_Api_Admin
                     <?php submit_button(); ?>
             </div>
             <div class="postbox" style="padding: 10px;margin-top: 10px">
-                <h3 style="color: blue">To show the FFL form on a checkout page you need to enable the "Requires FFL Shipment" checkbox on your woocommerce product's general settings view. You can also do this in bulk on your main products page by using the bulk action drop-down. See the screenshots below for reference. This setting can also be set via the API by adjusting the products meta-data attribute.</h4>
-                <p>Single Product Example:</p>
+                <h3 style="color: blue">Single Product Update Example:</h3>    
+                <p>To show the FFL form on a checkout page you need to enable the "Requires FFL Shipment" checkbox on your woocommerce product's general settings view. You can also do this in bulk on your main products page by using the bulk action drop-down. See the screenshots below for reference. This setting can also be set via the API by adjusting the products meta-data attribute.</p>
                 <img src="<?php echo plugin_dir_url(__FILE__) . 'images/example.png' ?>">
-                <p>Bulk Update Example:</p>
+                <h3 style="color: blue">Bulk Update Example:</h3>
+                <p>To mass update products, you can go to the main products page and use the bulk actions features. You can add and remove the "Needs FFL Shipment" setting from here.</p>
                 <img src="<?php echo plugin_dir_url(__FILE__) . 'images/example2.png' ?>">
+                <h3 style="color: blue">FFL List and Map Styling Adjustments</h3>
+                <p>You can control the height and other styling of the FFL List and Map component using the "Appearance > Cusstomize > Additional CSS" customization panel in the Worpress Admin panel. If for example you don't want to see a map at all, you can set the height to 0px. Copy and paste the code below.</p>
+                <pre><code>
+                ul#ffl-list{
+                    height:200px !important;
+                }
+
+                div#ffl-map{
+                    height:200px !important;
+                }
+                </code></pre>
+
+                <img src="<?php echo plugin_dir_url(__FILE__) . 'images/example3.png' ?>">
             </div>
             </form>
         </div>
