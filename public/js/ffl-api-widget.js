@@ -715,6 +715,7 @@
                                     parseFloat(coord),
                                     parseFloat(coord)
                                 );
+                                bounds.extend(coord);
                                 count += 1
                             }else{
                                 bounds.extend(coord);
