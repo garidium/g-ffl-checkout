@@ -597,9 +597,13 @@
                 var phone_sects = phone.match(/^(\d{3})(\d{3})(\d{4})$/);
                 phone = phone_sects[1] + '-' + phone_sects[2] + '-' + phone_sects[3];
             }
-            var i = new mapboxgl.Marker()
+            var markerColor = {"color": "#e51f47" }
+            if (e.ffl_on_file){
+                markerColor = {"color": "#28e51f" }
+            }
+            var i = new mapboxgl.Marker(markerColor)
                 .setLngLat([n.lng, n.lat])
-                .setPopup(new mapboxgl.Popup().setHTML('<div id="bodyContent"><h4 style="font-weight:bold;">' + e.list_name + "</h3>"+ (e.ffl_on_file?"<font color=#09bb00><b>Preferred Dealer:</b> We have the FFL on-file. Contact Dealer for Transfer Details.</font>":"<font color=red><b>FFL Contact Required</b> for Transfer Details. We will need a signed copy of the FFL.</font>") + "<br>" + e.premise_street + "<br>" + e.premise_city + ", " + e.premise_state + " " + e.premise_zip_code + "<br/>" + phone + (e.email!=null?"<br/>" + e.email:"") + "</div>"))
+                .setPopup(new mapboxgl.Popup().setHTML('<div id="bodyContent"><h4 style="font-weight:bold;">' + e.list_name + "</h3>"+ (e.ffl_on_file?"<font color=#09bb00><b>Preferred Dealer:</b> We have the FFL on-file. Contact Dealer for Transfer Details.</font>":"<font color=red><b>Dealer Contact Required</b> for Transfer Details. We need a signed copy of their FFL.</font>") + "<br>" + e.premise_street + "<br>" + e.premise_city + ", " + e.premise_state + " " + e.premise_zip_code + "<br/>" + phone + (e.email!=null?"<br/>" + e.email:"") + "</div>"))
                 .addTo(r);
             
             i.getElement().addEventListener("click", function() {
