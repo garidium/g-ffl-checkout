@@ -581,6 +581,15 @@
         for (var e = 0; e < y.length; e++) y[e].remove();
         d = [], g = [], y = []
     }
+    function scrollToMyRef(id){
+        var ref = document.getElementById(id);
+        setTimeout(function () {
+             ref.scrollIntoView({
+                 behavior: "smooth",
+                 block: "start",
+             });
+        }, 100);
+    };
     function i(t, n, e) {
         var r = l
         /*
@@ -592,9 +601,10 @@
                 });
         */
         if (n.lng < 0 && n.lat > 0){
+            
             var i = new mapboxgl.Marker()
                 .setLngLat([n.lng, n.lat])
-                .setPopup(t)
+                //.setPopup(t)
                 .addTo(r);
 
             var phone = e.voice_phone;
@@ -604,9 +614,9 @@
             }
 
             d[e.license_number] = i, g.push(i), null === localStorage.getItem("mapCenter") && localStorage.setItem("mapCenter", !0), i.getElement().addEventListener("click", function() {
-                t.setHTML('<div id="bodyContent"><h3>' + e.list_name + "</h3>"+ (e.ffl_on_file?"<font color=#09bb00>Preferred Dealer: We have a signed copy of the FFL</font>":"<font color=red>To process your order we will need a signed copy of the FFL from this dealer</font>") + "<br><br><p>" + e.premise_street + "<br>" + e.premise_city + "<br/>" + phone + "<br/>" + (e.email!=undefined?e.email:"") + "</p></div>");
+                //t.setHTML('<div id="bodyContent"><h3>' + e.list_name + "</h3>"+ (e.ffl_on_file?"<font color=#09bb00>Preferred Dealer: We have a signed copy of the FFL</font>":"<font color=red>To process your order we will need a signed copy of the FFL from this dealer</font>") + "<br><br><p>" + e.premise_street + "<br>" + e.premise_city + "<br/>" + phone + "<br/>" + (e.email!=undefined?e.email:"") + "</p></div>");
                 f.setSelected({data: e});
-                document.getElementById(e.license_number).scrollIntoView();
+                scrollToMyRef(e.license_number);
             })
         }
 
@@ -697,7 +707,7 @@
                         }
                         
                         var p = encodeURIComponent(JSON.stringify(s)),
-                            g = "<div id=" + s.license_number + '><button class="ffl-list-div" data-marker-id=' + s.license_number + " data-content=" + p + ">" + s.list_name + "  " + (s.ffl_on_file?"<img align=right height=25 width=25 title='FFL On-File' src='https://garidium.s3.amazonaws.com/images/ffl_on_file.png'>":"<img align=right height=25 width=25 title='We need a signed copy of the FFL emailed to us' src='https://garidium.s3.amazonaws.com/images/ffl_required.png'>") + "<br>" + s.premise_street + ", " + s.premise_city + "<br>" + phone+ (s.email!=undefined?" | <a target=_blank href='mailto:" + s.email + "'>" + s.email + "</a>":"") + "</button></div>";
+                            g = "<div id=" + s.license_number + '><button class="ffl-list-div" data-marker-id=' + s.license_number + " data-content=" + p + "><b>" + s.list_name + "</b>  " + (s.ffl_on_file?"<img align=right height=25 width=25 title='FFL On-File' src='https://garidium.s3.amazonaws.com/images/ffl_on_file.png'>":"<img align=right height=25 width=25 title='We need a signed copy of the FFL emailed to us' src='https://garidium.s3.amazonaws.com/images/ffl_required.png'>") + "<br>" + s.premise_street + ", " + s.premise_city + "<br>" + phone+ (s.email!=undefined?" | <a target=_blank href='mailto:" + s.email + "'>" + s.email + "</a>":"") + "</button></div>";
                         b.insertAdjacentHTML("beforeend", g)
 
                         // Create a 'LngLatBounds' with the first coordinate.
@@ -728,10 +738,8 @@
                         var a3 = d[this.getAttribute("data-marker-id")];
                         var data = this.getAttribute("data-content")
                         l.flyTo({center: [a3._lngLat.lng, a3._lngLat.lat], zoom: 15});
-                        t.preventDefault();t.stopPropagation();
                         getSelected(JSON.parse(decodeURIComponent(data)));
-                        //l.fire('click', [-118.3214,34.0318])
-                        //return google.maps.event.trigger(d[this.getAttribute("data-marker-id")], "click"), t.preventDefault(), t.stopPropagation(), !1
+                        t.preventDefault();t.stopPropagation();
                     });
                 }
                 if (t.data.length > 0){

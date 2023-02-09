@@ -1,4 +1,4 @@
-function initFFLJs(fKey,gKey,message,hook) {
+function initFFLJs(fKey,message,hook) {
 
 	if(hook === "woocommerce_before_checkout_billing_form") {
 		setTimeout(function() {
@@ -13,7 +13,6 @@ function initFFLJs(fKey,gKey,message,hook) {
 	FFL.init({
 		container : 'ffl_container',
 		apiKey: fKey,
-		geoKey: gKey,
 		cBack : getSelected
 	});
 

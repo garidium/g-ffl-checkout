@@ -28,11 +28,3 @@
     color: black;
     border: 1px solid #b20000;
 }
-#ffl_container .modalFFL-content /*IE Fix */ {
-    height: 65%;
-}
-@media only screen and (max-width: 480px) {
-    #ffl_container #modalFFL .modalFFL-content {
-        height: 80vh;
-    }
-}
