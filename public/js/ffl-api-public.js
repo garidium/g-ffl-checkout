@@ -139,9 +139,6 @@ function getSelected(data) {
 	orderComment.readOnly = true;
 	setNativeValue(orderComment,orderCommentText);
 
-	console.log(jQuery("#shipping_state"))
-	console.log(data.premise_state)
-
 	jQuery("#shipping_state").val(data.premise_state); // Change the value or make some change to the internal state
 	jQuery("#shipping_state").trigger("change");
 

@@ -582,42 +582,36 @@
         d = [], g = [], y = []
     }
     function scrollToMyRef(id){
-        var ref = document.getElementById(id);
         setTimeout(function () {
-             ref.scrollIntoView({
+             document.getElementById(id).scrollIntoView({
                  behavior: "smooth",
                  block: "start",
              });
         }, 100);
-    };
+    }
     function i(t, n, e) {
         var r = l
-        /*
-        var i = new google.maps.Marker({
-                position: n,
-                map: r,
-                icon: "https://garidium.s3.amazonaws.com/images/map_pin.png",
-                title: e.list_name
-                });
-        */
         if (n.lng < 0 && n.lat > 0){
             
             var i = new mapboxgl.Marker()
                 .setLngLat([n.lng, n.lat])
                 //.setPopup(t)
                 .addTo(r);
+            
+            i.getElement().addEventListener("click", function() {
+                //t.setHTML('<div id="bodyContent"><h3>' + e.list_name + "</h3>"+ (e.ffl_on_file?"<font color=#09bb00>Preferred Dealer: We have a signed copy of the FFL</font>":"<font color=red>To process your order we will need a signed copy of the FFL from this dealer</font>") + "<br><br><p>" + e.premise_street + "<br>" + e.premise_city + "<br/>" + phone + "<br/>" + (e.email!=undefined?e.email:"") + "</p></div>");
+                window.scrollBy(0, 1);
+                window.scrollBy(0, -1);
+                f.setSelected({data: e});
+                scrollToMyRef(e.license_number);
+            });
 
             var phone = e.voice_phone;
             if ((phone+"").length == 10){
                 var phone_sects = phone.match(/^(\d{3})(\d{3})(\d{4})$/);
                 phone = phone_sects[1] + '-' + phone_sects[2] + '-' + phone_sects[3];
             }
-
-            d[e.license_number] = i, g.push(i), null === localStorage.getItem("mapCenter") && localStorage.setItem("mapCenter", !0), i.getElement().addEventListener("click", function() {
-                //t.setHTML('<div id="bodyContent"><h3>' + e.list_name + "</h3>"+ (e.ffl_on_file?"<font color=#09bb00>Preferred Dealer: We have a signed copy of the FFL</font>":"<font color=red>To process your order we will need a signed copy of the FFL from this dealer</font>") + "<br><br><p>" + e.premise_street + "<br>" + e.premise_city + "<br/>" + phone + "<br/>" + (e.email!=undefined?e.email:"") + "</p></div>");
-                f.setSelected({data: e});
-                scrollToMyRef(e.license_number);
-            })
+            d[e.license_number] = i, g.push(i), null === localStorage.getItem("mapCenter") && localStorage.setItem("mapCenter", !0)
         }
 
     }
@@ -729,7 +723,6 @@
                       
                     }
                     // Note there are other options such as easeing animation and maxZoom
-                    console.log(bounds)
                     l.fitBounds(bounds, {
                         padding: 50
                     });  
@@ -749,7 +742,6 @@
                 }
             }, function(t) {
                 if (422 === t.response.status || 400 === t.response.status) return alert(t.response.data.message), !1;
-                console.log(t.response)
             }), t.preventDefault(), t.stopPropagation(), !1
         })
     }, f.initGMap = function() {
