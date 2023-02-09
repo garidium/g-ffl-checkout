@@ -101,9 +101,7 @@ class G_ffl_Api_Public
          */
 
         wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/ffl-api-widget.js', array( 'jquery' ), $this->version, false );
-        //wp_enqueue_script($this->plugin_name, 'https://app.fflapi.com/sdk/woo-widget-v2.js', array('jquery'), $this->version, false);
         wp_enqueue_script($this->plugin_name . '_init', plugin_dir_url(__FILE__) . 'js/ffl-api-public.js', array('jquery', $this->plugin_name), $this->version, false);
-
     }
 
     function ffl_woo_checkout()
@@ -149,20 +147,20 @@ class G_ffl_Api_Public
         $hok = get_option('ffl_init_map_location');
         echo '<div id="ffl_container"></div>';
         echo '
-<script type="text/javascript">
-    
-  let aKey = "' . $aKey . '"
-    let wMes = `' . $wMes . '`
-    let hok = "' . $hok . '"
-    
-    localStorage.removeItem("selectedFFL");
+                <script type="text/javascript">
+                    
+                    let aKey = "' . $aKey . '"
+                    let wMes = `' . $wMes . '`
+                    let hok = "' . $hok . '"
+                    
+                    localStorage.removeItem("selectedFFL");
 
-	if(!document.getElementById("ffl-zip-code")) {
-        document.addEventListener("DOMContentLoaded", function() {
-		    initFFLJs(aKey,wMes,hok);
-        });
-	}
-</script>';
+                    if(!document.getElementById("ffl-zip-code")) {
+                        document.addEventListener("DOMContentLoaded", function() {
+                            initFFLJs(aKey,wMes,hok);
+                        });
+                    }
+                </script>';
     }
 
 
