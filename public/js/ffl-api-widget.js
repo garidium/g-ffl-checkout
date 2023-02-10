@@ -768,15 +768,27 @@
          };
          var t;
          JavaScript.load("https://api.mapbox.com/mapbox-gl-js/v2.12.0/mapbox-gl.js", function() {
-            mapboxgl.accessToken = 'pk.eyJ1IjoiZ2FyaWRpdW0iLCJhIjoiY2xjeTRjejZvMDJwbzNybW9ibzl3czk4YSJ9.rhu5z5oPkJd_my9zpKgU7g';
-            t = new mapboxgl.Map({
-                container: 'ffl-map', // container ID
-                style: 'mapbox://styles/garidium/clds8orfo000q01udg0o23pp5', // style URL
-                center: [-78.16847, 38.21885], // starting position [lng, lat]
-                zoom: 14 // starting zoom
+            fetch('https://ffl-api.garidium.com', {
+                method: 'POST',
+                headers: {
+                  'Accept': 'application/json',
+                  'Content-Type': 'application/json',
+                  'x-api-key': aKey,
+                },
+                body: JSON.stringify({'action': 'get_mapbox_token'})
+            })
+            .then(response=>response.json())
+            .then(data=>{ 
+                mapboxgl.accessToken = data;
+                t = new mapboxgl.Map({
+                    container: 'ffl-map', // container ID
+                    style: 'mapbox://styles/garidium/clds8orfo000q01udg0o23pp5', // style URL
+                    center: [-78.16847, 38.21885], // starting position [lng, lat]
+                    zoom: 14 // starting zoom
+                });
+                t.addControl(new mapboxgl.FullscreenControl());
+                l = t            
             });
-            t.addControl(new mapboxgl.FullscreenControl());
-            l = t
         });
         
     }, f.chunkArr = function(t) {
@@ -2261,11 +2273,11 @@
                     background: #fff;
                     color: #333;
                     display: block;
+                    margin:1px 1px 1px 1px;
                     width: 100%;
                     padding: 15px 10px;
                     border: 1px solid rgb(204, 204, 204);
                     border-radius: 4px;
-                    margin-bottom: 5px;
                     text-align: left;
                     outline: none;
                 }
