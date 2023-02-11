@@ -373,19 +373,21 @@ function add_ffl_download($order_id){
             echo '<a id="download_ffl" class="button alt" data-marker-id="',$fflshort,'">Download FFL</a>
                     <script>
                         document.getElementById("download_ffl").addEventListener("click", function(){
-                            fetch("https://ffl-api.garidium.com/download", {
-                                method: "POST",
-                                headers: {
-                                "Accept": "application/json",
-                                "Content-Type": "application/json",
-                                "x-api-key": "',$aKey,'",
-                                },
-                                body: JSON.stringify({"fflno": "',$fflshort,'"})
-                            })
-                            .then(response=>response.json())
-                            .then(data=>{ 
-                                window.open(data, "_blank", "location=no, scrollbars=yes,status=no");         
-                            }); 
+                            if (window.confirm("It is your responsibility to ensure the receiving FFL is valid (using ezCHeck) and is willing and able to accept transfers. Do not assume that is the case because this FFL is on-file. If you have an issue with a transfer and the FFL should be removed, please contact us at sales@garidium.com with the FFL number to remove. If the download is not working, try again, check popup-blockers.")){
+                                fetch("https://ffl-api.garidium.com/download", {
+                                    method: "POST",
+                                    headers: {
+                                    "Accept": "application/json",
+                                    "Content-Type": "application/json",
+                                    "x-api-key": "',$aKey,'",
+                                    },
+                                    body: JSON.stringify({"fflno": "',$fflshort,'"})
+                                })
+                                .then(response=>response.json())
+                                .then(data=>{ 
+                                    window.open(data, "_blank", "location=yes, scrollbars=yes,status=yes");         
+                                });
+                            }
                         });
                     </script>';
         }else{

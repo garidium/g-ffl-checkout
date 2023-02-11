@@ -2164,6 +2164,7 @@
                 padding: 0px !important;
                 margin-bottom: 5px;
                 float: right !important;
+                width: 100%;
             }
             .ffl-map-resize {
                 width: 100%;
@@ -2235,7 +2236,23 @@
                 border-radius: 0px;
             }
             #ffl-search {
-                height: 45px;display: block;
+                -webkit-appearance: none;
+                -moz-appearance: none;
+                appearance: none;
+                box-shadow: inset 0 1px 1px #ebebeb;
+                border: 1px solid !important;
+                display: block;
+                -moz-osx-font-smoothing: grayscale;
+                -webkit-font-smoothing: antialiased;
+                font-smoothing: antialiased;
+                height: 45px;
+                margin: 0;
+                padding: 10px;
+                transition: all 100ms ease-out;
+                width: 100%;
+                -webkit-border-radius: 0px;
+                -moz-border-radius: 0px;
+                border-radius: 0px;
                 cursor: pointer;
                 width: 100%;
                 border-radius: 4px;
@@ -2366,7 +2383,7 @@
             <ul id="ffl-list" style="height:300px;" class="ffl-hide"></ul>
         </div>
         <div id="ffl-map" class="ffl-map-resize"></div>
-        <span class="mapbox-attribution"">© <a style="color:gray !important;" target=_blank href='https://www.mapbox.com/about/maps/'>Mapbox</a> © <a style="color:gray !important;" target=_blank href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a> © <a style="color:gray !important;" target=_blank href='http://www.maxar.com'>Maxar</a><strong> | <a style="color:gray !important;" href='https://www.mapbox.com/map-feedback/' target='_blank'>Improve this map</a></strong></span>
+        <span class="mapbox-attribution"">© <a style="color:gray !important;" target=_blank href='https://www.mapbox.com/about/maps/'>Mapbox</a> © <a style="color:gray !important;" target=_blank href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a> © <a style="color:gray !important;" target=_blank href='http://www.maxar.com'>Maxar</a><strong> | <a style="color:gray !important;" href='https://www.mapbox.com/map-feedback/' target='_blank'>Improve this map</a></strong></span><br>
         `;
     t.exports = ht
 }]);
