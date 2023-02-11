@@ -10,7 +10,7 @@ Tags: FFL, eCommerce checkout, WooCommerce, FFL gun dealers, map api, google map
 Requires at least: 5.0
 Tested up to: 6.1.1
 Requires PHP: 7.0
-Stable tag: 1.1.0
+Stable tag: 1.1.2
 License: GPL version 3 or any later version
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -135,6 +135,6 @@ After downloading the ZIP file
 7. Select an FFL Dealer from the map or the list and the shipping information of the selected FFL dealer will be auto-populated.
 
 == Changelog ==
-v1.1.0 Mapbox conversion, removing need for Google Maps API key and also adding eFile FFL upload/download/ezCheck features to orders details view
+v1.1.2 Mapbox conversion, removing need for Google Maps API key and also adding eFile FFL upload/download/ezCheck features to orders details view
 v1.0.1 Bug Fixes
 v1.0.0 Initial Release of the g-FFL API & Plugin
