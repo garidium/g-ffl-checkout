@@ -2066,8 +2066,14 @@
             }
             .mapboxgl-popup {
                  text-align:left !important;
-                 max-width: 350px !important;
-            }    
+                 max-width: 325px !important;
+            }  
+            .mapboxgl-ctrl-attrib-button{
+                display:none !important;
+            }  
+            .mapboxgl-ctrl-bottom-right{
+                display:none !important;
+            }
             .ffl-hide {
                 display: none;
             }
@@ -2096,13 +2102,15 @@
             .content {
                 margin: 0 auto;
                 max-width: 100%;
-                margin-bottom: 20px;
+                margin-bottom: 5px;
                 line-height: 1.6em;
                 text-align: center;
             }
+            
             .content label {
                 float: left;
             }
+            
             .ffl-list-container {
                 display: flex;
                 justify-content: flex-start;
@@ -2144,10 +2152,18 @@
                 border-radius: 4px;text-align: left;
             }
             #ffl-map {
-                height: 30vh;
-                margin-top: 1%;
-                margin-bottom: 30px;
+                height: 35vh;
+                margin-top: 0px;
+                margin-bottom: 0px;
                 width: 100%;
+            }
+            .mapbox-attribution {
+                font-weight: normal !important;;
+                font-size: 8pt !important;;
+                color: gray !important;
+                padding: 0px !important;
+                margin-bottom: 5px;
+                float: right !important;
             }
             .ffl-map-resize {
                 width: 100%;
@@ -2165,10 +2181,8 @@
                 -webkit-appearance: none;
                 -moz-appearance: none;
                 appearance: none;
-                background-color: #fff;
                 box-shadow: inset 0 1px 1px #ebebeb;
-                border: 1px solid #ebebeb;
-                color: #000;
+                border: 1px solid !important;
                 display: block;
                 -moz-osx-font-smoothing: grayscale;
                 -webkit-font-smoothing: antialiased;
@@ -2186,10 +2200,8 @@
                 -webkit-appearance: none;
                 -moz-appearance: none;
                 appearance: none;
-                background-color: #fff;
                 box-shadow: inset 0 1px 1px #ebebeb;
-                border: 1px solid #ebebeb;
-                color: #000;
+                border: 1px solid !important;
                 display: block;
                 -moz-osx-font-smoothing: grayscale;
                 -webkit-font-smoothing: antialiased;
@@ -2204,12 +2216,23 @@
                 border-radius: 0px;
             }
             #ffl-radius {
-                border: 1px solid #d9d9d9;
-                color: #333;
-                cursor: pointer;
+                -webkit-appearance: none;
+                -moz-appearance: none;
+                appearance: none;
+                box-shadow: inset 0 1px 1px #ebebeb;
+                border: 1px solid !important;
+                display: block;
+                -moz-osx-font-smoothing: grayscale;
+                -webkit-font-smoothing: antialiased;
+                font-smoothing: antialiased;
                 height: 45px;
+                margin: 0;
+                padding: 10px !important;
+                transition: all 100ms ease-out;
                 width: 100%;
-                background: #fff;
+                -webkit-border-radius: 0px;
+                -moz-border-radius: 0px;
+                border-radius: 0px;
             }
             #ffl-search {
                 height: 45px;display: block;
@@ -2319,17 +2342,14 @@
             </p>
             <div class="columns">
                 <div class="column">
-                    <label for="ffl-zip-code">Zip Code:</label>
                     <input autocomplete="off" type="text" id="ffl-zip-code" placeholder="Zip Code" class="" value="">
                 </div>
                 <div class="column">
-                    <label for="ffl-radius">Radius:</label>
                     <select id="ffl-radius">
-                        <option value="5" selected="">5 Miles</option>
-                        <option value="10">10 Miles</option>
-                        <option value="25">25 Miles</option>
-                        <option value="50">50 Miles</option>
-                        <option value="100">100 Miles</option>
+                        <option value="5" selected="">within 5 Miles</option>
+                        <option value="10">Within 10 Miles</option>
+                        <option value="25">Within 25 Miles</option>
+                        <option value="50">Within 50 Miles</option>
                     </select>
                 </div>
                 <div class="column">
@@ -2338,8 +2358,7 @@
             </div>
             <div class="columns">
                 <div class="column">
-                    <label for="ffl-name-search">FFL Name (optional): </label>         
-                    <input autocomplete="off" type="text" id="ffl-name-search" placeholder="">
+                    <input autocomplete="off" type="text" id="ffl-name-search" placeholder="FFL Name (optional)">
                 </div>
             </div>
         </div>
@@ -2347,6 +2366,7 @@
             <ul id="ffl-list" style="height:300px;" class="ffl-hide"></ul>
         </div>
         <div id="ffl-map" class="ffl-map-resize"></div>
+        <span class="mapbox-attribution"">© <a style="color:gray !important;" target=_blank href='https://www.mapbox.com/about/maps/'>Mapbox</a> © <a style="color:gray !important;" target=_blank href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a> © <a style="color:gray !important;" target=_blank href='http://www.maxar.com'>Maxar</a><strong> | <a style="color:gray !important;" href='https://www.mapbox.com/map-feedback/' target='_blank'>Improve this map</a></strong></span>
         `;
     t.exports = ht
 }]);
