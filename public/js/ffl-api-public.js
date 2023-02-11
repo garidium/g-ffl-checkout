@@ -1,4 +1,4 @@
-function initFFLJs(fKey,gKey,message,hook) {
+function initFFLJs(fKey,message,hook) {
 
 	if(hook === "woocommerce_before_checkout_billing_form") {
 		setTimeout(function() {
@@ -13,20 +13,15 @@ function initFFLJs(fKey,gKey,message,hook) {
 	FFL.init({
 		container : 'ffl_container',
 		apiKey: fKey,
-		geoKey: gKey,
 		cBack : getSelected
 	});
 
 	// set the checkout message
 	jQuery('.ffl_checkout_notice').html(wMes);
 	
-	let modal = jQuery("#modalFFL");
-	jQuery('.modal-close').next().html(wMes);
-
-	//modal.css('display','block');
-
-	jQuery(document).on('click','.modal-close',function () {
-		jQuery("#modalFFL").css('display','none');
+	jQuery("#ffl-map").ready(
+		function(){
+			 FFL.initGMap();
 	});
 
 	jQuery('.woocommerce-shipping-fields__field-wrapper').find('input').val(null);
@@ -47,7 +42,6 @@ function initFFLJs(fKey,gKey,message,hook) {
 			jQuery(document).on('click',"#wizard .actions a", function(e) {
 
 				if(localStorage.getItem("selectedFFL") === null) {
-					jQuery("#modalFFL").css('display','block');
 					jQuery("#wizard .actions a[href='#next']").prop('href','#');
 					e.preventDefault();
 					e.stopPropagation();
@@ -72,7 +66,6 @@ function initFFLJs(fKey,gKey,message,hook) {
 		function(e) {
 
 			if(localStorage.getItem("selectedFFL") === null) {
-				jQuery("#modalFFL").css('display','block');
 				e.preventDefault();
 				e.stopPropagation();
 				return false;
@@ -89,15 +82,12 @@ function initFFLJs(fKey,gKey,message,hook) {
 
 		} );
 
-
-
 	jQuery("#shipping_country").val(null).trigger('change');
 	jQuery("#order_comments").val(null).text(null);
 
 }
 
 function getSelected(data) {
-
 	jQuery("#shipping_country").prop("disabled",false);
 	jQuery("#shipping_state").prop("disabled",false);
 
@@ -148,9 +138,6 @@ function getSelected(data) {
 	}
 	orderComment.readOnly = true;
 	setNativeValue(orderComment,orderCommentText);
-
-	console.log(jQuery("#shipping_state"))
-	console.log(data.premise_state)
 
 	jQuery("#shipping_state").val(data.premise_state); // Change the value or make some change to the internal state
 	jQuery("#shipping_state").trigger("change");

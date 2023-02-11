@@ -362,4 +362,74 @@ function firearm_product_col_sort($columns)
     return wp_parse_args($custom, $columns);
 }
 
+add_action('woocommerce_admin_order_data_after_shipping_address', 'add_ffl_download', 25);
+function add_ffl_download($order_id){
+    $order = wc_get_order( $order_id );
+    $notes = $order->get_customer_note();
+    $aKey = esc_attr(get_option('ffl_api_key_option'));
+    if (str_contains($notes, "FFL Number")){
+        if (str_contains($notes, "On-File")){
+            $fflshort = substr($notes, -8);
+            echo '<a id="download_ffl" class="button alt" data-marker-id="',$fflshort,'">Download FFL</a>
+                    <script>
+                        document.getElementById("download_ffl").addEventListener("click", function(){
+                            if (window.confirm("It is your responsibility to ensure the receiving FFL is valid (using ezCHeck) and is willing and able to accept transfers. Do not assume that is the case because this FFL is on-file. If you have an issue with a transfer and the FFL should be removed, please contact us at sales@garidium.com with the FFL number to remove. If the download is not working, try again, check popup-blockers.")){
+                                fetch("https://ffl-api.garidium.com/download", {
+                                    method: "POST",
+                                    headers: {
+                                    "Accept": "application/json",
+                                    "Content-Type": "application/json",
+                                    "x-api-key": "',$aKey,'",
+                                    },
+                                    body: JSON.stringify({"fflno": "',$fflshort,'"})
+                                })
+                                .then(response=>response.json())
+                                .then(data=>{ 
+                                    window.open(data, "_blank", "location=yes, scrollbars=yes,status=yes");         
+                                });
+                            }
+                        });
+                    </script>';
+        }else{
+            echo '<strong>Upload a FFL to the g-FFL eFile System:</strong>
+                  <input type="file" id="ffl_upload_filename"><a id="upload_ffl" class="button alt">Upload FFL</a>
+                    <script>
+                        // Select your input type file and store it in a variable
+                        const input = document.getElementById("ffl_upload_filename");
+                        // This will upload the file after having read it
+                        const upload = (file) => {
+                            console.log("Uploading File Name = " + file.name);
+                            fetch("https://ffl-api.garidium.com/garidium-ffls/uploads%2F" + file.name, { 
+                                method: "PUT",
+                                headers: {
+                                    "x-api-key": "',$aKey,'",
+                                },
+                                body: file
+                            })
+                            .then(
+                                success => {alert("Upload Successful, we will process the FFL and make it available for the next order shipping to this FFL. Thank you for your contribution!");console.log(success);} 
+                            ).catch(
+                                error => {alert("There was an Error uploading the FFL, please try again.");console.log(error);}
+                            );
+                        };
+
+                        // Event handler executed when a file is selected
+                        const onSelectFile = () => upload(input.files[0]);
+
+                        // Add a listener on your input
+                        // It will be triggered when a file will be selected
+                        document.getElementById("upload_ffl").addEventListener("click", onSelectFile, false);
+                    </script>';
+        }
+        $ffl_lic = substr($notes, 13, 20);
+        $ezCheckLink = "https://fflezcheck.atf.gov/FFLEzCheck/fflSearch?licsRegn=" . substr($ffl_lic,0,1) . "&licsDis=" . substr($ffl_lic,2,2) . "&licsSeq=" . substr($ffl_lic,-5,5);   
+        echo '<a id="atf_ezcheck" class="button alt">ATF ezCheck</a>
+                <script>
+                    document.getElementById("atf_ezcheck").addEventListener("click", function(){
+                        window.open("',$ezCheckLink,'", "_blank", "location=yes, scrollbars=yes,status=yes"); 
+                    });
+                </script>';    
+    }
+}
+
 // DONE //

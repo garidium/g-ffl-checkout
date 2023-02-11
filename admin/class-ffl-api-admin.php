@@ -142,10 +142,7 @@ class g_ffl_Api_Admin
     {
         //register our settings
         register_setting('ffl-api-settings', 'ffl_api_key_option');
-        register_setting('ffl-api-settings', 'ffl_api_gmaps_option');
         register_setting('ffl-api-settings', 'ffl_checkout_message');
-        //register_setting('ffl-api-settings', 'ffl_list_background_option');
-        //register_setting('ffl-api-settings', 'ffl_list_text_option');
         register_setting('ffl-api-settings', 'ffl_init_map_location');
     }
 
@@ -155,7 +152,7 @@ class g_ffl_Api_Admin
         ?>
         <div class="wrap">
             <a href="https://garidium.com" target="_blank" style="display: inline-block">
-                <img src="<?php echo plugin_dir_url(__FILE__) . 'images/ffl-logo.png' ?>" style="width: 150px">
+                <img src="https://garidium.s3.amazonaws.com/ffl-api/plugin/images/ffl-logo.png" style="width: 150px">
             </a>
             <div class="postbox" style="padding: 10px;margin-top: 10px">
 
@@ -174,33 +171,25 @@ class g_ffl_Api_Admin
                                                aria-describedby="login_error" class="input password-input" size="20"
                                                value="<?php echo esc_attr(get_option('ffl_api_key_option')); ?>"/>
                                     </div>
+                                    <p>Email sales@garidium.com to get a key, or if your key has expired.</p>
                                 </div>
-                            </td>
-                        </tr>
-
-                        <tr valign="top">
-                            <th scope="row">Google Maps API Key:</th>
-                            <td><input type="text" style="width: 30%" name="ffl_api_gmaps_option"
-                                       value="<?php echo esc_attr(get_option('ffl_api_gmaps_option')); ?>"/>
                             </td>
                         </tr>
                         <tr valign="top">
                             <th scope="row">Checkout Message:</th>
                             <td>
-                                <textarea rows="5" cols="50"
-                                          name="ffl_checkout_message"><?php echo esc_attr(get_option('ffl_checkout_message') != '' ? get_option('ffl_checkout_message') : '<b>Federal law dictates that your online firearms purchase must be delivered to a federally licensed firearms dealer (FFL) before you can take possession.</b> This process is called a Transfer. Enter your zip code, radius, and FFL name (optional), then click the Find button to get a list of FFL dealers in your area. Select the FFL dealer you want the firearm shipped to. <b><u>Before Checking Out, Contact your selected FFL dealer to confirm they are currently accepting transfers</u></b>. You can also confirm transfer costs. If we do not have the FFL on-file, ask them to send a signed copy to <b>[update your email]</b>.</b>'); ?></textarea>
-                                <p id="warnHelp" class="form-text text-muted">You can edit this message that appears on the checkout page</p>
+                                <textarea rows="9" cols="60"
+                                          name="ffl_checkout_message"><?php echo esc_attr(get_option('ffl_checkout_message') != '' ? get_option('ffl_checkout_message') : '<b>Federal law dictates that your online firearms purchase must be delivered to a federally licensed firearms dealer (FFL) before you can take possession.</b> This process is called a Transfer. Enter your zip code, radius, and FFL name (optional), then click the Find button to get a list of FFL dealers in your area. Select the FFL dealer you want the firearm shipped to. <b><u>Before Checking Out, Contact your selected FFL dealer to confirm they are currently accepting transfers</u></b>. You can also confirm transfer costs. If we do not have the FFL on-file, ask them to send a signed copy to <b>youremail@here.com</b>.'); ?></textarea>
                             </td>
                         </tr>
                         <tr valign="top">
                             <th scope="row">Form Location:</th>
-
                             <td>
                                 <select name="ffl_init_map_location">
                                     <?php
                                     $selects = Array(
-                                        'woocommerce_checkout_order_review' => 'Order Review',
                                         'woocommerce_before_checkout_billing_form' => 'Above Billing Form',
+                                        'woocommerce_checkout_order_review' => 'Order Review',
                                         'woocommerce_after_checkout_billing_form' => 'Below Billing Form',
                                         'woocommerce_before_checkout_shipping_form' => 'Above Shipping Form',
                                         'woocommerce_after_checkout_shipping_form' => 'Below Shipping Form',
@@ -221,10 +210,42 @@ class g_ffl_Api_Admin
                     <?php submit_button(); ?>
             </div>
             <div class="postbox" style="padding: 10px;margin-top: 10px">
-                <h4 style="color: red">You just need to enable the checkbox from your woocommerce product's general
-                    settings if your product requires FFL Shipment.</h4>
-                <p>Example:</p>
-                <img src="<?php echo plugin_dir_url(__FILE__) . 'images/example.png' ?>">
+                <h3 style="color: blue">Single Product Update Example</h3>    
+                <p>To show the FFL form on a checkout page you need to enable the "Requires FFL Shipment" checkbox on your woocommerce product's general settings view. You can also do this in bulk on your main products page by using the bulk action drop-down. See the screenshots below for reference. This setting can also be set via the API by adjusting the products meta-data attribute.</p>
+                <img src="https://garidium.s3.amazonaws.com/ffl-api/plugin/images/example.png">
+                <h3 style="color: blue">Bulk Update Example</h3>
+                <p>To mass update products, you can go to the main products page and use the bulk actions features. You can add and remove the "Needs FFL Shipment" setting from here.</p>
+                <img src="https://garidium.s3.amazonaws.com/ffl-api/plugin/images/example2.png">
+                <h3 style="color: blue">FFL List and Map Styling Adjustments</h3>
+                <p>You can control the height and other styling of the FFL List and Map component using the "<b>Appearance > Cusstomize > Additional CSS</b>" customization panel in the Worpress Admin panel. If for example you don't want to see a map at all, you can set the height to 0px. Copy and paste the code below. Make sure to hit Publish after making these changes.</p>
+                <pre><code style="line-height:18px;padding: 0px 0px 0px;background:white;">
+                /* Customize Map and FFL List Height */
+                ul#ffl-list{
+                    height:200px !important;
+                }
+
+                div#ffl-map{
+                    height:200px !important;
+                }
+                </code></pre>
+                <p>If your background is dark, you can make the FFL list and notices more compliant with a Dark Mode. Here is some sample CSS that can be used to optimize for Dark Mode. Go here to paste this in: <b>Appearance > Cusstomize > Additional CSS</b>. Make sure to hit Publish after making these changes.</p>
+                <pre ><code style="line-height:18px;padding: 0px 0px 0px;background:white;">
+                /* Dark Mode Settings */
+                #ffl_container{
+                    background-color: black !important;
+                    color: white;
+                }
+                .notice{
+                    color:black !important;
+                }
+
+                .ffl-list-div{
+                    background-color:#333333 !important;
+                    color:white !important;
+                }
+                </code></pre>
+                <img src="https://garidium.s3.amazonaws.com/ffl-api/plugin/images/example3.png">
+                
             </div>
             </form>
         </div>

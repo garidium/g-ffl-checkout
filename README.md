@@ -1,8 +1,9 @@
+
+# g-ffl-api
 g-FFL API WooCommerce Plugin
 
-THIS PLUGIN UI CODE IS A MODIFIED VERSION OF FFL-API by Optimum7
-AND IS PROVIDED FREE OF USE FOR ALL THOSE INTERESTED THIS DOES NOT 
-INCLUDE BACKEND DATA SERVICES
+THIS PLUGIN UI CODE IS A HEAVILY MODIFIED VERSION OF FFL-API by Optimum7
+AND IS PROVIDED FREE OF USE FOR ALL THOSE INTERESTED THIS DOES NOT INCLUDE BACKEND DATA SERVICES.
 
 
 === g-FFL API - Federal Firearm E-commerce Store Checkout Plugin ===
@@ -11,79 +12,49 @@ Tags: FFL, eCommerce checkout, WooCommerce, FFL gun dealers, map api, google map
 Requires at least: 5.0
 Tested up to: 6.1.1
 Requires PHP: 7.0
-Stable tag: 1.5
+Stable tag: 1.1.2
 License: GPL version 3 or any later version
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
 
-g-FFL API WooCommerce plugin has been created to improve WooCommerce online stores. It simplifies the checkout phase on online gun stores that can implement user-friendly features for the benefit to the dealers and their customers.
+g-FFL API WooCommerce plugin has been created to improve WooCommerce online stores. Selecting a Federal Firearms Licensee (FFL) is a critical step when purchasing firearms, as most firearms require shipping to a FFL to perform background checks on the customer prior to transferring the firearm.
 
 
 == Description ==
 
+This plugin simplifies the checkout phase for online gun dealer websites. The g-FFL API WooCommerce plugin only works on the websites that have the WooCommerce plugin installed. 
 
-This plugin simplifies the checkout phase for online gun dealer websites. g-FFL API WooCommerce plugin only works on the websites that has WooCommerce plugin. These eCommerce stores can implement user-friendly features that benefit the dealers and their customers.
+As a now (two)-of-a-kind software in the online gun dealer sector, g-FFL API provides a service that everybody needs in the process of buying FFL products online.
 
-
-As a now two-of-a-kind software in the online gun dealer sector, g-FFL API provides a service that everybody needs in the process of buying FFL products online.
-
-
-== Shop Owners ==
-Online shop owners wish to raise revenue and improve their storefronts. 12% of customers leave the website during checkout because of the limited options or inconvenience. Others get upset with the brand in the case of never receiving their orders.
-
-
-With g-FFL API, shop owners will not lose customers on the checkout phase because of the confusion. Websites will see a drastic reduction in cart abandonment, and find viable business leads.
-
-
-== Users Interested In Purchasing FFL Products ==
-Website visitors want to shop online with ease. A complex checkout does not impress them, in the age of Amazon and convenience.
-
-
-g-FFL API provides user-friendly checkout. Visitors know whether their products are FFL or not and where to ship their products.
+g-FFL API provides user-friendly checkout process. Visitors know whether their products are FFL-required and can select where to ship their purchase.
 
 == Screenshots ==
 
-1. Simply setup g-FFL API WooCommerce Plugin
+1. Setup g-FFL API WooCommerce Plugin
 2. Set the products as firearms
 3. Bulk update the products
-4. FFL dealers appear on the map via zip code
+4. FFL dealers appear on the map via zip code, and an optional FFL name search
 
 ==Features==
 
-==User-Friendly Checkout==
-
-g-FFL API provides user-friendly checkout to WooCommerce stores. Customers can make their purchases easily, with an enhanced experience and simple UI design.
+==List and Map-based Interface==
+Search for and retrieve a list of FFL within a specified radius of your provided zip code. You can also filter this list down by FFL name if you'd like. The map interface is built without the need for a Google Maps API like others. This streamlines the setup process and eliminates any potential Google API costs on your end.
 
 ==Ability to Define FFL Products==
+g-FFL API WooCommerce plugin provides an easy-to-use interface for shop owners to mark products as FFL-required. You can either do this at the individual product level, or in bulk on the product list page. You also have the ability to update the indicator using the WooCommerce API. 
 
-g-FFL API WooCommerce plugin provides a very easy user interface for shop owners. As the admin of the online stores, shop owner adds FFL products to the store carts, which are saved in the system and appropriately defined. The API will remember these selections for future orders. Moreover, shop owner has the ability of bulk ordering as well.
-
-==Bulk Update on Admin Panel==
-
-This feature provides the ability to determine the products as FFL or non-FFL with bulk edition on the admin panel. The store owners can update up to 999 products with one click.
-
-This feature also provides filtering of the products by category.
-
-==Listing FFL Dealers On Map==
-
-g-FFL API saves customers the time spent finding their certified local dealers on a separate website. The software automatically lists the dealers within the customer’s zip code, eliminating one step of the purchase process. Thanks to this feature, store owners will not lose customers at the checkout phase and complete the conversion.
-
-==Easy Gun Dealer Search With Zip Code==
-
-Customers have the ability to search with zip code and find the nearest gun dealer to them. They can select the gun dealer with just one click and continue to billing.
 
 ==Auto-Update Functionality==
 
 When a new release is published g-FFL API WooCommerce Plugin sends an update notification to the admin of the website. With this feature, the g-FFL API makes sure that websites are up to date.
 
-==Color Customization==
+==Checkout Message Customization==
 
-g-FFL API WooCommerce Plugin provides color customization ability to website admin. The plugin’s design can be determined however the admin wants.
+g-FFL API WooCommerce Plugin provides the ability to change the message that appears to the customer on the checkout page relating to selecting a FFL.
 
+==The Ability to Place the FFL plugin in different places on the checkout page==
 
-==The Ability to Land FFL Selection Area Anywhere on The Page==
-
-This feature provides the ability to set the position of FFL API Plugin where admin wants on the websites. There are 5 options for g-FFL API Plugin position:
+This feature provides the ability to set the position of g-FFL API Plugin where admin wants on the websites. There are 5 options for g-FFL API Plugin position:
 * Order Review
 * Above Billing Form
 * Below Billing Form
@@ -98,9 +69,6 @@ If you think you found a bug in  g-FFL API, or have a problem/question concernin
 If you don't have WooCommerce plugin on your website, g-FFL API will not work. g-FFL API WooCommerce Plugin has been created only to launch with WooCommerce plugin.
 
 
-
-
-
 == Frequently Asked Questions ==
 
 
@@ -109,15 +77,13 @@ If you don't have WooCommerce plugin on your website, g-FFL API will not work. g
 No. For each website, you need to have a unique API key. Therefore, you need to buy a unique one when integrating a new website.
 
 = 2. DOES THE API REQUEST NUMBERS TRANSFER TO THE NEXT MONTH'S USAGE? =
-
-No. Each package price is monthly. We provide an API request number for the purchased month.
-These numbers reset at the beginning of your package renewal date and do not transfer to the new month’s numbers.
+r
+No. Each package price is monthly. We provide an API request number for the purchased month. These numbers reset at the beginning of your package renewal date and do not transfer to the new month’s numbers.
 
 
 = 3. HOW DO I KNOW IF A GUN DEALER HAS FFL LICENSE OR NOT =
 
-
-g-FFL API, updates gun dealers according to the FFL database regularly.
+g-FFL API data services update weekly against the ATF database, and are updated in real-time as we receive new FFL information and documents.
 
 
 
@@ -126,39 +92,31 @@ g-FFL API, updates gun dealers according to the FFL database regularly.
 
 #### Thank you for your interest in g-FFL API WooCommerce Plugin.
 
-
 ### Minimum requirements.
 *   Wordpress 5.0+
 *   PHP 7.x
 *   MySQL 5.x
 *   WooCommerce Plugin
 
-In order to use g-FFL Api, you need 2 API Keys
-1. g-FFL API: Please go to [https://garidium.com/g-ffl-api/) and complete the subscription purchase. Once you checkout we will be in contact with you to get you a key.
-2. Google Maps API: You can see how to get Google Maps API Key from the link below.
-[https://developers.google.com/maps/documentation/maps-static/get-api-key](https://developers.google.com/maps/documentation/maps-static/get-api-key)
-
+In order to use g-FFL Api, you need an API Key
+g-FFL API: Please go to [https://garidium.com/g-ffl-api/) and complete the subscription purchase. Once you checkout we will be in contact with you to get you a key.
 You can follow the steps below for the setup process.
 
 ### Perform a new installation
-
-
 After downloading the ZIP file 
-
 
 1. Log in to the administrator panel.
 2. Go to Plugins Add > New > Upload.
-3. Locate g-ffl-api.zip”
+3. Locate g-ffl-api.zip file you downloaded
 4. Click "Install Now" button.
 5. Upon successful installation of the plugin, select “Activate Plugin” button
-6. After the plugin is activated,  “g-FFL API” will appear on the menu
+6. After the plugin is activated,  “g-FFL API” will appear on the left menu
 7. Select the “g-FFL API” link
 8. Fill in the following information:
 **g-FFL API Key
-**Google Maps API Key
-**Set Warning Message for the Checkout Page
+**Set Checkout Message (change email in the message)
 9. Select “Save Changes” to save the changes
-10. If the installation does not succeed, please [click here to contact us](https://www.fflapi.com/contact-us/).
+10. If the installation does not succeed, please reach out to sales@garidium.com for assistance. We will respond as soon as we can.
 
 
 == How To Assign a Product as Firearm ==
@@ -176,7 +134,9 @@ After downloading the ZIP file
 4. Enter the Zipcode and the Radius information which FFL dealer you want the firearm to be shipped
 5. Select Find. Based on the Zipcode entered, FFL dealers located within the radius will appear on the map
 6. Optionally enter a FFL name to filter the list further
-7. Select an FFL Dealer from the map. The shipping information of the selected FFL dealer will appear on the page
+7. Select an FFL Dealer from the map or the list and the shipping information of the selected FFL dealer will be auto-populated.
 
 == Changelog ==
+v1.1.2 Mapbox conversion, removing need for Google Maps API key and also adding eFile FFL upload/download/ezCheck features to orders details view
+v1.0.1 Bug Fixes
 v1.0.0 Initial Release of the g-FFL API & Plugin
