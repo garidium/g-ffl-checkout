@@ -363,8 +363,8 @@ function firearm_product_col_sort($columns)
 }
 
 add_action('woocommerce_admin_order_data_after_shipping_address', 'add_ffl_download', 25);
-function add_ffl_download(){
-    $order = wc_get_order( 17 );
+function add_ffl_download($order_id){
+    $order = wc_get_order( $order_id );
     $notes = $order->get_customer_note();
     $aKey = esc_attr(get_option('ffl_api_key_option'));
     if (str_contains($notes, "On-File")){
