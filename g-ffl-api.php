@@ -13,15 +13,15 @@
  * @package           G_ffl_Api
  *
  * @wordpress-plugin
- * Plugin Name:       g-FFl API
+ * Plugin Name:       g-FFL Checkout
  * Plugin URI:        garidium.com/g-ffl-api
- * Description:       g-FFL API Woocommerce plugin
+ * Description:       g-FFL Checkout
  * Version:           1.1.2
  * WC requires at least: 3.0.0
  * WC tested up to:   4.0
  * Author:            Garidium LLC
  * Author URI:        garidium.com
- * License:           GPL-2.0+
+ * License:           GPL-3.0+
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
  * Text Domain:       g-ffl-api
  * Domain Path:       /languages
