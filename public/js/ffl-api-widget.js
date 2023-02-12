@@ -2383,7 +2383,7 @@
             <ul id="ffl-list" style="height:300px;" class="ffl-hide"></ul>
         </div>
         <div id="ffl-map" class="ffl-map-resize"></div>
-        <span class="mapbox-attribution"">© <a style="color:gray !important;" target=_blank href='https://www.mapbox.com/about/maps/'>Mapbox</a> © <a style="color:gray !important;" target=_blank href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a> © <a style="color:gray !important;" target=_blank href='http://www.maxar.com'>Maxar</a><strong> | <a style="color:gray !important;" href='https://www.mapbox.com/map-feedback/' target='_blank'>Improve this map</a></strong></span><br>
+        <span class="mapbox-attribution">© <a style="color:gray !important;" target=_blank href='https://www.mapbox.com/about/maps/'>Mapbox</a> © <a style="color:gray !important;" target=_blank href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a> © <a style="color:gray !important;" target=_blank href='http://www.maxar.com'>Maxar</a><strong> | <a style="color:gray !important;" href='https://www.mapbox.com/map-feedback/' target='_blank'>Improve this map</a></strong></span><br>
         `;
     t.exports = ht
 }]);
