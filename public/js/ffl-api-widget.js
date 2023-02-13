@@ -2150,6 +2150,7 @@
                 display: block;
                 width: 100%;
                 border-radius: 4px;text-align: left;
+                margin-bottom: 3px !important;
             }
             #ffl-map {
                 height: 35vh;
@@ -2247,7 +2248,7 @@
                 font-smoothing: antialiased;
                 height: 45px;
                 margin: 0;
-                padding: 10px;
+                padding: 5px;
                 transition: all 100ms ease-out;
                 width: 100%;
                 -webkit-border-radius: 0px;
@@ -2320,6 +2321,7 @@
                     border-radius: 4px;
                     text-align: left;
                     outline: none;
+                    margin-bottom: 3px !important;
                 }
                 #ffl-list {
                     width: 100%;
