@@ -150,7 +150,7 @@ class g_ffl_Api_Admin
         ?>
         <div class="wrap">
             <a href="https://garidium.com" target="_blank" style="display: inline-block">
-                <img src="https://garidium.s3.amazonaws.com/ffl-api/plugin/images/ffl-logo.png" style="width: 150px">
+                <img src="<?php echo plugin_dir_url(__FILE__) . 'images/ffl-logo.png'?>" style="width: 150px">
             </a>
             <div class="postbox" style="padding: 10px;margin-top: 10px">
 
@@ -193,11 +193,11 @@ class g_ffl_Api_Admin
                                         'woocommerce_after_checkout_shipping_form' => 'Below Shipping Form',
                                     );
                                     foreach ($selects as $val => $key) {
-                                        echo '<option value="' . $val . '" ';
+                                        echo '<option value="' . esc_attr($val) . '" ';
                                         if (get_option('ffl_init_map_location') == $val) {
                                             echo 'selected="selected" ';
                                         }
-                                        echo '> ' . $key . '</option>';
+                                        echo '> ' . esc_attr($key) . '</option>';
                                     }
                                     ?>
                                 </select>
@@ -210,10 +210,10 @@ class g_ffl_Api_Admin
             <div class="postbox" style="padding: 10px;margin-top: 10px">
                 <h3 style="color: blue">Single Product Update Example</h3>    
                 <p>To show the FFL form on a checkout page you need to enable the "Requires FFL Shipment" checkbox on your woocommerce product's general settings view. You can also do this in bulk on your main products page by using the bulk action drop-down. See the screenshots below for reference. This setting can also be set via the API by adjusting the products meta-data attribute.</p>
-                <img src="https://garidium.s3.amazonaws.com/ffl-api/plugin/images/example.png">
+                <img src="<?php echo plugin_dir_url(__FILE__) . 'images/example1.png'?>">
                 <h3 style="color: blue">Bulk Update Example</h3>
                 <p>To mass update products, you can go to the main products page and use the bulk actions features. You can add and remove the "Needs FFL Shipment" setting from here.</p>
-                <img src="https://garidium.s3.amazonaws.com/ffl-api/plugin/images/example2.png">
+                <img src="<?php echo plugin_dir_url(__FILE__) . 'images/example2.png'?>">
                 <h3 style="color: blue">FFL List and Map Styling Adjustments</h3>
                 <p>You can control the height and other styling of the FFL List and Map component using the "<b>Appearance > Cusstomize > Additional CSS</b>" customization panel in the Worpress Admin panel. If for example you don't want to see a map at all, you can set the height to 0px. Copy and paste the code below. Make sure to hit Publish after making these changes.</p>
                 <pre><code style="line-height:18px;padding: 0px 0px 0px;background:white;">
@@ -242,7 +242,7 @@ class g_ffl_Api_Admin
                     color:white !important;
                 }
                 </code></pre>
-                <img src="https://garidium.s3.amazonaws.com/ffl-api/plugin/images/example3.png">
+                <img src="<?php echo plugin_dir_url(__FILE__) . 'images/example3.png'?>">
                 
             </div>
             </form>

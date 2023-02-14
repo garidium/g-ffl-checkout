@@ -142,16 +142,16 @@ class G_ffl_Api_Public
     {
 
 
-        $aKey = esc_attr(get_option('ffl_api_key_option'));
+        $aKey = get_option('ffl_api_key_option');
         $wMes = get_option('ffl_checkout_message') != '' ? get_option('ffl_checkout_message') : '<b>Federal law dictates that your online firearms purchase must be delivered to a federally licensed firearms dealer (FFL) before you can take possession.</b> This process is called a Transfer. Enter your zip code, radius, and FFL name (optional), then click the Find button to get a list of FFL dealers in your area. Select the FFL dealer you want the firearm shipped to. <b><u>Before Checking Out, Contact your selected FFL dealer to confirm they are currently accepting transfers</u></b>. You can also confirm transfer costs.';
         $hok = get_option('ffl_init_map_location');
         echo '<div id="ffl_container"></div>';
         echo '
                 <script type="text/javascript">
                     
-                    let aKey = "' . $aKey . '"
-                    let wMes = `' . $wMes . '`
-                    let hok = "' . $hok . '"
+                    let aKey = "' . esc_attr($aKey) . '"
+                    let wMes = `' . wp_kses_post($wMes) . '`
+                    let hok = "' . esc_attr($hok) . '"
                     
                     localStorage.removeItem("selectedFFL");
 

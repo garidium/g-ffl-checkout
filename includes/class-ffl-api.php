@@ -366,11 +366,11 @@ add_action('woocommerce_admin_order_data_after_shipping_address', 'add_ffl_downl
 function add_ffl_download($order_id){
     $order = wc_get_order( $order_id );
     $notes = $order->get_customer_note();
-    $aKey = esc_attr(get_option('ffl_api_key_option'));
+    $aKey = get_option('ffl_api_key_option');
     if (str_contains($notes, "FFL Number")){
         if (str_contains($notes, "On-File")){
             $fflshort = substr($notes, -8);
-            echo '<a id="download_ffl" class="button alt" data-marker-id="',$fflshort,'">Download FFL</a>
+            echo '<a id="download_ffl" class="button alt" data-marker-id="',esc_attr($fflshort),'">Download FFL</a>
                     <script>
                         document.getElementById("download_ffl").addEventListener("click", function(){
                             if (window.confirm("It is your responsibility to ensure the receiving FFL is valid (using ezCHeck) and is willing and able to accept transfers. Do not assume that is the case because this FFL is on-file. If you have an issue with a transfer and the FFL should be removed, please contact us at sales@garidium.com with the FFL number to remove. If the download is not working, try again, check popup-blockers.")){
@@ -379,9 +379,9 @@ function add_ffl_download($order_id){
                                     headers: {
                                     "Accept": "application/json",
                                     "Content-Type": "application/json",
-                                    "x-api-key": "',$aKey,'",
+                                    "x-api-key": "',esc_attr($aKey),'",
                                     },
-                                    body: JSON.stringify({"fflno": "',$fflshort,'"})
+                                    body: JSON.stringify({"fflno": "',esc_attr($fflshort),'"})
                                 })
                                 .then(response=>response.json())
                                 .then(data=>{ 
@@ -402,7 +402,7 @@ function add_ffl_download($order_id){
                             fetch("https://ffl-api.garidium.com/garidium-ffls/uploads%2F" + file.name, { 
                                 method: "PUT",
                                 headers: {
-                                    "x-api-key": "',$aKey,'",
+                                    "x-api-key": "',esc_attr($aKey),'",
                                 },
                                 body: file
                             })
@@ -426,7 +426,7 @@ function add_ffl_download($order_id){
         echo '<a id="atf_ezcheck" class="button alt">ATF ezCheck</a>
                 <script>
                     document.getElementById("atf_ezcheck").addEventListener("click", function(){
-                        window.open("',$ezCheckLink,'", "_blank", "location=yes, scrollbars=yes,status=yes"); 
+                        window.open("',esc_url_raw($ezCheckLink),'", "_blank", "location=yes, scrollbars=yes,status=yes"); 
                     });
                 </script>';    
     }
