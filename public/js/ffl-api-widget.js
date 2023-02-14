@@ -2265,7 +2265,6 @@
                 width: 100%;
                 border-radius: 4px;
                 outline: none;
-                padding: 10px;
             }
             .selectedFFLDivButton {
                 border:solid black 1.5px !important;
