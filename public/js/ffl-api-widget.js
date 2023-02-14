@@ -702,11 +702,11 @@
                         
                         var p = encodeURIComponent(JSON.stringify(s)),
                             g = "<div id=" + s.license_number + '><button class="ffl-list-div" data-marker-id=' + s.license_number + " data-content=" + p + "><b>" + s.list_name + "</b>  ";
-                            var icon_url = "https://garidium.s3.amazonaws.com/images/ffl_required.png";
+                            var icon_url = plugin_directory + "includes/images/ffl_required.png";
                             var icon_text = "We need a signed copy of the FFL emailed to us";
                             if (s.ffl_on_file){
                                 icon_text = "FFL On-File";
-                                icon_url = "https://garidium.s3.amazonaws.com/images/ffl_on_file.png";
+                                icon_url = plugin_directory + "includes/images/ffl_on_file.png";
                             }
                             g+="<img align=right height=25 width=25 title='" + icon_text + "' src='" + icon_url + "'>" + "<br>" + s.premise_street + ", " + s.premise_city + "<br>" + phone+ (s.email!=undefined?" | <a target=_blank href='mailto:" + s.email + "'>" + s.email + "</a>":"") + "</button></div>";
                         b.insertAdjacentHTML("beforeend", g)
@@ -2255,7 +2255,6 @@
                 font-smoothing: antialiased;
                 height: 45px;
                 margin: 0;
-                padding: 5px;
                 transition: all 100ms ease-out;
                 width: 100%;
                 -webkit-border-radius: 0px;
@@ -2263,8 +2262,12 @@
                 border-radius: 0px;
                 cursor: pointer;
                 width: 100%;
-                border-radius: 4px;
+                border-radius: 5px;
                 outline: none;
+                background-color: #2f2727 !important;
+                color:#EEEEEE !important;
+                font-weight:bold !important;
+                text-align:center !important;
             }
             .selectedFFLDivButton {
                 border:solid black 1.5px !important;
@@ -2378,7 +2381,7 @@
                     </select>
                 </div>
                 <div class="column">
-                    <a id="ffl-search" class="button alt">Find</a>
+                    <input readonly id="ffl-search" placeholder="FIND" value="FIND">
                 </div>
             </div>
             <div class="columns">
