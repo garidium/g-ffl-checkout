@@ -233,8 +233,13 @@ class g_ffl_Api_Admin
                     background-color: black !important;
                     color: white;
                 }
+                
                 .notice{
                     color:black !important;
+                }
+
+                .ffl-dealer-heading {
+                    color:white !important;
                 }
 
                 .ffl-list-div{
