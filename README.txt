@@ -9,12 +9,23 @@ Stable tag: 1.1.2
 License: GPL v3+
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
-Built by a FFL, for FFL\'s. This plugin will streamline the firearm purchasing and fulfillment processes.
+Built by a FFL, for FFL's. This plugin will help to streamline the firearm purchasing and fulfillment processes.
 
 == Description ==
-The g-FFL Checkout plugin supports the ordering checkout process for items requiring a FFL. It provides users an intuitive search tool, that includes a map, a zip code search, and a FFL name search option. The mapping technology we use does not need a Google Maps key, which helps you avoid unexpected API charges. FFL\'s are ordered in the search results based on whether or not we have a signed copy of the FFL on-file.  In addition to helping customers through the FFL selection and checkout process, we also built tools for the dealer to optimize their fulfillment process. In the order details page you will see a FFL Download or Upload feature depending on if we have a signed copy of the FFL on-file and available for download. We also provided a quick and easy ezCheck link, automatically filled out based on the FFL the customer selected. As a FFL myself, I built this plugin to support my business and I hope it can support yours. 
+The g-FFL Checkout plugin supports the ordering checkout process for items requiring a FFL. It provides customers an intuitive search tool which includes a map, a zip code search, and a FFL name search option. The mapping technology we use does not require a Google Maps key, which helps avoid unexpected API charges. FFL's are ordered in the search results based on whether or not we have a signed copy of the FFL on-file.  In addition to helping customers through the FFL selection and checkout process, we also include tools for the dealer to optimize their fulfillment process. In the order details page you will see a FFL Download or Upload feature depending on if we have a signed copy of the FFL, on-file and available for download. We also provided a one-click ezCheck link, based on the FFL the customer selected. As a FFL myself, I built this plugin to support my business and I hope it can support yours. 
 
-This plugin is supported by a data service that scans the ATF FFL database on a weekly basis, and will update FFL information (including FFL copies) in real-time as the information is received. Once you install the plugin, visit: https://garidium.com/product/g-ffl-api-key/ to purchase a data services key. We will then reach out to you via email and provide you the required key. 
+== API Subscription Required ==
+While the plugin is free to download and install, it does require you to purchase a license for a personalized API key. The plugin will not be useful without this key. The API key allows the plugin to connect to the required data services, providing the following features:
+* Access to the Synchronized ATF FFL database, with real-time opt-in/out features for FFL's
+* Access to the eFile system to download and upload FFL documentation
+* Access to Mapping and Geocoding features for displaying FFL locations
+
+To purchase a key, visit the g-FFL API product page:
+* https://garidium.com/g-ffl-api/
+
+Please review our Terms and Conditions:
+* https://garidium.com/terms_of_sale/
+
 
 == Installation ==
 1. Log in to the administrator panel.
@@ -31,16 +42,14 @@ This plugin is supported by a data service that scans the ATF FFL database on a 
 10. If the installation does not succeed, please reach out to sales@garidium.com for assistance. We will respond as soon as we can.
 
 
-
 == Frequently Asked Questions ==
 = How do I flag a product as FFL required? =
 The plugin provides two tools to do this, first you can check the \"Requires FFL Shipment\" checkbox on each individual product. This is located in the product data section. Secondly, on the main products list you can check 1-to-many products and use the bulk actions to set them all as FFL required products. In addition to these features, there is also a way to programmatically set products as FFL required. If you have questions about this option, please reach out to us.
-
-=Why is this plug better than the other alternatives?=
+=Why is this plug better than the alternatives?=
 * It was built by a FFL, actively used by that FFL. I know what the industry needs, especially those first starting out with smaller budgets.
 * The data services are built on state-of-the-art cloud-based technologies hosted on Amazon Web Services. This basically means that downtime will be minimal, and performance will be consistent.
-* The plugin doesn\'t require a Google Maps API key, which adds additional cost and complexity to the installation process of other plugins
-* We maintain a database of signed FFL copies for dealers that perform transfers. While its still your responsibility to ensure that the firearms your mailing go to a willing and able transfer FFL, having these FFL\'s on file and available for download is a big time saver in the fulfillment process
+* The plugin doesn't require a Google Maps API key, which adds additional cost and complexity to the installation process of other plugins
+* We maintain a database of signed FFL copies for dealers that perform transfers. While its still your responsibility to ensure that the firearms your mailing go to a willing and able transfer FFL, having these FFL's on file and available for download is a big time saver in the fulfillment process
 * The Order Details page provides you the ability to Upload FFL's and also quickly check the ATF ezCheck site for the FFL the customer selected during checkout
 
 
