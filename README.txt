@@ -16,15 +16,16 @@ The g-FFL Checkout plugin supports the ordering checkout process for items requi
 
 == API Subscription Required ==
 While the plugin is free to download and install, it does require you to purchase a license for a personalized API key. The plugin will not be useful without this key. The API key allows the plugin to connect to the required data services, providing the following features:
-* Access to the Synchronized ATF FFL database, with real-time opt-in/out features for FFL's
-* Access to the eFile system to download and upload FFL documentation
-* Access to Mapping and Geocoding features for displaying FFL locations
 
-To purchase a key, visit the g-FFL API product page:
-* https://garidium.com/g-ffl-api/
+1. Access to the Synchronized ATF FFL database, with real-time opt-in/out features for FFL's Access to the eFile system to download and upload FFL documentation
 
-Please review our Terms and Conditions:
-* https://garidium.com/terms_of_sale/
+2. Access to Mapping and Geocoding features for displaying FFL locations
+
+== To purchase a key, visit the g-FFL API product page: ==
+[g-FFL Product Page](https://garidium.com/g-ffl-api/) 
+
+==Please review our Terms and Conditions: ==
+[Terms and Conditions](https://garidium.com/terms_of_sale/)
 
 
 == Installation ==
@@ -36,8 +37,8 @@ Please review our Terms and Conditions:
 6. After the plugin is activated,  “g-FFL Checkout” will appear on the left menu
 7. Select the “g-FFL Checkout" link
 8. Fill in the following information:
-**g-FFL API Key
-**Set Checkout Message (change email in the message)
+-g-FFL API Key
+-Set Checkout Message (change email in the message)
 9. Select “Save Changes” to save the changes
 10. If the installation does not succeed, please reach out to sales@garidium.com for assistance. We will respond as soon as we can.
 

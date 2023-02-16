@@ -589,6 +589,14 @@
              });
         }, 100);
     }
+    function scrollToMyRefWithOffset(id, offset){
+        setTimeout(function () {
+            const yOffset = offset; 
+            const element = document.getElementById(id);
+            const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
+            window.scrollTo({top: y, behavior: 'smooth'});
+        }, 100);
+    }
     function i(t, n, e) {
         var r = l
         if (n.lng < 0 && n.lat > 0){
@@ -730,10 +738,15 @@
                         }
                       
                     }
+
                     // Note there are other options such as easeing animation and maxZoom
-                    l.fitBounds(bounds, {
-                        padding: 50
-                    });  
+                    if (count > 0){                        
+                        l.fitBounds(bounds, {
+                            padding: 50
+                        });  
+                    }else{
+                        alert("No FFL's were found based on your search criteria.")
+                    }
 
                     for (var m = document.getElementsByClassName("ffl-list-div"), I = 0; I < m.length; I++) m[I].addEventListener("click", function(t) {
                         var a3 = d[this.getAttribute("data-marker-id")];
@@ -745,9 +758,8 @@
                 }
                 if (t.data.length > 0){
                     b.classList.remove("ffl-hide");
-                }else{
-                    alert("No FFL's found for Zip, check the zip code or expand the radius.")
                 }
+    
             }, function(t) {
                 if (422 === t.response.status || 400 === t.response.status) return alert(t.response.data.message), !1;
             }), t.preventDefault(), t.stopPropagation(), !1
@@ -795,7 +807,8 @@
                 });
                 t.resize();
                 t.addControl(new mapboxgl.FullscreenControl());
-                l = t            
+                l = t 
+                l.resize();           
             });
         });
         

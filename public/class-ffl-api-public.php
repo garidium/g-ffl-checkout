@@ -135,13 +135,27 @@ class G_ffl_Api_Public
 
         if ($fireArmCount > 0) {
             add_action(get_option('ffl_init_map_location', 'woocommerce_checkout_order_review'), array($this, 'ffl_init_map'), 10);
+        }else{
+            add_action('woocommerce_checkout_shipping', 'handle_no_ffl_items', 10);
+                function handle_no_ffl_items(){
+                    echo '
+                        <script>
+                            document.getElementById("ship-to-different-address-checkbox").checked = false;
+                            document.getElementById("shipping_first_name").value = "";
+                            document.getElementById("shipping_last_name").value = "";
+                            document.getElementById("shipping_company").value = "";
+                            document.getElementById("shipping_address_1").value = "";
+                            document.getElementById("shipping_address_2").value = "";
+                            document.getElementById("shipping_city").value = "";
+                            document.getElementById("shipping_postcode").value = "";
+                            document.getElementById("shipping_state").value = "";
+                        </script>';
+                }
         }
     }
 
     function ffl_init_map()
     {
-
-
         $aKey = get_option('ffl_api_key_option');
         $wMes = get_option('ffl_checkout_message') != '' ? get_option('ffl_checkout_message') : '<b>Federal law dictates that your online firearms purchase must be delivered to a federally licensed firearms dealer (FFL) before you can take possession.</b> This process is called a Transfer. Enter your zip code, radius, and FFL name (optional), then click the Find button to get a list of FFL dealers in your area. Select the FFL dealer you want the firearm shipped to. <b><u>Before Checking Out, Contact your selected FFL dealer to confirm they are currently accepting transfers</u></b>. You can also confirm transfer costs.';
         $hok = get_option('ffl_init_map_location');

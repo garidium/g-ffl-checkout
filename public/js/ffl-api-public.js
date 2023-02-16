@@ -3,7 +3,6 @@ function initFFLJs(fKey,message,hook) {
 	if(hook === "woocommerce_before_checkout_billing_form") {
 		setTimeout(function() {
 			document.getElementById("ship-to-different-address-checkbox").disabled = true;
-
 		},1000);
 	} else {
 		document.getElementById("ship-to-different-address-checkbox").disabled = true;
@@ -26,7 +25,7 @@ function initFFLJs(fKey,message,hook) {
 
 	jQuery('.woocommerce-shipping-fields__field-wrapper').find('input').val(null);
 	jQuery('.woocommerce-shipping-fields__field-wrapper').prepend(
-		'<p class="notice" style="margin-bottom: 10px;">The First and Last name below help the FFL identify your gun when it arrives at their location. Enter <b><u>your</u></b> First and Last Name.</p>'
+		'<p id="first_last_notice" class="notice" style="margin-bottom: 10px;">The First and Last name below help the FFL identify your gun when it arrives at their location. Enter <b><u>your</u></b> First and Last Name.</p>'
 	);
 
 	if(jQuery("#wizard")) {
@@ -48,7 +47,6 @@ function initFFLJs(fKey,message,hook) {
 					return false;
 				} else {
 					document.getElementById("ship-to-different-address-checkbox").disabled = false;
-
 					jQuery("#wizard .actions a[href='#']").prop('href','#next');
 
 				}
