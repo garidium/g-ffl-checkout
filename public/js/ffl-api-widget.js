@@ -793,6 +793,7 @@
                     center: [-78.16847, 38.21885], // starting position [lng, lat]
                     zoom: 14 // starting zoom
                 });
+                t.resize();
                 t.addControl(new mapboxgl.FullscreenControl());
                 l = t            
             });
