@@ -148,7 +148,7 @@ class G_ffl_Api_Public
         echo '<div id="ffl_container"></div>';
         echo '
                 <script type="text/javascript">
-                    let plugin_directory = "' . esc_attr(plugin_dir_url(__FILE__)) . '"    
+                    let g_ffl_plugin_directory = "' . esc_attr(plugin_dir_url(__FILE__)) . '"    
                     let aKey = "' . esc_attr($aKey) . '"
                     let wMes = `' . wp_kses_post($wMes) . '`
                     let hok = "' . esc_attr($hok) . '"

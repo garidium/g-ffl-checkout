@@ -702,11 +702,11 @@
                         
                         var p = encodeURIComponent(JSON.stringify(s)),
                             g = "<div id=" + s.license_number + '><button class="ffl-list-div" data-marker-id=' + s.license_number + " data-content=" + p + "><b>" + s.list_name + "</b>  ";
-                            var icon_url = plugin_directory + "includes/images/ffl_required.png";
+                            var icon_url = g_ffl_plugin_directory + "includes/images/ffl_required.png";
                             var icon_text = "We need a signed copy of the FFL emailed to us";
                             if (s.ffl_on_file){
                                 icon_text = "FFL On-File";
-                                icon_url = plugin_directory + "includes/images/ffl_on_file.png";
+                                icon_url = g_ffl_plugin_directory + "includes/images/ffl_on_file.png";
                             }
                             g+="<img align=right height=25 width=25 title='" + icon_text + "' src='" + icon_url + "'>" + "<br>" + s.premise_street + ", " + s.premise_city + "<br>" + phone+ (s.email!=undefined?" | <a target=_blank href='mailto:" + s.email + "'>" + s.email + "</a>":"") + "</button></div>";
                         b.insertAdjacentHTML("beforeend", g)
