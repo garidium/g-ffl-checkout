@@ -608,7 +608,7 @@
                 var phone_sects = phone.match(/^(\d{3})(\d{3})(\d{4})$/);
                 phone = phone_sects[1] + '-' + phone_sects[2] + '-' + phone_sects[3];
             }
-            var markerColor = {"color": "#e51f47" }
+            var markerColor = {"color": "#cfd4ce" }
             if (e.ffl_on_file){
                 markerColor = {"color": "#28e51f" }
             }
@@ -2339,7 +2339,7 @@
             .columns {
                 display: flex;
                 justify-content: center;
-                align-items: baseline;
+                //align-items: baseline;
                 padding-bottom: 5px !important;
             }
             .column {
