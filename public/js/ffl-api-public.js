@@ -8,6 +8,7 @@ function initFFLJs(fKey,message,hook) {
 		document.getElementById("ship-to-different-address-checkbox").disabled = true;
 	}
 
+	document.getElementById("ship-to-different-address").style.display = 'none';
 
 	FFL.init({
 		container : 'ffl_container',

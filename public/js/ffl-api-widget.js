@@ -761,11 +761,15 @@
                     for (var m = document.getElementsByClassName("ffl-list-div"), I = 0; I < m.length; I++) m[I].addEventListener("click", function(t) {
                         var a3 = d[this.getAttribute("data-marker-id")];
                         var data = this.getAttribute("data-content")
-                        if (fflIncludeMap){
-                            l.flyTo({center: [a3._lngLat.lng, a3._lngLat.lat], zoom: 15});
-                        }
                         getSelected(JSON.parse(decodeURIComponent(data)));
                         t.preventDefault();t.stopPropagation();
+                        if (fflIncludeMap){
+                            l.flyTo({center: [a3._lngLat.lng, a3._lngLat.lat], zoom: 15});
+                        }else{
+                            if (hok=='woocommerce_before_checkout_shipping_form'){
+                                scrollToMyRef("first_last_notice");
+                            }
+                        }
                     });
                 }
                 if (t.data.length > 0){
@@ -790,8 +794,7 @@
                  loaded = true;
                };
              }
-             document.getElementById("ship-to-different-address").style.display="none";
-
+             
              document.getElementsByTagName('head')[0].appendChild(script);
              if (fflIncludeMap){
                 var I2 = document.createElement("link");
