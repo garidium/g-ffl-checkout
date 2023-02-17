@@ -142,6 +142,7 @@ class g_ffl_Api_Admin
         register_setting('ffl-api-settings', 'ffl_api_key_option');
         register_setting('ffl-api-settings', 'ffl_checkout_message');
         register_setting('ffl-api-settings', 'ffl_init_map_location');
+        register_setting('ffl-api-settings', 'ffl_include_map');
     }
 
     function ffl_api_settings_page()
@@ -203,6 +204,13 @@ class g_ffl_Api_Admin
                                 </select>
                                 <p id="warnHelp" class="form-text text-muted"></p>
                             </td>
+                        </tr>
+                        <tr valign="top">
+                            <th scope="row">Show Map:</th>
+                            <td>
+                                <input type="radio" id="ffl_include_map_yes" name="ffl_include_map" value="Yes" <?php echo esc_attr(get_option('ffl_include_map')=='Yes' || get_option('ffl_include_map')==''?' checked':''); ?> >Yes&nbsp;&nbsp;
+                                <input type="radio" id="ffl_include_map_no" name="ffl_include_map" value="No" <?php echo esc_attr(get_option('ffl_include_map')=='No'?' checked':''); ?> >No                               
+                             </td>
                         </tr>
                     </table>
                     <?php submit_button(); ?>

@@ -16,7 +16,7 @@
  * Plugin Name:       g-FFL Checkout
  * Plugin URI:        garidium.com/g-ffl-api
  * Description:       g-FFL Checkout
- * Version:           1.1.3
+ * Version:           1.2.0
  * WC requires at least: 3.0.0
  * WC tested up to:   4.0
  * Author:            Garidium LLC
@@ -47,7 +47,7 @@ if (! in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', 
  * Start at version 1.0.0 and use SemVer - https://semver.org
  * Rename this for your plugin and update it as you release new versions.
  */
-define('G_FFL_API_VERSION', '1.1.3');
+define('G_FFL_API_VERSION', '1.2.0');
 
 /**
  * The code that runs during plugin activation.
@@ -77,6 +77,7 @@ register_deactivation_hook(__FILE__, 'deactivate_ffl_api');
  * admin-specific hooks, and public-facing site hooks.
  */
 require plugin_dir_path(__FILE__) . 'includes/class-ffl-api.php';
+require plugin_dir_path(__FILE__) . 'includes/ffl_ordering.php';
 
 /**
  * Begins execution of the plugin.

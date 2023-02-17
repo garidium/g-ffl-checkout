@@ -598,6 +598,9 @@
         }, 100);
     }
     function i(t, n, e) {
+        if (!fflIncludeMap){
+            return;
+        }
         var r = l
         if (n.lng < 0 && n.lat > 0){
             var phone = e.voice_phone;
@@ -681,14 +684,16 @@
                     "x-api-key": s,
                 }
             }).then(function(t) {
-                if (document.getElementById("ffl-map").classList.remove("ffl-map-full"), document.getElementById("ffl-map").classList.add("ffl-map-resize"), N.classList.remove("dsbSearch"), 200 === t.status) {
+                if (fflIncludeMap && document.getElementById("ffl-map").classList.remove("ffl-map-full"), document.getElementById("ffl-map").classList.add("ffl-map-resize"), N.classList.remove("dsbSearch"), 200 === t.status) {
                     if (t.data.Error!=null || (t.data.original && 400 === t.data.original.status)) return alert("No FFL's found, Please check your inputs and try again."), !1;
                     localStorage.removeItem("mapCenter");
                     var n, e = t.data,
                         o = 0;
                     var count = 0;
+                    var overallCount = 0;
                     var bounds = null;
                     for (var a in e) {
+                        overallCount += 1;
                         var s = e[a],
                             u = s.premise_street + ", " + s.premise_city + ", " + s.premise_state + ", " + s.premise_zip_code;
                         if (0 !== s.lat) {
@@ -720,38 +725,45 @@
                         b.insertAdjacentHTML("beforeend", g)
 
                         // Create a 'LngLatBounds' with the first coordinate.
-                        
-                        var lat = parseFloat(s.lat);
-                        var lng = parseFloat(s.lng);
-                        if (lat > 0 && lng < 0){
-                            var coord = new mapboxgl.LngLat(lng,lat)
-                            if (count == 0){
-                                bounds = new mapboxgl.LngLatBounds(
-                                    parseFloat(coord),
-                                    parseFloat(coord)
-                                );
-                                bounds.extend(coord);
-                                count += 1
-                            }else{
-                                bounds.extend(coord);
+                        if (fflIncludeMap){
+                            var lat = parseFloat(s.lat);
+                            var lng = parseFloat(s.lng);
+                            if (lat > 0 && lng < 0){
+                                var coord = new mapboxgl.LngLat(lng,lat)
+                                if (count == 0){
+                                    bounds = new mapboxgl.LngLatBounds(
+                                        parseFloat(coord),
+                                        parseFloat(coord)
+                                    );
+                                    bounds.extend(coord);
+                                    count += 1
+                                }else{
+                                    bounds.extend(coord);
+                                }
                             }
                         }
                       
                     }
 
                     // Note there are other options such as easeing animation and maxZoom
-                    if (count > 0){                        
-                        l.fitBounds(bounds, {
-                            padding: 50
-                        });  
-                    }else{
+                    if (count > 0){ 
+                        if (fflIncludeMap){                       
+                            l.fitBounds(bounds, {
+                                padding: 50
+                            });  
+                        }
+                    }
+                    
+                    if (overallCount==0){
                         alert("No FFL's were found based on your search criteria.")
                     }
 
                     for (var m = document.getElementsByClassName("ffl-list-div"), I = 0; I < m.length; I++) m[I].addEventListener("click", function(t) {
                         var a3 = d[this.getAttribute("data-marker-id")];
                         var data = this.getAttribute("data-content")
-                        l.flyTo({center: [a3._lngLat.lng, a3._lngLat.lat], zoom: 15});
+                        if (fflIncludeMap){
+                            l.flyTo({center: [a3._lngLat.lng, a3._lngLat.lat], zoom: 15});
+                        }
                         getSelected(JSON.parse(decodeURIComponent(data)));
                         t.preventDefault();t.stopPropagation();
                     });
@@ -778,39 +790,48 @@
                  loaded = true;
                };
              }
+             document.getElementById("ship-to-different-address").style.display="none";
+
              document.getElementsByTagName('head')[0].appendChild(script);
-             var I2 = document.createElement("link");
-             I2.setAttribute("href", "https://api.mapbox.com/mapbox-gl-js/v2.12.0/mapbox-gl.css");
-             I2.setAttribute("rel", "stylesheet");
-             document.getElementsByTagName('head')[0].appendChild(I2);
+             if (fflIncludeMap){
+                var I2 = document.createElement("link");
+                I2.setAttribute("href", "https://api.mapbox.com/mapbox-gl-js/v2.12.0/mapbox-gl.css");
+                I2.setAttribute("rel", "stylesheet");
+                document.getElementsByTagName('head')[0].appendChild(I2);
+             }
            }
          };
-         var t;
-         JavaScript.load("https://api.mapbox.com/mapbox-gl-js/v2.12.0/mapbox-gl.js", function() {
-            fetch('https://ffl-api.garidium.com', {
-                method: 'POST',
-                headers: {
-                  'Accept': 'application/json',
-                  'Content-Type': 'application/json',
-                  'x-api-key': aKey,
-                },
-                body: JSON.stringify({'action': 'get_mapbox_token'})
-            })
-            .then(response=>response.json())
-            .then(data=>{ 
-                mapboxgl.accessToken = data;
-                t = new mapboxgl.Map({
-                    container: 'ffl-map', // container ID
-                    style: 'mapbox://styles/garidium/clds8orfo000q01udg0o23pp5', // style URL
-                    center: [-78.16847, 38.21885], // starting position [lng, lat]
-                    zoom: 14 // starting zoom
+         var t = null;
+         if (fflIncludeMap){
+            JavaScript.load("https://api.mapbox.com/mapbox-gl-js/v2.12.0/mapbox-gl.js", function() {
+                fetch('https://ffl-api.garidium.com', {
+                    method: 'POST',
+                    headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'x-api-key': aKey,
+                    },
+                    body: JSON.stringify({'action': 'get_mapbox_token'})
+                })
+                .then(response=>response.json())
+                .then(data=>{ 
+                    mapboxgl.accessToken = data;
+                    t = new mapboxgl.Map({
+                        container: 'ffl-map', // container ID
+                        style: 'mapbox://styles/garidium/clds8orfo000q01udg0o23pp5', // style URL
+                        center: [-78.16847, 38.21885], // starting position [lng, lat]
+                        zoom: 14 // starting zoom
+                    });
+                    t.resize();
+                    t.addControl(new mapboxgl.FullscreenControl());
+                    l = t 
+                    l.resize();           
                 });
-                t.resize();
-                t.addControl(new mapboxgl.FullscreenControl());
-                l = t 
-                l.resize();           
             });
-        });
+         }else{                     
+            document.getElementById("ffl-map").style.display = "none";
+            document.getElementById("mapbox-attribution-line").style.display = "none";
+         }
         
     }, f.chunkArr = function(t) {
         for (var n = t.arr, e = t.chunkSize, r = [], i = 0, o = n.length; i < o; i += e) r.push(n.slice(i, i + e));
@@ -2395,7 +2416,7 @@
                     </select>
                 </div>
                 <div class="column">
-                    <input readonly id="ffl-search" placeholder="FIND" value="FIND">
+                    <input readonly id="ffl-search" placeholder="FIND FFL" value="FIND FFL">
                 </div>
             </div>
             <div class="columns">
@@ -2408,7 +2429,7 @@
             <ul id="ffl-list" style="height:300px;" class="ffl-hide"></ul>
         </div>
         <div id="ffl-map" class="ffl-map-resize"></div>
-        <span class="mapbox-attribution">© <a style="color:gray !important;" target=_blank href='https://www.mapbox.com/about/maps/'>Mapbox</a> © <a style="color:gray !important;" target=_blank href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a> © <a style="color:gray !important;" target=_blank href='http://www.maxar.com'>Maxar</a><strong> | <a style="color:gray !important;" href='https://www.mapbox.com/map-feedback/' target='_blank'>Improve this map</a></strong></span><br>
+        <span id="mapbox-attribution-line" class="mapbox-attribution">© <a style="color:gray !important;" target=_blank href='https://www.mapbox.com/about/maps/'>Mapbox</a> © <a style="color:gray !important;" target=_blank href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a> © <a style="color:gray !important;" target=_blank href='http://www.maxar.com'>Maxar</a><strong> | <a style="color:gray !important;" href='https://www.mapbox.com/map-feedback/' target='_blank'>Improve this map</a></strong></span><br>
         `;
     t.exports = ht
 }]);

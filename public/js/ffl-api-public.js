@@ -88,7 +88,7 @@ function initFFLJs(fKey,message,hook) {
 function getSelected(data) {
 	jQuery("#shipping_country").prop("disabled",false);
 	jQuery("#shipping_state").prop("disabled",false);
-
+	
 	jQuery("#shipping_country").val("US"); // Change the value or make some change to the internal state
 	jQuery("#shipping_country").trigger("change");
 	//jQuery("#shipping_country").prop("disabled",true);
@@ -119,31 +119,37 @@ function getSelected(data) {
 	setNativeValue(postalCode,data.premise_zip_code);
 	postalCode.readOnly = true;
 
-	var orderComment = document.getElementsByName("order_comments")[0];
-	var orderCommentText = 'FFL Number : ' + data.license_number + ' | ' +
-		'FFL : ' + data.list_name + ' | ' +
-		'Street : ' + data.premise_street + ' | ' +
-		'City : ' + data.premise_city + ' | ' +
-		'State : ' + data.premise_state + ' | ' +
-		'Zip: ' + data.premise_zip_code + ' | ' + 
-		'Phone: ' + data.voice_phone;
-	if (data.email != null)
-		 orderCommentText += ' | Email : ' + data.email;
-	if (data.ffl_on_file){
-		 fflshort = data.license_number.replaceAll("-","");
-		 fflshort = fflshort.substring(0,3) + fflshort.substring(10,15);
-		 orderCommentText += ' | FFL On-File: ' + fflshort;
-	}
-	orderComment.readOnly = true;
-	setNativeValue(orderComment,orderCommentText);
+	var fflEmail = document.getElementsByName("shipping_email")[0];
+	setNativeValue(fflEmail,data.email);
+	fflEmail.readOnly = false;
+
+	var fflPhone = document.getElementsByName("shipping_phone")[0];
+	setNativeValue(fflPhone,data.voice_phone);
+	fflPhone.readOnly = true;
+
+	var fflLicense = document.getElementsByName("shipping_fflno")[0];
+	setNativeValue(fflLicense,data.license_number);
+	fflLicense.readOnly = true;
+
+	var fflExpiry = document.getElementsByName("shipping_fflexp")[0];
+	var expiration_date = "2025-4-01";
+	setNativeValue(fflExpiry, data.expiration_date.substring(0,10));
+	fflExpiry.readOnly = true;
+	
+	var fflOnFile = document.getElementsByName("shipping_ffl_onfile")[0];
+	if (data.ffl_on_file){	
+		setNativeValue(fflOnFile, "Yes");
+	}else{
+		setNativeValue(fflOnFile, "No");
+	}		
+	fflOnFile.readOnly = true;
+	
 
 	jQuery("#shipping_state").val(data.premise_state); // Change the value or make some change to the internal state
 	jQuery("#shipping_state").trigger("change");
 
 	jQuery("#shipping_country").prop("disabled",true);
 	jQuery("#shipping_state").prop("disabled",true);
-
-
 
 	return false;
 }
