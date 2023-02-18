@@ -5,7 +5,7 @@ Donate link: https://garidium.com/product/g-ffl-api-key/
 Requires at least: 5.0
 Tested up to: 6.1.1
 Requires PHP: 7.0
-Stable tag: 1.2.3
+Stable tag: 1.2.4
 License: GPL v3+
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -63,6 +63,7 @@ The plugin provides two tools to do this, first you can check the \"Requires FFL
 6. The Download FFL will securely retrieve the FFL copy on-file. These links are not shareable and work for you as a subscriber to the g-FFL API
 
 == Changelog ==
+v1.2.4 Preload API when no map is selected to improve performance of FFL search
 v1.2.3 Page jumps to first and last name after seleecting FFL when map is disabled and plugin above shipping
 v1.2.2 Map is now optional, FFL Information now in custom fields instead of notes, and shipping forms are removed if FFL-required purchase
 v1.1.3 Resolved an issue with caching shipping address from FFL purchase to non-FFL purchase
