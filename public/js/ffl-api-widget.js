@@ -805,19 +805,21 @@
            }
          };
          var t = null;
-         if (fflIncludeMap){
-            JavaScript.load("https://api.mapbox.com/mapbox-gl-js/v2.12.0/mapbox-gl.js", function() {
-                fetch('https://ffl-api.garidium.com', {
-                    method: 'POST',
-                    headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                    'x-api-key': aKey,
-                    },
-                    body: JSON.stringify({'action': 'get_mapbox_token'})
-                })
-                .then(response=>response.json())
-                .then(data=>{ 
+         // still run this request even if we don't have the map
+         // to preload the API for better performance 
+         JavaScript.load("https://api.mapbox.com/mapbox-gl-js/v2.12.0/mapbox-gl.js", function() {
+            fetch('https://ffl-api.garidium.com', {
+                method: 'POST',
+                headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'x-api-key': aKey,
+                },
+                body: JSON.stringify({'action': 'get_mapbox_token'})
+            })
+            .then(response=>response.json())
+            .then(data=>{ 
+                if (fflIncludeMap){
                     mapboxgl.accessToken = data;
                     t = new mapboxgl.Map({
                         container: 'ffl-map', // container ID
@@ -828,10 +830,11 @@
                     t.resize();
                     t.addControl(new mapboxgl.FullscreenControl());
                     l = t 
-                    l.resize();           
-                });
+                    l.resize();
+                }       
             });
-         }else{                     
+        });
+         if (!fflIncludeMap){                    
             document.getElementById("ffl-map").style.display = "none";
             document.getElementById("mapbox-attribution-line").style.display = "none";
          }
