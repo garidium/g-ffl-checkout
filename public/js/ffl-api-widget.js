@@ -819,6 +819,9 @@
             })
             .then(response=>response.json())
             .then(data=>{ 
+                if (data.Error){
+                    alert(data.Error);
+                }
                 if (fflIncludeMap){
                     mapboxgl.accessToken = data;
                     t = new mapboxgl.Map({
