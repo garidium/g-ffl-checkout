@@ -665,25 +665,44 @@
                 withCredentials: !1,
                 baseURL: "https://ffl-api.garidium.com",
                 crossdomain: !0
-            }),
-            N = document.getElementById("ffl-search"),
-            v = document.getElementById("ffl-zip-code"),
-            j = document.getElementById("ffl-radius"),
-            ns = document.getElementById("ffl-name-search"),
-            b = document.getElementById("ffl-list");
+        }),
+        N = document.getElementById("ffl-search"),
+        v = document.getElementById("ffl-zip-code"),
+        j = document.getElementById("ffl-radius"),
+        ns = document.getElementById("ffl-name-search"),
+        b = document.getElementById("ffl-list");
+        var searchByLicense = false;
+        var fisp = document.getElementById("ffl-local-pickup-search");
+        var fispContainer = document.getElementById("fff-local-pickup-section");
+        if (fflLocalPickup.length == 20){
+            fispContainer.style.display='';
+            fisp.addEventListener("click", function(t) {
+                searchByLicense = true;
+                N.click(), t.preventDefault(), t.stopPropagation();
+            });
+        }else{
+            fispContainer.style.display='none';
+        }
+
+        ns.addEventListener("keypress", function(t) {
+            "Enter" !== t.key && "Enter" !== t.code || (N.click(), t.preventDefault(), t.stopPropagation())
+        }),
         v.addEventListener("keypress", function(t) {
             "Enter" !== t.key && "Enter" !== t.code || (N.click(), t.preventDefault(), t.stopPropagation())
         }), N.addEventListener("click", function(t) {
-            if (5 !== v.value.length) return alert("Enter valid zip code!"), t.preventDefault(), !1;
-            if (0 === j.value) return alert("Enter valid radius!"), t.preventDefault(), !1;
-            N.classList.add("dsbSearch"), r(), b.classList.add("ffl-hide"), b.innerHTML = "";
+            if (!searchByLicense){
+                if (5 !== v.value.length) return alert("Enter valid zip code!"), t.preventDefault(), !1;
+                if (0 === j.value) return alert("Enter valid radius!"), t.preventDefault(), !1;
+            }
+            N.classList.add("dsbSearch"), r(), b.classList.add("ffl-hide"), document.getElementById("ffl-click-instructions").classList.add("ffl-hide"), b.innerHTML = "";
             var n = {};
-            return n.action = 'get_ffl_list', n.data = "{\"ffl_name\": \"" + ns.value + "\", \"zipcode\": \"" + v.value + "\", \"radius\": \"" + j.value + "\"}", w.post("", n, {
+            return n.action = 'get_ffl_list', n.data = searchByLicense?"{\"license_number\": \"" + fflLocalPickup + "\"}" : "{\"ffl_name\": \"" + ns.value + "\", \"zipcode\": \"" + v.value + "\", \"radius\": \"" + j.value + "\"}", w.post("", n, {
                 headers: {
                     "Content-Type": "application/json",
                     "x-api-key": s,
                 }
             }).then(function(t) {
+                // reset search by license option
                 if (fflIncludeMap && document.getElementById("ffl-map").classList.remove("ffl-map-full"), document.getElementById("ffl-map").classList.add("ffl-map-resize"), N.classList.remove("dsbSearch"), 200 === t.status) {
                     if (t.data.Error!=null || (t.data.original && 400 === t.data.original.status)) return alert("No FFL's found, Please check your inputs and try again."), !1;
                     localStorage.removeItem("mapCenter");
@@ -755,7 +774,7 @@
                     }
                     
                     if (overallCount==0){
-                        alert("No FFL's were found based on your search criteria.")
+                        alert("No FFL's were found based on your search criteria.");
                     }
 
                     for (var m = document.getElementsByClassName("ffl-list-div"), I = 0; I < m.length; I++) m[I].addEventListener("click", function(t) {
@@ -774,11 +793,14 @@
                 }
                 if (t.data.length > 0){
                     b.classList.remove("ffl-hide");
+                    document.getElementById("ffl-click-instructions").classList.remove("ffl-hide");
                 }
-    
+                searchByLicense = false;
+
             }, function(t) {
                 if (422 === t.response.status || 400 === t.response.status) return alert(t.response.data.message), !1;
             }), t.preventDefault(), t.stopPropagation(), !1
+            
         })
     }, f.initGMap = function() {
          var JavaScript = {
@@ -2169,13 +2191,21 @@
                 width: 100%;
             }
             #ffl-list {
-                height: 300px;
+                max-height: 300px;
                 overflow-y: scroll;
                 scroll-behavior: smooth;
                 overflow-x: hidden;
                 padding: 0 5px 0 0;
                 margin: 0 0 10px 0;
                 width: 100%;
+            }
+            #ffl-click-instructions{
+                width:100%;
+                background-color: #ba102d;
+                color:#EEEEEE !important;
+                font-weight:bold !important;
+                text-align:center !important;
+                margin-bottom:2px !important;
             }
             #ffl-list::-webkit-scrollbar-track {
                 -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
@@ -2313,6 +2343,32 @@
                 font-weight:bold !important;
                 text-align:center !important;
             }
+            #ffl-local-pickup-search {
+                -webkit-appearance: none;
+                -moz-appearance: none;
+                appearance: none;
+                box-shadow: inset 0 1px 1px #ebebeb;
+                border: 1px solid !important;
+                display: block;
+                -moz-osx-font-smoothing: grayscale;
+                -webkit-font-smoothing: antialiased;
+                font-smoothing: antialiased;
+                height: 45px;
+                margin: 0;
+                transition: all 100ms ease-out;
+                width: 100%;
+                -webkit-border-radius: 0px;
+                -moz-border-radius: 0px;
+                border-radius: 0px;
+                cursor: pointer;
+                width: 100%;
+                border-radius: 5px;
+                outline: none;
+                background-color: #2f2727 !important;
+                color:#EEEEEE !important;
+                font-weight:bold !important;
+                text-align:center !important;
+            }
             .selectedFFLDivButton {
                 border:solid black 1.5px !important;
                 background: #EEEEEE !important;
@@ -2412,30 +2468,38 @@
                     You can also confirm transfer costs.</b>.
                 </span>
             </p>
-            <div class="columns">
+            <div class="columns" id="fff-local-pickup-section">
                 <div class="column">
-                    <input autocomplete="off" type="text" id="ffl-zip-code" placeholder="Zip Code" class="" value="">
-                </div>
-                <div class="column">
-                    <select id="ffl-radius">
-                        <option value="5" selected="">within 5 Miles</option>
-                        <option value="10">Within 10 Miles</option>
-                        <option value="25">Within 25 Miles</option>
-                        <option value="50">Within 50 Miles</option>
-                    </select>
-                </div>
-                <div class="column">
-                    <input readonly id="ffl-search" placeholder="FIND FFL" value="FIND FFL">
+                    <input readonly id="ffl-local-pickup-search" placeholder="" value="IN STORE PICKUP">
                 </div>
             </div>
-            <div class="columns">
-                <div class="column">
-                    <input autocomplete="off" type="text" id="ffl-name-search" placeholder="FFL Name (optional)">
+            <div id="ffl_search_fields">
+                <div class="columns">
+                    <div class="column">
+                        <input autocomplete="off" type="text" id="ffl-zip-code" placeholder="Zip Code" class="" value="">
+                    </div>
+                    <div class="column">
+                        <select id="ffl-radius">
+                            <option value="5" selected="">within 5 Miles</option>
+                            <option value="10">Within 10 Miles</option>
+                            <option value="25">Within 25 Miles</option>
+                            <option value="50">Within 50 Miles</option>
+                        </select>
+                    </div>
+                    <div class="column">
+                        <input readonly id="ffl-search" placeholder="FIND FFL" value="FIND FFL">
+                    </div>
+                </div>
+                <div class="columns">
+                    <div class="column">
+                        <input autocomplete="off" type="text" id="ffl-name-search" placeholder="FFL Name (optional)">
+                    </div>
                 </div>
             </div>
         </div>
+        <div id="ffl-click-instructions" class="ffl-hide">Click on FFL to Confirm the Pickup Location</div>
         <div class="ffl-list-container">
-            <ul id="ffl-list" style="height:300px;" class="ffl-hide"></ul>
+            <ul id="ffl-list" class="ffl-hide"></ul>
         </div>
         <div id="ffl-map" class="ffl-map-resize"></div>
         <span id="mapbox-attribution-line" class="mapbox-attribution">© <a style="color:gray !important;" target=_blank href='https://www.mapbox.com/about/maps/'>Mapbox</a> © <a style="color:gray !important;" target=_blank href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a> © <a style="color:gray !important;" target=_blank href='http://www.maxar.com'>Maxar</a><strong> | <a style="color:gray !important;" href='https://www.mapbox.com/map-feedback/' target='_blank'>Improve this map</a></strong></span><br>

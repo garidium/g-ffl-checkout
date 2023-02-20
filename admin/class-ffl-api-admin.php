@@ -143,6 +143,7 @@ class g_ffl_Api_Admin
         register_setting('ffl-api-settings', 'ffl_checkout_message');
         register_setting('ffl-api-settings', 'ffl_init_map_location');
         register_setting('ffl-api-settings', 'ffl_include_map');
+        register_setting('ffl-api-settings', 'ffl_local_pickup');
     }
 
     function ffl_api_settings_page()
@@ -179,6 +180,15 @@ class g_ffl_Api_Admin
                             <td>
                                 <textarea rows="9" cols="60"
                                           name="ffl_checkout_message"><?php echo esc_attr(get_option('ffl_checkout_message') != '' ? get_option('ffl_checkout_message') : '<b>Federal law dictates that your online firearms purchase must be delivered to a federally licensed firearms dealer (FFL) before you can take possession.</b> This process is called a Transfer. Enter your zip code, radius, and FFL name (optional), then click the Find button to get a list of FFL dealers in your area. Select the FFL dealer you want the firearm shipped to. <b><u>Before Checking Out, Contact your selected FFL dealer to confirm they are currently accepting transfers</u></b>. You can also confirm transfer costs. If we do not have the FFL on-file, ask them to send a signed copy to <b>youremail@here.com</b>.'); ?></textarea>
+                            </td>
+                        </tr>
+                        <tr valign="top">
+                            <th scope="row">In-Store Pickup FFL#:</th>
+                            <td>
+                                <input type="text" style="width: 30%" name="ffl_local_pickup" maxlength=20
+                                        value="<?php echo esc_attr(get_option('ffl_local_pickup')); ?>"/>
+                                <p>If this field is filled in, the user is presented with a local pickup option in checkout.<br>
+                                This needs to be in the full FFL format: <b>1-23-456-78-9A-01234</b></p>
                             </td>
                         </tr>
                         <tr valign="top">

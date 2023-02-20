@@ -16,7 +16,7 @@
  * Plugin Name:       g-FFL Checkout
  * Plugin URI:        garidium.com/g-ffl-api
  * Description:       g-FFL Checkout
- * Version:           1.2.5
+ * Version:           1.3.0
  * WC requires at least: 3.0.0
  * WC tested up to:   4.0
  * Author:            Garidium LLC
