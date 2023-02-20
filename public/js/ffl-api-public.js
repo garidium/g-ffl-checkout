@@ -133,7 +133,6 @@ function getSelected(data) {
 	fflLicense.readOnly = true;
 
 	var fflExpiry = document.getElementsByName("shipping_fflexp")[0];
-	var expiration_date = "2025-4-01";
 	setNativeValue(fflExpiry, data.expiration_date.substring(0,10));
 	fflExpiry.readOnly = true;
 	
@@ -149,8 +148,11 @@ function getSelected(data) {
 	jQuery("#shipping_state").val(data.premise_state); // Change the value or make some change to the internal state
 	jQuery("#shipping_state").trigger("change");
 
-	jQuery("#shipping_country").prop("disabled",true);
-	jQuery("#shipping_state").prop("disabled",true);
+	jQuery("#shipping_country").val("US"); // Change the value or make some change to the internal state
+	jQuery("#shipping_country").trigger("change");
+
+	//jQuery("#shipping_country").prop("disabled",true);
+	//jQuery("#shipping_state").prop("disabled",true);
 
 	return false;
 }

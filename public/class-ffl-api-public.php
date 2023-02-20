@@ -143,7 +143,7 @@ class G_ffl_Api_Public
                             document.getElementById("ship-to-different-address-checkbox").checked = false;
                             document.getElementById("shipping_first_name").value = "";
                             document.getElementById("shipping_last_name").value = "";
-                            document.getElementById("shipping_company").value = "";
+                            document.getElementById("shipping_company").value = "US";
                             document.getElementById("shipping_address_1").value = "";
                             document.getElementById("shipping_address_2").value = "";
                             document.getElementById("shipping_city").value = "";

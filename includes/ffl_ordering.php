@@ -122,6 +122,7 @@ function ffl_order_meta_box_html()
     $ffl_onfile = (get_post_meta($order->get_id(), '_shipping_ffl_onfile', true ) == 'Yes');
     $ffl_license = get_post_meta($order->get_id(), '_shipping_fflno', true );
     $ffl_expiration = get_post_meta($order->get_id(), '_shipping_fflexp', true);
+    $ffl_email = get_post_meta($order->get_id(), '_shipping_email', true);
     $ffl_customer = get_post_meta($order->get_id(), '_shipping_first_name', true) . ' ' . get_post_meta($order->get_id(), '_shipping_last_name', true);
     if ($ffl_license ==""){
         echo '<strong>FFL shipment is not required for this Order</strong>';
@@ -131,6 +132,13 @@ function ffl_order_meta_box_html()
     echo '
         <p><strong>FFL License Number:</strong> ' . esc_attr($ffl_license) . '<br>
         <strong>FFL Expiration Date:</strong> ' . esc_attr($ffl_expiration) . '<br>
+        ';
+    
+    if ($ffl_email!=""){
+        echo '<strong>FFL Email:</strong> ' . esc_attr($ffl_email) . '<br>';
+    }
+    
+    echo '
         <strong>FFL On-File:</strong> ' . esc_attr($ffl_onfile?'Yes':'No') . '<br>
         <strong>Shipment For:</strong> ' . esc_attr($ffl_customer) . '</p>';
 

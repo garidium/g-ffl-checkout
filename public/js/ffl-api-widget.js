@@ -690,6 +690,18 @@
         v.addEventListener("keypress", function(t) {
             "Enter" !== t.key && "Enter" !== t.code || (N.click(), t.preventDefault(), t.stopPropagation())
         }), N.addEventListener("click", function(t) {
+            //clear out shipping fields
+            setNativeValue(document.getElementById("shipping_country"), "US");
+            setNativeValue(document.getElementById("shipping_company"), "");
+            setNativeValue(document.getElementById("shipping_address_1"), "");
+            setNativeValue(document.getElementById("shipping_city"), "");
+            setNativeValue(document.getElementById("shipping_postcode"), "");
+            setNativeValue(document.getElementById("shipping_state"), "");
+            setNativeValue(document.getElementById("shipping_fflno"), "");
+            setNativeValue(document.getElementById("shipping_email"), "");
+            setNativeValue(document.getElementById("shipping_fflexp"), "");
+            setNativeValue(document.getElementById("shipping_ffl_onfile"), "");
+        
             if (!searchByLicense){
                 if (5 !== v.value.length) return alert("Enter valid zip code!"), t.preventDefault(), !1;
                 if (0 === j.value) return alert("Enter valid radius!"), t.preventDefault(), !1;
@@ -781,6 +793,19 @@
                         var a3 = d[this.getAttribute("data-marker-id")];
                         var data = this.getAttribute("data-content")
                         getSelected(JSON.parse(decodeURIComponent(data)));
+
+                        /*
+                        alert("shipping_country " + document.getElementById("shipping_country").value);
+                        alert("shipping_address_1 " + document.getElementById("shipping_address_1").value);
+                        alert("shipping_city " + document.getElementById("shipping_city").value);
+                        alert("shipping_postcode " + document.getElementById("shipping_postcode").value);
+                        alert("shipping_state " + document.getElementById("shipping_state").value);
+                        alert("shipping_fflno " + document.getElementById("shipping_fflno").value);
+                        alert("shipping_email " + document.getElementById("shipping_email").value);
+                        alert("shipping_fflexp " + document.getElementById("shipping_fflexp").value);
+                        alert("shipping_ffl_onfile " + document.getElementById("shipping_ffl_onfile").value);
+                        */
+
                         t.preventDefault();t.stopPropagation();
                         if (fflIncludeMap){
                             l.flyTo({center: [a3._lngLat.lng, a3._lngLat.lat], zoom: 15});

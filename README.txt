@@ -5,7 +5,7 @@ Donate link: https://garidium.com/product/g-ffl-api-key/
 Requires at least: 5.0
 Tested up to: 6.1.1
 Requires PHP: 7.0
-Stable tag: 1.3.0
+Stable tag: 1.3.2
 License: GPL v3+
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -67,7 +67,7 @@ While the plugin is free to download and install, it does require you to purchas
 6. The Download FFL will securely retrieve the FFL copy on-file. These links are not shareable and work for you as a subscriber to the g-FFL API
 
 == Changelog ==
-1. v1.3.0 Added local pickup option, which is configurable on the admin page
+1. v1.3.2 Added local pickup option, which is configurable on the admin page
 2. v1.2.5 Unauthorized message on checkout if plugin is not approved, this previously would be a silent alert
 3. v1.2.4 Preload API when no map is selected to improve performance of FFL search
 4. v1.2.3 Page jumps to first and last name after seleecting FFL when map is disabled and plugin above shipping
