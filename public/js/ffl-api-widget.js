@@ -691,6 +691,7 @@
             "Enter" !== t.key && "Enter" !== t.code || (N.click(), t.preventDefault(), t.stopPropagation())
         }), N.addEventListener("click", function(t) {
             //clear out shipping fields
+            document.getElementById("floatingBarsG").style.display="";
             setNativeValue(document.getElementById("shipping_country"), "US");
             setNativeValue(document.getElementById("shipping_company"), "");
             setNativeValue(document.getElementById("shipping_address_1"), "");
@@ -788,24 +789,12 @@
                     if (overallCount==0){
                         alert("No FFL's were found based on your search criteria.");
                     }
+                    document.getElementById("floatingBarsG").style.display="none";
 
                     for (var m = document.getElementsByClassName("ffl-list-div"), I = 0; I < m.length; I++) m[I].addEventListener("click", function(t) {
                         var a3 = d[this.getAttribute("data-marker-id")];
                         var data = this.getAttribute("data-content")
                         getSelected(JSON.parse(decodeURIComponent(data)));
-
-                        /*
-                        alert("shipping_country " + document.getElementById("shipping_country").value);
-                        alert("shipping_address_1 " + document.getElementById("shipping_address_1").value);
-                        alert("shipping_city " + document.getElementById("shipping_city").value);
-                        alert("shipping_postcode " + document.getElementById("shipping_postcode").value);
-                        alert("shipping_state " + document.getElementById("shipping_state").value);
-                        alert("shipping_fflno " + document.getElementById("shipping_fflno").value);
-                        alert("shipping_email " + document.getElementById("shipping_email").value);
-                        alert("shipping_fflexp " + document.getElementById("shipping_fflexp").value);
-                        alert("shipping_ffl_onfile " + document.getElementById("shipping_ffl_onfile").value);
-                        */
-
                         t.preventDefault();t.stopPropagation();
                         if (fflIncludeMap){
                             l.flyTo({center: [a3._lngLat.lng, a3._lngLat.lat], zoom: 15});
@@ -2159,6 +2148,221 @@
 }, function(t, n) {
     ht = `
         <style>
+            #floatingBarsG{
+                position:relative;
+                width:60px;
+                height:75px;
+                margin:auto;
+            }
+            
+            .blockG{
+                position:absolute;
+                background-color:rgb(255,255,255);
+                width:10px;
+                height:23px;
+                border-radius:8px 8px 0 0;
+                    -o-border-radius:8px 8px 0 0;
+                    -ms-border-radius:8px 8px 0 0;
+                    -webkit-border-radius:8px 8px 0 0;
+                    -moz-border-radius:8px 8px 0 0;
+                transform:scale(0.4);
+                    -o-transform:scale(0.4);
+                    -ms-transform:scale(0.4);
+                    -webkit-transform:scale(0.4);
+                    -moz-transform:scale(0.4);
+                animation-name:fadeG;
+                    -o-animation-name:fadeG;
+                    -ms-animation-name:fadeG;
+                    -webkit-animation-name:fadeG;
+                    -moz-animation-name:fadeG;
+                animation-duration:1.2s;
+                    -o-animation-duration:1.2s;
+                    -ms-animation-duration:1.2s;
+                    -webkit-animation-duration:1.2s;
+                    -moz-animation-duration:1.2s;
+                animation-iteration-count:infinite;
+                    -o-animation-iteration-count:infinite;
+                    -ms-animation-iteration-count:infinite;
+                    -webkit-animation-iteration-count:infinite;
+                    -moz-animation-iteration-count:infinite;
+                animation-direction:normal;
+                    -o-animation-direction:normal;
+                    -ms-animation-direction:normal;
+                    -webkit-animation-direction:normal;
+                    -moz-animation-direction:normal;
+            }
+            
+            #rotateG_01{
+                left:0;
+                top:27px;
+                animation-delay:0.45s;
+                    -o-animation-delay:0.45s;
+                    -ms-animation-delay:0.45s;
+                    -webkit-animation-delay:0.45s;
+                    -moz-animation-delay:0.45s;
+                transform:rotate(-90deg);
+                    -o-transform:rotate(-90deg);
+                    -ms-transform:rotate(-90deg);
+                    -webkit-transform:rotate(-90deg);
+                    -moz-transform:rotate(-90deg);
+            }
+            
+            #rotateG_02{
+                left:8px;
+                top:10px;
+                animation-delay:0.6s;
+                    -o-animation-delay:0.6s;
+                    -ms-animation-delay:0.6s;
+                    -webkit-animation-delay:0.6s;
+                    -moz-animation-delay:0.6s;
+                transform:rotate(-45deg);
+                    -o-transform:rotate(-45deg);
+                    -ms-transform:rotate(-45deg);
+                    -webkit-transform:rotate(-45deg);
+                    -moz-transform:rotate(-45deg);
+            }
+            
+            #rotateG_03{
+                left:25px;
+                top:3px;
+                animation-delay:0.75s;
+                    -o-animation-delay:0.75s;
+                    -ms-animation-delay:0.75s;
+                    -webkit-animation-delay:0.75s;
+                    -moz-animation-delay:0.75s;
+                transform:rotate(0deg);
+                    -o-transform:rotate(0deg);
+                    -ms-transform:rotate(0deg);
+                    -webkit-transform:rotate(0deg);
+                    -moz-transform:rotate(0deg);
+            }
+            
+            #rotateG_04{
+                right:8px;
+                top:10px;
+                animation-delay:0.9s;
+                    -o-animation-delay:0.9s;
+                    -ms-animation-delay:0.9s;
+                    -webkit-animation-delay:0.9s;
+                    -moz-animation-delay:0.9s;
+                transform:rotate(45deg);
+                    -o-transform:rotate(45deg);
+                    -ms-transform:rotate(45deg);
+                    -webkit-transform:rotate(45deg);
+                    -moz-transform:rotate(45deg);
+            }
+            
+            #rotateG_05{
+                right:0;
+                top:27px;
+                animation-delay:1.05s;
+                    -o-animation-delay:1.05s;
+                    -ms-animation-delay:1.05s;
+                    -webkit-animation-delay:1.05s;
+                    -moz-animation-delay:1.05s;
+                transform:rotate(90deg);
+                    -o-transform:rotate(90deg);
+                    -ms-transform:rotate(90deg);
+                    -webkit-transform:rotate(90deg);
+                    -moz-transform:rotate(90deg);
+            }
+            
+            #rotateG_06{
+                right:8px;
+                bottom:7px;
+                animation-delay:1.2s;
+                    -o-animation-delay:1.2s;
+                    -ms-animation-delay:1.2s;
+                    -webkit-animation-delay:1.2s;
+                    -moz-animation-delay:1.2s;
+                transform:rotate(135deg);
+                    -o-transform:rotate(135deg);
+                    -ms-transform:rotate(135deg);
+                    -webkit-transform:rotate(135deg);
+                    -moz-transform:rotate(135deg);
+            }
+            
+            #rotateG_07{
+                bottom:0;
+                left:25px;
+                animation-delay:1.35s;
+                    -o-animation-delay:1.35s;
+                    -ms-animation-delay:1.35s;
+                    -webkit-animation-delay:1.35s;
+                    -moz-animation-delay:1.35s;
+                transform:rotate(180deg);
+                    -o-transform:rotate(180deg);
+                    -ms-transform:rotate(180deg);
+                    -webkit-transform:rotate(180deg);
+                    -moz-transform:rotate(180deg);
+            }
+            
+            #rotateG_08{
+                left:8px;
+                bottom:7px;
+                animation-delay:1.5s;
+                    -o-animation-delay:1.5s;
+                    -ms-animation-delay:1.5s;
+                    -webkit-animation-delay:1.5s;
+                    -moz-animation-delay:1.5s;
+                transform:rotate(-135deg);
+                    -o-transform:rotate(-135deg);
+                    -ms-transform:rotate(-135deg);
+                    -webkit-transform:rotate(-135deg);
+                    -moz-transform:rotate(-135deg);
+            }
+            
+            
+            
+            @keyframes fadeG{
+                0%{
+                    background-color:rgb(0,0,0);
+                }
+            
+                100%{
+                    background-color:rgb(255,255,255);
+                }
+            }
+            
+            @-o-keyframes fadeG{
+                0%{
+                    background-color:rgb(0,0,0);
+                }
+            
+                100%{
+                    background-color:rgb(255,255,255);
+                }
+            }
+            
+            @-ms-keyframes fadeG{
+                0%{
+                    background-color:rgb(0,0,0);
+                }
+            
+                100%{
+                    background-color:rgb(255,255,255);
+                }
+            }
+            
+            @-webkit-keyframes fadeG{
+                0%{
+                    background-color:rgb(0,0,0);
+                }
+            
+                100%{
+                    background-color:rgb(255,255,255);
+                }
+            }
+            
+            @-moz-keyframes fadeG{
+                0%{
+                    background-color:rgb(0,0,0);
+                }
+            
+                100%{
+                    background-color:rgb(255,255,255);
+                }
+            }
             .popupContent{
                 backround:#DDDDDD !important;
             }
@@ -2220,7 +2424,7 @@
                 overflow-y: scroll;
                 scroll-behavior: smooth;
                 overflow-x: hidden;
-                padding: 0 5px 0 0;
+                padding: 0 5px 0 0 !important;
                 margin: 0 0 10px 0;
                 width: 100%;
             }
@@ -2459,7 +2663,7 @@
                 }
                 #ffl-list {
                     width: 100%;
-                    padding: 0 5px 0 0px;
+                    padding: 0 5px 0 0px !important;
                 }
                 body,
                 html {
@@ -2525,6 +2729,16 @@
         <div id="ffl-click-instructions" class="ffl-hide">Click on FFL to Confirm the Pickup Location</div>
         <div class="ffl-list-container">
             <ul id="ffl-list" class="ffl-hide"></ul>
+            <div id="floatingBarsG" style="display:none;">
+                <div class="blockG" id="rotateG_01"></div>
+                <div class="blockG" id="rotateG_02"></div>
+                <div class="blockG" id="rotateG_03"></div>
+                <div class="blockG" id="rotateG_04"></div>
+                <div class="blockG" id="rotateG_05"></div>
+                <div class="blockG" id="rotateG_06"></div>
+                <div class="blockG" id="rotateG_07"></div>
+                <div class="blockG" id="rotateG_08"></div>
+            </div>
         </div>
         <div id="ffl-map" class="ffl-map-resize"></div>
         <span id="mapbox-attribution-line" class="mapbox-attribution">© <a style="color:gray !important;" target=_blank href='https://www.mapbox.com/about/maps/'>Mapbox</a> © <a style="color:gray !important;" target=_blank href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a> © <a style="color:gray !important;" target=_blank href='http://www.maxar.com'>Maxar</a><strong> | <a style="color:gray !important;" href='https://www.mapbox.com/map-feedback/' target='_blank'>Improve this map</a></strong></span><br>

@@ -16,7 +16,7 @@
  * Plugin Name:       g-FFL Checkout
  * Plugin URI:        garidium.com/g-ffl-api
  * Description:       g-FFL Checkout
- * Version:           1.3.2
+ * Version:           1.3.3
  * WC requires at least: 3.0.0
  * WC tested up to:   4.0
  * Author:            Garidium LLC
@@ -47,13 +47,13 @@ if (! in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', 
  * Start at version 1.0.0 and use SemVer - https://semver.org
  * Rename this for your plugin and update it as you release new versions.
  */
-define('G_FFL_API_VERSION', '1.3.2');
+define('G_FFL_API_VERSION', '1.3.3');
 
 /**
  * The code that runs during plugin activation.
  * This action is documented in includes/class-ffl-api-activator.php
  */
-function activate_ffl_api()
+function activate_g_ffl_api()
 {
     require_once plugin_dir_path(__FILE__) . 'includes/class-ffl-api-activator.php';
     G_ffl_Api_Activator::activate();
@@ -63,14 +63,14 @@ function activate_ffl_api()
  * The code that runs during plugin deactivation.
  * This action is documented in includes/class-ffl-api-deactivator.php
  */
-function deactivate_ffl_api()
+function deactivate_g_ffl_api()
 {
     require_once plugin_dir_path(__FILE__) . 'includes/class-ffl-api-deactivator.php';
     G_ffl_Api_Deactivator::deactivate();
 }
 
-register_activation_hook(__FILE__, 'activate_ffl_api');
-register_deactivation_hook(__FILE__, 'deactivate_ffl_api');
+register_activation_hook(__FILE__, 'activate_g_ffl_api');
+register_deactivation_hook(__FILE__, 'deactivate_g_ffl_api');
 
 /**
  * The core plugin class that is used to define internationalization,

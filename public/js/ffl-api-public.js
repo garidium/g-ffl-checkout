@@ -104,39 +104,39 @@ function getSelected(data) {
 	localStorage.setItem("selectedFFL",data.license_number);
 	document.getElementById( "place_order" ).disabled = false
 
-	var company = document.getElementsByName("shipping_company")[0];
+	var company = document.getElementById("shipping_company");
 	setNativeValue(company,data.list_name);
 	company.readOnly = true;
 
-	var address1 = document.getElementsByName("shipping_address_1")[0];
+	var address1 = document.getElementById("shipping_address_1");
 	setNativeValue(address1,data.premise_street);
 	address1.readOnly = true;
 
-	var city = document.getElementsByName("shipping_city")[0];
+	var city = document.getElementById("shipping_city");
 	setNativeValue(city,data.premise_city);
 	city.readOnly = true;
 
-	var postalCode = document.getElementsByName("shipping_postcode")[0];
+	var postalCode = document.getElementById("shipping_postcode");
 	setNativeValue(postalCode,data.premise_zip_code);
 	postalCode.readOnly = true;
 
-	var fflEmail = document.getElementsByName("shipping_email")[0];
+	var fflEmail = document.getElementById("shipping_email");
 	setNativeValue(fflEmail,data.email);
 	fflEmail.readOnly = false;
 
-	var fflPhone = document.getElementsByName("shipping_phone")[0];
+	var fflPhone = document.getElementById("shipping_phone");
 	setNativeValue(fflPhone,data.voice_phone);
 	fflPhone.readOnly = true;
 
-	var fflLicense = document.getElementsByName("shipping_fflno")[0];
+	var fflLicense = document.getElementById("shipping_fflno");
 	setNativeValue(fflLicense,data.license_number);
 	fflLicense.readOnly = true;
 
-	var fflExpiry = document.getElementsByName("shipping_fflexp")[0];
+	var fflExpiry = document.getElementById("shipping_fflexp");
 	setNativeValue(fflExpiry, data.expiration_date.substring(0,10));
 	fflExpiry.readOnly = true;
 	
-	var fflOnFile = document.getElementsByName("shipping_ffl_onfile")[0];
+	var fflOnFile = document.getElementById("shipping_ffl_onfile");
 	if (data.ffl_on_file){	
 		setNativeValue(fflOnFile, "Yes");
 	}else{

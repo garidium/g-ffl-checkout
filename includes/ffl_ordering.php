@@ -70,7 +70,7 @@ function ffl_checkout_validation($data, $errors)
     if (order_contain_firearms()) {
 
         if (empty($data['shipping_fflno'])) {
-            $errors->add('validation', "FFL Number Required.");
+            $errors->add('validation', "You must search for and select a FFL from the list.");
             return;
         }
 
