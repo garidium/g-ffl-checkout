@@ -781,7 +781,8 @@
                     if (count > 0){ 
                         if (fflIncludeMap){                       
                             l.fitBounds(bounds, {
-                                padding: 50
+                                padding: 50,
+                                maxZoom: 17,
                             });  
                         }
                     }
@@ -2153,7 +2154,7 @@
                 width:60px;
                 height:75px;
                 margin:auto;
-                //padding-bottom:5px;
+                margin-bottom:15px;
             }
             
             .blockG{
