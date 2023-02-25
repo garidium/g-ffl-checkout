@@ -691,7 +691,6 @@
             "Enter" !== t.key && "Enter" !== t.code || (N.click(), t.preventDefault(), t.stopPropagation())
         }), N.addEventListener("click", function(t) {
             //clear out shipping fields
-            document.getElementById("floatingBarsG").style.display="";
             setNativeValue(document.getElementById("shipping_country"), "US");
             setNativeValue(document.getElementById("shipping_company"), "");
             setNativeValue(document.getElementById("shipping_address_1"), "");
@@ -707,6 +706,7 @@
                 if (5 !== v.value.length) return alert("Enter valid zip code!"), t.preventDefault(), !1;
                 if (0 === j.value) return alert("Enter valid radius!"), t.preventDefault(), !1;
             }
+            document.getElementById("floatingBarsG").style.display="";
             N.classList.add("dsbSearch"), r(), b.classList.add("ffl-hide"), document.getElementById("ffl-click-instructions").classList.add("ffl-hide"), b.innerHTML = "";
             var n = {};
             return n.action = 'get_ffl_list', n.data = searchByLicense?"{\"license_number\": \"" + fflLocalPickup + "\"}" : "{\"ffl_name\": \"" + ns.value + "\", \"zipcode\": \"" + v.value + "\", \"radius\": \"" + j.value + "\"}", w.post("", n, {
@@ -2153,6 +2153,7 @@
                 width:60px;
                 height:75px;
                 margin:auto;
+                //padding-bottom:5px;
             }
             
             .blockG{

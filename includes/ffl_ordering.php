@@ -115,6 +115,37 @@ function ffl_order_meta_box()
     );
 }
 
+function is_ffl_onfile($license_number){
+    $aKey = get_option('ffl_api_key_option');
+    $post_data = '{"action": "get_ffl_list", "data": {"license_number": "'.$license_number.'"}}';
+    
+    // Prepare new cURL resource
+    $crl = curl_init('https://ffl-api.garidium.com');
+    curl_setopt($crl, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($crl, CURLINFO_HEADER_OUT, true);
+    curl_setopt($crl, CURLOPT_POST, true);
+    curl_setopt($crl, CURLOPT_POSTFIELDS, $post_data);
+    
+    // Set HTTP Header for POST request 
+    curl_setopt($crl, CURLOPT_HTTPHEADER, array(
+        'Content-Type: application/json',
+        'Accept: application/json',
+        'x-api-key: ' . $aKey)
+    );
+    
+    // Submit the POST request
+    $result = curl_exec($crl);
+    $has_ffl_on_file = false; 
+    $arr = json_decode($result, true)[0];
+    //echo "<script>alert('".$arr['ffl_on_file']."');</script>";
+    if ($arr['ffl_on_file']){
+        $has_ffl_on_file = true;
+    }
+    // Close cURL session handle
+    curl_close($crl); 
+
+    return $has_ffl_on_file;
+}
 function ffl_order_meta_box_html()
 {
     global $post_id;
@@ -136,6 +167,13 @@ function ffl_order_meta_box_html()
     
     if ($ffl_email!=""){
         echo '<strong>FFL Email:</strong> ' . esc_attr($ffl_email) . '<br>';
+    }
+
+    $ffl_onfile = false;
+    try{
+        $ffl_onfile = is_ffl_onfile("$ffl_license");
+    }catch(Exception $e) {
+        $ffl_onfile = false;
     }
     
     echo '

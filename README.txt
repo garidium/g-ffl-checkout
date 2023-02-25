@@ -5,13 +5,13 @@ Donate link: https://garidium.com/product/g-ffl-api-key/
 Requires at least: 5.0
 Tested up to: 6.1.1
 Requires PHP: 7.0
-Stable tag: 1.3.3
+Stable tag: 1.3.4
 License: GPL v3+
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
 ==Description==
 ==Built by a FFL, for FFL's. This plugin will help streamline the firearm purchasing and fulfillment processes.==
-It was built to support my business, and I know it will help yours as well. See the pluginin-action on [garidium.com](https://garidium.com).
+It was built to support my business, and I know it will help yours as well. See the plugin in-action on [garidium.com](https://garidium.com).
 
 ==Feature Highlights:==
 1. Easy to use FFL searching by zip, distance and name, showing a list view in the checkout page.
@@ -67,13 +67,14 @@ While the plugin is free to download and install, it does require you to purchas
 6. The Download FFL will securely retrieve the FFL copy on-file. These links are not shareable and work for you as a subscriber to the g-FFL API
 
 == Changelog ==
-1. v1.3.3 Added progress indicator to load panel
-2. v1.3.2 Added local pickup option, which is configurable on the admin page
-3. v1.2.5 Unauthorized message on checkout if plugin is not approved, this previously would be a silent alert
-4. v1.2.4 Preload API when no map is selected to improve performance of FFL search
-5. v1.2.3 Page jumps to first and last name after seleecting FFL when map is disabled and plugin above shipping
-6. v1.2.2 Map is now optional, FFL Information now in custom fields instead of notes, and shipping forms are removed if FFL-required purchase
-7. v1.1.3 Resolved an issue with caching shipping address from FFL purchase to non-FFL purchase
-8. v1.1.2 Mapbox conversion, removing need for Google Maps API key and also adding eFile FFL upload/download/ezCheck features to orders details view
-9. v1.0.1 Bug Fixes
-10. v1.0.0 Initial Release of the g-FFL API & Plugin
+11. v1.3.4 FFL-Download button now hitting API to get real-time status
+10. v1.3.3 Added progress indicator to load panel
+9. v1.3.2 Added local pickup option, which is configurable on the admin page
+8. v1.2.5 Unauthorized message on checkout if plugin is not approved, this previously would be a silent alert
+7. v1.2.4 Preload API when no map is selected to improve performance of FFL search
+6. v1.2.3 Page jumps to first and last name after seleecting FFL when map is disabled and plugin above shipping
+5. v1.2.2 Map is now optional, FFL Information now in custom fields instead of notes, and shipping forms are removed if FFL-required purchase
+4. v1.1.3 Resolved an issue with caching shipping address from FFL purchase to non-FFL purchase
+3. v1.1.2 Mapbox conversion, removing need for Google Maps API key and also adding eFile FFL upload/download/ezCheck features to orders details view
+2. v1.0.1 Bug Fixes
+1. v1.0.0 Initial Release of the g-FFL API & Plugin
