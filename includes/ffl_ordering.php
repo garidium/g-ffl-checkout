@@ -82,26 +82,6 @@ function ffl_checkout_validation($data, $errors)
     }
 }
 
-/*
-add_action(
-    'woocommerce_admin_order_data_after_shipping_address',
-    'ffl_shipping_display_admin_order_meta',
-    10,
-    1
-);
-
-function ffl_shipping_display_admin_order_meta($order)
-{
-    echo '<p><strong>FFL Phone:</strong> ' .
-        get_post_meta($order->get_id(), '_shipping_phone', true) . '</p>';
-
-
-    echo '<p><strong>FFL Email:</strong> ' .
-        get_post_meta($order->get_id(), '_shipping_email', true) . '</p>';
-
-}
-*/
-
 add_action('add_meta_boxes_shop_order', 'ffl_order_meta_box');
 function ffl_order_meta_box()
 {
@@ -115,43 +95,14 @@ function ffl_order_meta_box()
     );
 }
 
-function is_ffl_onfile($license_number){
-    $aKey = get_option('ffl_api_key_option');
-    $post_data = '{"action": "get_ffl_list", "data": {"license_number": "'.$license_number.'"}}';
-    
-    // Prepare new cURL resource
-    $crl = curl_init('https://ffl-api.garidium.com');
-    curl_setopt($crl, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($crl, CURLINFO_HEADER_OUT, true);
-    curl_setopt($crl, CURLOPT_POST, true);
-    curl_setopt($crl, CURLOPT_POSTFIELDS, $post_data);
-    
-    // Set HTTP Header for POST request 
-    curl_setopt($crl, CURLOPT_HTTPHEADER, array(
-        'Content-Type: application/json',
-        'Accept: application/json',
-        'x-api-key: ' . $aKey)
-    );
-    
-    // Submit the POST request
-    $result = curl_exec($crl);
-    $has_ffl_on_file = false; 
-    $arr = json_decode($result, true)[0];
-    //echo "<script>alert('".$arr['ffl_on_file']."');</script>";
-    if ($arr['ffl_on_file']){
-        $has_ffl_on_file = true;
-    }
-    // Close cURL session handle
-    curl_close($crl); 
-
-    return $has_ffl_on_file;
-}
 function ffl_order_meta_box_html()
 {
     global $post_id;
     $order = new WC_Order( $post_id );
     $ffl_onfile = (get_post_meta($order->get_id(), '_shipping_ffl_onfile', true ) == 'Yes');
     $ffl_license = get_post_meta($order->get_id(), '_shipping_fflno', true );
+    $ffl_short = str_replace('-','',$ffl_license);  
+    $ffl_short = substr($ffl_short, 0, 3) . substr($ffl_short, -5);
     $ffl_expiration = get_post_meta($order->get_id(), '_shipping_fflexp', true);
     $ffl_email = get_post_meta($order->get_id(), '_shipping_email', true);
     $ffl_customer = get_post_meta($order->get_id(), '_shipping_first_name', true) . ' ' . get_post_meta($order->get_id(), '_shipping_last_name', true);
@@ -169,84 +120,84 @@ function ffl_order_meta_box_html()
         echo '<strong>FFL Email:</strong> ' . esc_attr($ffl_email) . '<br>';
     }
 
-    $ffl_onfile = false;
-    try{
-        $ffl_onfile = is_ffl_onfile("$ffl_license");
-    }catch(Exception $e) {
-        $ffl_onfile = false;
-    }
-    
     echo '
-        <strong>FFL On-File:</strong> ' . esc_attr($ffl_onfile?'Yes':'No') . '<br>
-        <strong>Shipment For:</strong> ' . esc_attr($ffl_customer) . '</p>';
-
+        <strong>Shipment For:</strong> ' . esc_attr($ffl_customer) . '</p>
+        <table>
+            <tr>
+                <td><div><a id="atf_ezcheck" class="button alt">ATF ezCheck</a></div></td>
+                <td>&nbsp;</td>
+                <td><div id="ffl_upload_download"></div></td>
+            </tr>
+        </table>';
         $aKey = get_option('ffl_api_key_option');
-        if ($ffl_onfile){
-            $fflshort = str_replace('-','',$ffl_license);  
-            $fflshort = substr($fflshort, 0, 3) . substr($fflshort, -5);
-            echo '<a id="download_ffl" class="button alt" data-marker-id="',esc_attr($fflshort),'">Download FFL</a>
-                    <script>
-                        document.getElementById("download_ffl").addEventListener("click", function(){
-                            if (window.confirm("It is your responsibility to ensure the receiving FFL is valid (using ezCHeck) and is willing and able to accept transfers. Do not assume that is the case because this FFL is on-file. If you have an issue with a transfer and the FFL should be removed, please contact us at sales@garidium.com with the FFL number to remove. If the download is not working, try again, check popup-blockers.")){
-                                fetch("https://ffl-api.garidium.com/download", {
-                                    method: "POST",
-                                    headers: {
-                                    "Accept": "application/json",
-                                    "Content-Type": "application/json",
-                                    "x-api-key": "',esc_attr($aKey),'",
-                                    },
-                                    body: JSON.stringify({"fflno": "',esc_attr($fflshort),'"})
-                                })
-                                .then(response=>response.json())
-                                .then(data=>{ 
-                                    window.open(data, "_blank", "location=yes, scrollbars=yes,status=yes");         
-                                });
-                            }
-                        });
-                    </script>';
-        }else{
-            echo '<strong>Upload a FFL to the g-FFL eFile System:</strong>
-                    <input type="file" id="ffl_upload_filename"><a id="upload_ffl" class="button alt">Upload FFL</a>
-                    <script>
-                        // Select your input type file and store it in a variable
-                        const input = document.getElementById("ffl_upload_filename");
-                        // This will upload the file after having read it
-                        const upload = (file) => {
-                            console.log("Uploading File Name = " + file.name);
-                            fetch("https://ffl-api.garidium.com/garidium-ffls/uploads%2F" + file.name, { 
-                                method: "PUT",
-                                headers: {
-                                    "x-api-key": "',esc_attr($aKey),'",
-                                },
-                                body: file
-                            })
-                            .then(
-                                success => {alert("Upload Successful, we will process the FFL and make it available for the next order shipping to this FFL. Thank you for your contribution!");console.log(success);} 
-                            ).catch(
-                                error => {alert("There was an Error uploading the FFL, please try again.");console.log(error);}
-                            );
-                        };
-
-                        // Event handler executed when a file is selected
-                        const onSelectFile = () => upload(input.files[0]);
-
-                        // Add a listener on your input
-                        // It will be triggered when a file will be selected
-                        document.getElementById("upload_ffl").addEventListener("click", onSelectFile, false);
-                    </script>';
-        }
         $ezCheckLink = "https://fflezcheck.atf.gov/FFLEzCheck/fflSearch?licsRegn=" . substr($ffl_license,0,1) . "&licsDis=" . substr($ffl_license,2,2) . "&licsSeq=" . substr($ffl_license,-5,5);   
-        echo '<a id="atf_ezcheck" class="button alt">ATF ezCheck</a>
-                <script>
-                    document.getElementById("atf_ezcheck").addEventListener("click", function(){
-                        window.open("',esc_url_raw($ezCheckLink),'", "_blank", "location=yes, scrollbars=yes,status=yes"); 
-                    });
-                </script>';    
-        
+        echo '<script>
+                document.getElementById("atf_ezcheck").addEventListener("click", function(){
+                    window.open("',esc_url_raw($ezCheckLink),'", "_blank", "location=yes, scrollbars=yes,status=yes"); 
+                });
+                window.onload = function() {
+                    fetch("https://ffl-api.garidium.com", {
+                        method: "POST",
+                        headers: {
+                        "Accept": "application/json",
+                        "Content-Type": "application/json",
+                        "x-api-key": "',esc_attr($aKey),'",
+                        },
+                        body: JSON.stringify({"action": "get_ffl_list", "data": {"license_number": "',esc_attr($ffl_license),'"}})
+                    })
+                    .then(response=>response.json())
+                    .then(data=>{ 
+                        var onFile = data[0].ffl_on_file;  
+                        if (onFile){
+                            document.getElementById("ffl_upload_download").innerHTML = "<a id=\"download_ffl\" class=\"button alt\" data-marker-id=\"" + data[0].short_lic_nodash + "\">Download FFL</a>";
+                            document.getElementById("download_ffl").addEventListener("click", function(){
+                                if (window.confirm("It is your responsibility to ensure the receiving FFL is valid (using ezCHeck) and is willing and able to accept transfers. Do not assume that is the case because this FFL is on-file. If you have an issue with a transfer and the FFL should be removed, please contact us at sales@garidium.com with the FFL number to remove. If the download is not working, try again, check popup-blockers.")){
+                                    fetch("https://ffl-api.garidium.com/download", {
+                                        method: "POST",
+                                        headers: {
+                                        "Accept": "application/json",
+                                        "Content-Type": "application/json",
+                                        "x-api-key": "',esc_attr($aKey),'",
+                                        },
+                                        body: JSON.stringify({"fflno": "',esc_attr($ffl_short),'"})
+                                    })
+                                    .then(response=>response.json())
+                                    .then(data=>{ 
+                                        window.open(data, "_blank", "location=yes, scrollbars=yes,status=yes");         
+                                    });
+                                }
+                            });
     
-
-
-
+                        }else{
+                            document.getElementById("ffl_upload_download").innerHTML = "<strong>Upload a FFL to the g-FFL eFile System:</strong><input type=\"file\" id=\"ffl_upload_filename\"><a id=\"upload_ffl\" class=\"button alt\">Upload FFL</a>";
+                            // Select your input type file and store it in a variable
+                            const input = document.getElementById("ffl_upload_filename");
+                            // This will upload the file after having read it
+                            const upload = (file) => {
+                                console.log("Uploading File Name = " + file.name);
+                                fetch("https://ffl-api.garidium.com/garidium-ffls/uploads%2F" + file.name, { 
+                                    method: "PUT",
+                                    headers: {
+                                        "x-api-key": "',esc_attr($aKey),'",
+                                    },
+                                    body: file
+                                })
+                                .then(
+                                    success => {alert("Upload Successful, we will process the FFL and make it available for the next order shipping to this FFL. Thank you for your contribution!");} 
+                                ).catch(
+                                    error => {alert("There was an Error uploading the FFL, please try again.");console.log(error);}
+                                );
+                            };    
+                            // Event handler executed when a file is selected
+                            const onSelectFile = () => upload(input.files[0]);
+    
+                            // Add a listener on your input
+                            // It will be triggered when a file will be selected
+                            document.getElementById("upload_ffl").addEventListener("click", onSelectFile, false);
+                        }    
+                    });
+                }
+              </script>';
 }
 
 function order_contain_firearms()
