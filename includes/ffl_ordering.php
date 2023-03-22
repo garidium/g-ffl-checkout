@@ -19,18 +19,20 @@ function ffl_customize_checkout_fields($fields)
     $fields['shipping']['shipping_company'] = array(
         'type' => 'hidden',
     );
-    $fields['shipping']['shipping_country'] = array(
-        'type' => 'hidden',
-    );
     $fields['shipping']['shipping_address_1'] = array(
         'type' => 'hidden',
     );
     $fields['shipping']['shipping_city'] = array(
         'type' => 'hidden',
     );
+    /*
     $fields['shipping']['shipping_state'] = array(
         'type' => 'hidden',
     );
+    $fields['shipping']['shipping_country'] = array(
+        'type' => 'hidden',
+    );
+    */
     $fields['shipping']['shipping_postcode'] = array(
         'type' => 'hidden',
     );

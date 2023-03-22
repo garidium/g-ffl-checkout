@@ -9,6 +9,8 @@ function initFFLJs(fKey,message,hook) {
 	}
 
 	document.getElementById("ship-to-different-address").style.display = 'none';
+	document.getElementById("shipping_state_field").style.display = 'none';
+	document.getElementById("shipping_country_field").style.display = 'none';
 
 	FFL.init({
 		container : 'ffl_container',
@@ -90,10 +92,6 @@ function getSelected(data) {
 	jQuery("#shipping_country").prop("disabled",false);
 	jQuery("#shipping_state").prop("disabled",false);
 	
-	jQuery("#shipping_country").val("US"); // Change the value or make some change to the internal state
-	jQuery("#shipping_country").trigger("change");
-	//jQuery("#shipping_country").prop("disabled",true);
-
 	var elemsActive = document.querySelectorAll(".selectedFFLDivButton");
 
 	[].forEach.call(elemsActive, function(el) {
@@ -151,8 +149,12 @@ function getSelected(data) {
 	jQuery("#shipping_country").val("US"); // Change the value or make some change to the internal state
 	jQuery("#shipping_country").trigger("change");
 
-	//jQuery("#shipping_country").prop("disabled",true);
-	//jQuery("#shipping_state").prop("disabled",true);
+	jQuery("#shipping_country").prop("disabled",true);
+	jQuery("#shipping_state").prop("disabled",true);
+	
+	document.getElementById("shipping_state_field").style.display = 'none';
+	document.getElementById("shipping_country_field").style.display = 'none';
+
 
 	return false;
 }

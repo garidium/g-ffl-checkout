@@ -5,7 +5,7 @@ Donate link: https://garidium.com/product/g-ffl-api-key/
 Requires at least: 5.0
 Tested up to: 6.1.1
 Requires PHP: 7.0
-Stable tag: 1.3.6
+Stable tag: 1.3.7
 License: GPL v3+
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -67,6 +67,7 @@ While the plugin is free to download and install, it does require you to purchas
 6. The Download FFL will securely retrieve the FFL copy on-file. These links are not shareable and work for you as a subscriber to the g-FFL API
 
 == Changelog ==
+14. v1.3.7 Fix display of Tax and Shipping Costs after FFL selection 
 13. v1.3.6 Improved load speed of orders page, checking for on-file FFL 
 12. v1.3.5 Max Zoom issue resolved on Local Pickup option
 11. v1.3.4 FFL-Download button now hitting API to get real-time status
