@@ -152,7 +152,7 @@ class g_ffl_Api_Admin
         ?>
         <div class="wrap">
             <a href="https://garidium.com" target="_blank" style="display: inline-block">
-                <img src="<?php echo plugin_dir_url(__FILE__) . 'images/ffl-logo.png'?>" style="width: 150px">
+                <img src="<?php echo plugin_dir_url(__FILE__) . 'images/ffl-logo.png'?>">
             </a>
             <div class="postbox" style="padding: 10px;margin-top: 10px">
 
