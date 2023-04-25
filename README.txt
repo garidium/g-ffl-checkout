@@ -3,9 +3,9 @@ Contributors: garidium
 Tags: FFL, eCommerce checkout, WooCommerce, FFL gun dealers, map api, google maps, gun dealer
 Donate link: https://garidium.com/product/g-ffl-api-key/
 Requires at least: 5.0
-Tested up to: 6.1.1
+Tested up to: 6.2
 Requires PHP: 7.0
-Stable tag: 1.3.9
+Stable tag: 1.4.0
 License: GPL v3+
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -67,7 +67,8 @@ While the plugin is free to download and install, it does require you to purchas
 6. The Download FFL will securely retrieve the FFL copy on-file. These links are not shareable and work for you as a subscriber to the g-FFL API
 
 == Changelog ==
-15. v1.3.9 Cosmetic Logo Changes 
+17. v1.4.0 Added White-labeling Features for Plugin Name and Logo 
+16. v1.3.9 Cosmetic Logo Changes 
 15. v1.3.8 Minor fix for situation when user changes FFL during checkout 
 14. v1.3.7 Fix display of Tax and Shipping Costs after FFL selection 
 13. v1.3.6 Improved load speed of orders page, checking for on-file FFL 
