@@ -108,7 +108,8 @@ class g_ffl_Api_Admin
 
     public function ffl_load_menu()
     {
-        add_menu_page('g-FFL Checkout Settings Page', 'g-FFL Checkout', 'manage_options', 'ffl-api-settings', array($this, 'ffl_api_settings_page'), 'dashicons-location-alt', 70);
+        $custom_plugin_name = (get_option('g_ffl_plugin_name') != ''? get_option('g_ffl_plugin_name') : 'g-FFL Checkout');
+        add_menu_page('g-FFL Checkout Settings Page', $custom_plugin_name, 'manage_options', 'ffl-api-settings', array($this, 'ffl_api_settings_page'), 'dashicons-location-alt', 70);
         add_action('admin_init', array($this, 'register_ffl_api_settings'));
         add_action('woocommerce_product_options_general_product_data', array($this, 'ffl_option_group'));
         add_action('woocommerce_process_product_meta', array($this, 'ffl_save_fields'), 10, 2);
@@ -144,6 +145,8 @@ class g_ffl_Api_Admin
         register_setting('ffl-api-settings', 'ffl_init_map_location');
         register_setting('ffl-api-settings', 'ffl_include_map');
         register_setting('ffl-api-settings', 'ffl_local_pickup');
+        register_setting('ffl-api-settings', 'g_ffl_plugin_name');
+        register_setting('ffl-api-settings', 'g_ffl_plugin_logo_url');
     }
 
     function ffl_api_settings_page()
@@ -151,9 +154,7 @@ class g_ffl_Api_Admin
 
         ?>
         <div class="wrap">
-            <a href="https://garidium.com" target="_blank" style="display: inline-block">
-                <img src="<?php echo plugin_dir_url(__FILE__) . 'images/ffl-checkout-logo.png'?>">
-            </a>
+            <img src="<?php echo esc_attr(get_option('g_ffl_plugin_logo_url') != '' ? get_option('g_ffl_plugin_logo_url') : plugin_dir_url(__FILE__) . 'images/ffl-checkout-logo.png');?>">
             <div class="postbox" style="padding: 10px;margin-top: 10px">
 
                 <form method="post" action="options.php">
@@ -222,8 +223,24 @@ class g_ffl_Api_Admin
                                 <input type="radio" id="ffl_include_map_no" name="ffl_include_map" value="No" <?php echo esc_attr(get_option('ffl_include_map')=='No'?' checked':''); ?> >No                               
                              </td>
                         </tr>
+                        <tr valign="top" id="white_label_settings_name" style="display:none;">
+                            <th scope="row">Plugin Name:</th>
+                            <td>
+                                <input type="text" style="width: 30%" name="g_ffl_plugin_name" maxlength=20
+                                        value="<?php echo esc_attr(get_option('g_ffl_plugin_name') != '' ? get_option('g_ffl_plugin_name') : 'g-FFL Checkout'); ?>"/>
+                            </td>
+                        </tr>
+                        <tr valign="top" id="white_label_settings_url" style="display:none;">
+                            <th scope="row">Plugin Logo URL:</th>
+                            <td>
+                                <input type="text" style="width: 500px;" name="g_ffl_plugin_logo_url"
+                                        value="<?php echo esc_attr(get_option('g_ffl_plugin_logo_url') != '' ? get_option('g_ffl_plugin_logo_url') : plugin_dir_url(__FILE__) . 'images/ffl-checkout-logo.png');?>"/>
+                            </td>
+                        </tr>
                     </table>
                     <?php submit_button(); ?>
+                    <br>
+                    <a style="cursor:pointer;" onclick="document.getElementById('white_label_settings_name').style.display='';document.getElementById('white_label_settings_url').style.display='';">&nbsp;&nbsp;&nbsp;<br>&nbsp;&nbsp;&nbsp;</a>
             </div>
             <div class="postbox" style="padding: 10px;margin-top: 10px">
                 <h3 style="color: blue">Single Product Update Example</h3>    
