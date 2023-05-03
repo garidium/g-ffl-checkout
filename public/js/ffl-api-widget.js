@@ -2601,8 +2601,8 @@
                 text-align:center !important;
             }
             .selectedFFLDivButton {
-                border:solid black 1.5px !important;
-                background: #EEEEEE !important;
+                border:solid #ba102d 1px !important;
+                background: #09fa003d !important;
                 color: #000 !important;
             }
             /** WooCommerce Updates **/
