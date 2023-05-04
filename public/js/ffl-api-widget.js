@@ -673,16 +673,31 @@
         b = document.getElementById("ffl-list");
         var searchByLicense = false;
         var fisp = document.getElementById("ffl-local-pickup-search");
-        var fispContainer = document.getElementById("fff-local-pickup-section");
+        var fispContainer = document.getElementById("ffl-local-pickup-section");
         if (fflLocalPickup.length == 20){
             fispContainer.style.display='';
             fisp.addEventListener("click", function(t) {
                 searchByLicense = true;
+                licenseSearchValue = fflLocalPickup;
                 N.click(), t.preventDefault(), t.stopPropagation();
             });
         }else{
             fispContainer.style.display='none';
         }
+
+        var fflFavorite = document.getElementById("ffl-favorite-search");
+        var fflFavoriteContainer = document.getElementById("ffl-favorite-section");
+        if (customerFavoriteFFL.length == 20){
+            fflFavoriteContainer.style.display='';
+            fflFavorite.addEventListener("click", function(t) {
+                searchByLicense = true;
+                licenseSearchValue = customerFavoriteFFL;
+                N.click(), t.preventDefault(), t.stopPropagation();
+            });
+        }else{
+            fflFavoriteContainer.style.display='none';
+        }
+
 
         ns.addEventListener("keypress", function(t) {
             "Enter" !== t.key && "Enter" !== t.code || (N.click(), t.preventDefault(), t.stopPropagation())
@@ -709,7 +724,7 @@
             document.getElementById("floatingBarsG").style.display="";
             N.classList.add("dsbSearch"), r(), b.classList.add("ffl-hide"), document.getElementById("ffl-click-instructions").classList.add("ffl-hide"), b.innerHTML = "";
             var n = {};
-            return n.action = 'get_ffl_list', n.data = searchByLicense?"{\"license_number\": \"" + fflLocalPickup + "\"}" : "{\"ffl_name\": \"" + ns.value + "\", \"zipcode\": \"" + v.value + "\", \"radius\": \"" + j.value + "\"}", w.post("", n, {
+            return n.action = 'get_ffl_list', n.data = searchByLicense?"{\"license_number\": \"" + licenseSearchValue + "\"}" : "{\"ffl_name\": \"" + ns.value + "\", \"zipcode\": \"" + v.value + "\", \"radius\": \"" + j.value + "\"}", w.post("", n, {
                 headers: {
                     "Content-Type": "application/json",
                     "x-api-key": s,
@@ -810,6 +825,15 @@
                     b.classList.remove("ffl-hide");
                     document.getElementById("ffl-click-instructions").classList.remove("ffl-hide");
                 }
+
+                /*
+                if (searchByLicense && overallCount == 1){
+                    alert("AUTOSELECT NOW");
+                    f.setSelected({data: e});
+                }
+                */
+
+
                 searchByLicense = false;
 
             }, function(t) {
@@ -2574,7 +2598,7 @@
                 font-weight:bold !important;
                 text-align:center !important;
             }
-            #ffl-local-pickup-search {
+            #ffl-favorite-search{
                 -webkit-appearance: none;
                 -moz-appearance: none;
                 appearance: none;
@@ -2587,7 +2611,33 @@
                 height: 45px;
                 margin: 0;
                 transition: all 100ms ease-out;
+                width: 50%;
+                -webkit-border-radius: 0px;
+                -moz-border-radius: 0px;
+                border-radius: 0px;
+                cursor: pointer;
                 width: 100%;
+                border-radius: 5px;
+                outline: none;
+                background-color: #2f2727 !important;
+                color:#EEEEEE !important;
+                font-weight:bold !important;
+                text-align:center !important;
+            }
+            #ffl-local-pickup-search{
+                -webkit-appearance: none;
+                -moz-appearance: none;
+                appearance: none;
+                box-shadow: inset 0 1px 1px #ebebeb;
+                border: 1px solid !important;
+                display: block;
+                -moz-osx-font-smoothing: grayscale;
+                -webkit-font-smoothing: antialiased;
+                font-smoothing: antialiased;
+                height: 45px;
+                margin: 0;
+                transition: all 100ms ease-out;
+                width: 50%;
                 -webkit-border-radius: 0px;
                 -moz-border-radius: 0px;
                 border-radius: 0px;
@@ -2699,9 +2749,16 @@
                     You can also confirm transfer costs.</b>.
                 </span>
             </p>
-            <div class="columns" id="fff-local-pickup-section">
-                <div class="column">
-                    <input readonly id="ffl-local-pickup-search" placeholder="" value="IN STORE PICKUP">
+            <div>
+                <div class="columns" id="ffl-local-pickup-section">
+                    <div class="column">
+                        <input readonly id="ffl-local-pickup-search" placeholder="" value="IN STORE PICKUP">
+                    </div>
+                </div>
+                <div class="columns" id="ffl-favorite-section">
+                    <div class="column">
+                        <input readonly id="ffl-favorite-search" placeholder="" value="FIND THE LAST FFL YOU USED">
+                    </div>
                 </div>
             </div>
             <div id="ffl_search_fields">

@@ -74,13 +74,15 @@ function ffl_checkout_validation($data, $errors)
         if (empty($data['shipping_fflno'])) {
             $errors->add('validation', "You must search for and select a FFL from the list.");
             return;
+        }else{
+            // set the favorite FFL cookie for this customer
+            setcookie('g_ffl_checkout_favorite_ffl', $data['shipping_fflno']);     
         }
 
         if (empty($data['shipping_fflexp'])) {
             $errors->add('validation', "FFL Expiration Data Required.");
             return;
         }
-
     }
 }
 

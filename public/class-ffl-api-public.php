@@ -161,6 +161,10 @@ class G_ffl_Api_Public
         $hok = get_option('ffl_init_map_location');
         $fflLocalPickup = get_option('ffl_local_pickup');
         $fflIncludeMap = get_option('ffl_include_map') == "No"?false:true;
+        $customerFavoriteFFL = '';
+        if(isset($_COOKIE['g_ffl_checkout_favorite_ffl'])) {
+            $customerFavoriteFFL = $_COOKIE['g_ffl_checkout_favorite_ffl'];
+        }
         
         echo '<div id="ffl_container"></div>';
         echo '
@@ -171,6 +175,8 @@ class G_ffl_Api_Public
                     let hok = "' . esc_attr($hok) . '"
                     let fflLocalPickup = "' . esc_attr($fflLocalPickup) . '"
                     let fflIncludeMap = "' . esc_attr($fflIncludeMap) . '"
+                    let licenseSearchValue = ""
+                    let customerFavoriteFFL = "' . esc_attr($customerFavoriteFFL) . '"
                     localStorage.removeItem("selectedFFL");
 
                     if(!document.getElementById("ffl-zip-code")) {
