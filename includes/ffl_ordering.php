@@ -103,8 +103,10 @@ function ffl_order_meta_box_html()
 {
     global $post_id;
     $order = new WC_Order( $post_id );
+    $ffl_name = get_post_meta($order->get_id(), '_shipping_company', true);
     $ffl_onfile = (get_post_meta($order->get_id(), '_shipping_ffl_onfile', true ) == 'Yes');
     $ffl_license = get_post_meta($order->get_id(), '_shipping_fflno', true );
+    $ffl_phone = get_post_meta($order->get_id(), '_shipping_phone', true );
     $ffl_short = str_replace('-','',$ffl_license);  
     $ffl_short = substr($ffl_short, 0, 3) . substr($ffl_short, -5);
     $ffl_expiration = get_post_meta($order->get_id(), '_shipping_fflexp', true);
@@ -116,13 +118,17 @@ function ffl_order_meta_box_html()
     }
 
     echo '
-        <p><strong>FFL License Number:</strong> ' . esc_attr($ffl_license) . '<br>
-        <strong>FFL Expiration Date:</strong> ' . esc_attr($ffl_expiration) . '<br>
+        <p>
+        <strong>Name:</strong> ' . esc_attr($ffl_name) . '<br>
+        <strong>License Number:</strong> ' . esc_attr($ffl_license) . '<br>
+        <strong>Expiration Date:</strong> ' . esc_attr($ffl_expiration) . '<br>
         ';
     
     if ($ffl_email!=""){
-        echo '<strong>FFL Email:</strong> ' . esc_attr($ffl_email) . '<br>';
+        echo '<strong>Email:</strong> ' . esc_attr($ffl_email) . '<br>';
     }
+    echo '<strong>Phone:</strong> ' . esc_attr($ffl_phone) . '<br>';
+
 
     echo '
         <strong>Shipment For:</strong> ' . esc_attr($ffl_customer) . '</p>
