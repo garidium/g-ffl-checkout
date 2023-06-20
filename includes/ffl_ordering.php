@@ -185,7 +185,9 @@ function ffl_order_meta_box_html()
                         // This will upload the file after having read it
                         const upload = (file) => {
                             console.log("Uploading File Name = " + file.name);
-                            fetch("https://ffl-api.garidium.com/garidium-ffls/uploads%2F" + file.name, { 
+                            var ext = file.name.split(".").pop();
+                            var newFileName = "',esc_attr($ffl_short),'" + "." + ext;
+                            fetch("https://ffl-api.garidium.com/garidium-ffls/uploads%2F" + newFileName, { 
                                 method: "PUT",
                                 headers: {
                                     "x-api-key": "',esc_attr($aKey),'",
