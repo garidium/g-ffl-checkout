@@ -26,8 +26,8 @@ While the plugin is free to download and install, it does require you to purchas
 2. Access to the eFile system to download and upload FFL documentation
 3. Access to Mapping and Geocoding features for displaying FFL locations on a map
 
-== To purchase a key, visit the g-FFL API product page: ==
-[g-FFL Product Page](https://garidium.com/g-ffl-api/) 
+== To purchase a key, visit the g-FFL Checkout product page: ==
+[g-FFL Checkout Product Page](https://garidium.com/g-ffl-api/) 
 
 ==Please review our Terms and Conditions: ==
 [Terms and Conditions](https://garidium.com/terms_of_sale/)
