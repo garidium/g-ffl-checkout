@@ -10,7 +10,7 @@ License: GPL v3+
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
 ==Description==
-==Built by a FFL, for FFL's. This plugin will help streamline the firearm purchasing and fulfillment processes.==
+==Built by a FFL, for FFL's. This plugin will add a FFL search & selection widget to your checkout page for products requiring FFL Shipment.==
 It was built to support my business, and I know it will help yours as well. See the plugin in-action on [garidium.com](https://garidium.com).
 
 ==Feature Highlights:==
