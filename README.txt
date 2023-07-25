@@ -5,7 +5,7 @@ Donate link: https://garidium.com/product/g-ffl-api-key/
 Requires at least: 5.0
 Tested up to: 6.2
 Requires PHP: 7.0
-Stable tag: 1.4.5
+Stable tag: 1.4.6
 License: GPL v3+
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -67,6 +67,7 @@ While the plugin is free to download and install, it does require you to purchas
 6. The Download FFL will securely retrieve the FFL copy on-file. These links are not shareable and work for you as a subscriber to the g-FFL API
 
 == Changelog ==
+24. v1.4.6 Added an auto-refresh after FFL Upload Success
 22. v1.4.5 Changed how FFL Upload validation process works
 21. v1.4.4 Added Phone Number and FFL Name to FFL Information Panel in Order Details view
 20. v1.4.3 PLugin will save a customers previous selected FFL to streamline subsequent checkouts
