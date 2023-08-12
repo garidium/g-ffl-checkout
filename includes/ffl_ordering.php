@@ -99,10 +99,84 @@ function ffl_order_meta_box()
     );
 }
 
+add_action( 'wp_ajax_update_order_ffl', 'update_order_ffl' );
+function update_order_ffl()
+{
+    // Get the order object
+    $new_ffl = $_POST['new_ffl'];
+    $order_id = $_POST['order_id'];
+
+    $order = wc_get_order($order_id);
+    $aKey = get_option('ffl_api_key_option');
+    
+ 
+    // Prepare the headers for the POST request
+    $headers = array(
+        'Accept' => 'application/json',
+        'Content-Type' => 'application/json',
+        'x-api-key' => esc_attr($aKey)
+    );
+
+    // Call the web service with a POST request
+    $api_url = 'https://ffl-api.garidium.com';
+    $body = '{"action": "get_ffl_list", "data": {"license_number": "'.$new_ffl.'"}}';
+
+    $response = wp_safe_remote_post($api_url, array(
+        'headers' => $headers,
+        'body' => $body
+    ));
+    
+    $ffl = wp_remote_retrieve_body($response);
+    $ffl = json_decode($ffl, true)[0];
+    
+    if (strlen($ffl['license_number']) == 20){
+        // Update meta_data
+        $new_meta_data = array(
+            array('key' => '_shipping_email', 'value' => $ffl['email']),
+            array('key' => '_shipping_fflno', 'value' => $ffl['license_number']),
+            array('key' => '_shipping_fflexp', 'value' => $ffl['expiration_date']),
+            array('key' => '_shipping_ffl_onfile', 'value' => $ffl['ffl_on_file']?"Yes":"No"),
+            array('key' => 'is_vat_exempt', 'value' => 'no'),
+        );
+        // Update the order's meta_data and shipping fields
+        $order->update_meta_data('_shipping_email', $ffl['email']);
+        $order->update_meta_data('_shipping_fflno', $ffl['license_number']);
+        $order->update_meta_data('_shipping_fflexp', $ffl['expiration_date']);
+        $order->update_meta_data('_shipping_ffl_onfile', $ffl['ffl_on_file']?"Yes":"No");
+        $order->update_meta_data('is_vat_exempt', 'no');
+        
+    
+        // Update shipping fields
+        $shipping_address = array(
+            'first_name' => $order->get_shipping_first_name(),
+            'last_name'  => $order->get_shipping_last_name(),
+            'company'    => $ffl['list_name'],
+            'address_1'  => $ffl['premise_street'],
+            'address_2'  => '',
+            'city'       => $ffl['premise_city'],
+            'state'      => $ffl['premise_state'],
+            'postcode'   => $ffl['premise_zip_code'],
+            'country'    => 'US',
+            'phone'      => $ffl['voice_phone']
+        );
+        
+        $order->set_shipping_address($shipping_address);
+    
+        // Save the changes
+        $order->save();
+        echo 'success';
+    }else{
+        echo 'The FFL License Number provided did not match a record in our ATF database. Please try again. If the error persists please contact support@garidium.com';
+    }
+    wp_die(); 
+
+}
+
 function ffl_order_meta_box_html()
 {
     global $post_id;
     $order = new WC_Order( $post_id );
+    $order_id = $order->get_id();
     $ffl_name = get_post_meta($order->get_id(), '_shipping_company', true);
     $ffl_onfile = (get_post_meta($order->get_id(), '_shipping_ffl_onfile', true ) == 'Yes');
     $ffl_license = get_post_meta($order->get_id(), '_shipping_fflno', true );
@@ -112,6 +186,7 @@ function ffl_order_meta_box_html()
     $ffl_expiration = get_post_meta($order->get_id(), '_shipping_fflexp', true);
     $ffl_email = get_post_meta($order->get_id(), '_shipping_email', true);
     $ffl_customer = get_post_meta($order->get_id(), '_shipping_first_name', true) . ' ' . get_post_meta($order->get_id(), '_shipping_last_name', true);
+
     if ($ffl_license ==""){
         echo '<strong>FFL shipment is not required for this Order</strong>';
         return;
@@ -134,11 +209,25 @@ function ffl_order_meta_box_html()
         <strong>Shipment For:</strong> ' . esc_attr($ffl_customer) . '</p>
         <table>
             <tr>
+                <td>
+                    <div><a id="change_ffl" class="button alt">Change FFL</a></div>
+                </td>
+                <td>&nbsp;</td>
                 <td><div><a id="atf_ezcheck" class="button alt">ATF ezCheck</a></div></td>
                 <td>&nbsp;</td>
                 <td><div id="ffl_upload_download"></div></td>
             </tr>
+            <tr>
+                <td colspan="5">
+                    <div id="change_ffl_form" style="display:none;">
+                        <br>License Number (X-XX-XXX-XX-XX-XXXXX):<br><input style="width:200px;" maxlength=20 type="text" id="new_ffl">
+                        <a id="save_new_ffl" class="button alt">Update</a>
+                        <a id="cancel_new_ffl" class="button alt">Cancel</a>
+                    </div>
+                </td>
+            </tr>
         </table>';
+
         $aKey = get_option('ffl_api_key_option');
         $ezCheckLink = "https://fflezcheck.atf.gov/FFLEzCheck/fflSearch?licsRegn=" . substr($ffl_license,0,1) . "&licsDis=" . substr($ffl_license,2,2) . "&licsSeq=" . substr($ffl_license,-5,5);   
         echo '<script>
@@ -146,6 +235,34 @@ function ffl_order_meta_box_html()
                     window.open("',esc_url_raw($ezCheckLink),'", "_blank", "location=yes, scrollbars=yes,status=yes"); 
                 });
 
+                document.getElementById("change_ffl").addEventListener("click", function(){
+                    document.getElementById("change_ffl_form").style.display=""; 
+                });
+
+                document.getElementById("cancel_new_ffl").addEventListener("click", function(){
+                    document.getElementById("change_ffl_form").style.display="none"; 
+                });
+
+                document.getElementById("save_new_ffl").addEventListener("click", function(){
+                    var new_ffl_input = document.getElementById("new_ffl").value;
+                    if (new_ffl_input.length!=20 || new_ffl_input.indexOf("-") < 0){
+                        alert("The FFL must be properly formatted!"); 
+                        return;
+                    }else{
+                        document.getElementById("save_new_ffl").disabled = true;
+                        document.getElementById("change_ffl_form").innerHTML = "<br><span style=\"font-weight:bold;color:red;font-style:italic;\">Updating FFL Please wait...</span>";
+                        jQuery.ajax({
+                            type: "POST",
+                            url: "',admin_url('admin-ajax.php'),'",
+                            data:{action:"update_order_ffl", order_id: "',esc_attr($order_id),'" , new_ffl: new_ffl_input},
+                            success:function(response) {
+                                if (response!="success"){alert(response);}
+                                window.location.reload();
+                            }
+                        });
+                    }    
+                });
+        
                 function sleep(ms) {
                     return new Promise(resolve => setTimeout(resolve, ms));
                 }
