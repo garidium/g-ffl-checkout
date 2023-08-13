@@ -112,6 +112,7 @@ function update_order_ffl()
  
     // Prepare the headers for the POST request
     $headers = array(
+        'origin' => get_site_url(),
         'Accept' => 'application/json',
         'Content-Type' => 'application/json',
         'x-api-key' => esc_attr($aKey)
@@ -218,7 +219,7 @@ function ffl_order_meta_box_html()
                 <td><div id="ffl_upload_download"></div></td>
             </tr>
             <tr>
-                <td colspan="5">
+                <td colspan="4">
                     <div id="change_ffl_form" style="display:none;">
                         <br>License Number (X-XX-XXX-XX-XX-XXXXX):<br><input style="width:200px;" maxlength=20 type="text" id="new_ffl">
                         <a id="save_new_ffl" class="button alt">Update</a>
