@@ -109,7 +109,7 @@ class g_ffl_Api_Admin
     public function ffl_load_menu()
     {
         $custom_plugin_name = (get_option('g_ffl_plugin_name') != ''? get_option('g_ffl_plugin_name') : 'g-FFL Checkout');
-        add_menu_page('g-FFL Checkout Settings Page', $custom_plugin_name, 'manage_options', 'ffl-api-settings', array($this, 'ffl_api_settings_page'), 'dashicons-location-alt', 70);
+        add_menu_page('g-FFL Checkout Settings Page', $custom_plugin_name, 'manage_options', 'ffl-api-settings', array($this, 'ffl_api_settings_page'), 'dashicons-media-document', 70);
         add_action('admin_init', array($this, 'register_ffl_api_settings'));
         add_action('woocommerce_product_options_general_product_data', array($this, 'ffl_option_group'));
         add_action('woocommerce_process_product_meta', array($this, 'ffl_save_fields'), 10, 2);
