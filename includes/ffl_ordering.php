@@ -86,14 +86,19 @@ function ffl_checkout_validation($data, $errors)
     }
 }
 
-add_action('add_meta_boxes_shop_order', 'ffl_order_meta_box');
+use Automattic\WooCommerce\Internal\DataStores\Orders\CustomOrdersTableController;
+add_action('add_meta_boxes', 'ffl_order_meta_box');
 function ffl_order_meta_box()
 {
+    $screen = wc_get_container()->get( CustomOrdersTableController::class )->custom_orders_table_usage_is_enabled()
+    ? wc_get_page_screen_id( 'shop-order' )
+    : 'shop_order';
+
     add_meta_box(
         'ffl-order-meta-box',
         __('FFL Information'),
         'ffl_order_meta_box_html',
-        'shop_order',
+        $screen,
         'normal',
         'high'
     );
@@ -173,10 +178,10 @@ function update_order_ffl()
 
 }
 
-function ffl_order_meta_box_html()
+function ffl_order_meta_box_html($post_or_order_object)
 {
     global $post_id;
-    $order = new WC_Order( $post_id );
+    $order = ( $post_or_order_object instanceof WP_Post ) ? wc_get_order( $post_or_order_object->ID ) : $post_or_order_object;
     $order_id = $order->get_id();
     $ffl_name = get_post_meta($order->get_id(), '_shipping_company', true);
     $ffl_onfile = (get_post_meta($order->get_id(), '_shipping_ffl_onfile', true ) == 'Yes');

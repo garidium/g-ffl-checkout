@@ -5,7 +5,7 @@ Donate link: https://garidium.com/product/g-ffl-api-key/
 Requires at least: 5.0
 Tested up to: 6.3
 Requires PHP: 7.0
-Stable tag: 1.4.10
+Stable tag: 1.4.11
 License: GPL v3+
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -67,6 +67,7 @@ While the plugin is free to download and install, it does require you to purchas
 6. The Download FFL will securely retrieve the FFL copy on-file. These links are not shareable and work for you as a subscriber to the g-FFL API
 
 == Changelog ==
+29. v1.4.11 HPOS Compatibility
 28. v1.4.10 Minor Updates
 27. v1.4.9 Bug Fixes
 26. v1.4.8 You can now change the selected FFL on an Order
