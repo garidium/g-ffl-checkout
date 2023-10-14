@@ -5,7 +5,18 @@ if (!defined('WPINC')) die('No access outside of wordpress.');
 add_filter('woocommerce_checkout_fields', 'ffl_checkout_fields');
 function ffl_checkout_fields($fields)
 {
-    if (order_contain_firearms()){
+    // check to see if the candr override exists
+    if (isset($_COOKIE["g_ffl_checkout_candr_override"])) {
+        $candr_license_value = isset($_COOKIE["candr_license"]) ? $_COOKIE["candr_license"] : '';
+        $fields['billing']['candr_license'] = array(
+            'type'          => 'text',
+            'required'      => true, 
+            'readonly'      => true, 
+            'label'         => 'C&R License'
+        );
+        return $fields;
+    }
+    if (order_requires_ffl_selector()){
         return ffl_customize_checkout_fields($fields);   
     }else{
         return $fields;
@@ -65,11 +76,36 @@ function ffl_customize_checkout_fields($fields)
 
     return $fields;
 }
+// Hook to add order metadata after checkout validation
+add_action('woocommerce_checkout_create_order', 'add_custom_order_metadata', 10, 2);
+function add_custom_order_metadata($order, $data) {
+    if (isset($_COOKIE["g_ffl_checkout_candr_override"])) {
+        if (isset($_COOKIE["candr_license"])){
+            $order->update_meta_data('_candr_license', $_COOKIE["candr_license"]);
+            // Set the cookie to expire in the past (i.e., immediately expire)
+            setcookie('g_ffl_checkout_candr_override', '', time() - 3600, '/'); // Set the expiration time to a past timestamp
+            setcookie('candr_license', '', time() - 3600, '/'); // Set the expiration time to a past timestamp
+
+            // Unset the cookie from the $_COOKIE superglobal (optional but recommended for immediate effect)
+            unset($_COOKIE['g_ffl_checkout_candr_override']);
+            unset($_COOKIE['candr_license']);
+        }
+    }
+}
 
 add_action('woocommerce_after_checkout_validation', 'ffl_checkout_validation', 10, 2);
 function ffl_checkout_validation($data, $errors)
 {
-    if (order_contain_firearms()) {
+    // check to see if the candr override exists
+    if (isset($_COOKIE["g_ffl_checkout_candr_override"])) {
+        if (empty($data['candr_license'])) {
+            $errors->add('validation', "C&R wasn't set, please close your browser and retry.");
+            return;
+        }
+        return;
+    }
+
+    if (order_requires_ffl_selector()) {
 
         if (empty($data['shipping_fflno'])) {
             $errors->add('validation', "You must search for and select a FFL from the list.");
@@ -183,6 +219,36 @@ function ffl_order_meta_box_html($post_or_order_object)
     global $post_id;
     $order = ( $post_or_order_object instanceof WP_Post ) ? wc_get_order( $post_or_order_object->ID ) : $post_or_order_object;
     $order_id = $order->get_id();
+    $aKey = get_option('ffl_api_key_option');
+
+    // Get the "_candr_license" metadata for the order
+    $candr_license = get_post_meta($order_id, '_candr_license', true);
+
+    // Check if the metadata exists and is not empty
+    if (!empty($candr_license)) {
+        echo 'C&R License: <a style="cursor:pointer;" id="download_candr">' . $candr_license .'</a><br>
+        <script>
+        document.getElementById("download_candr").addEventListener("click", function(){
+            fetch("https://ffl-api.garidium.com/download", {
+                method: "POST",
+                headers: {
+                "Accept": "application/json",
+                "Content-Type": "application/json",
+                "x-api-key": "',esc_attr($aKey),'",
+                },
+                body: JSON.stringify({"candr": "',esc_attr($candr_license),'"})
+            })
+            .then(response=>response.json())
+            .then(data=>{ 
+                window.open(data, "_blank", "location=yes, scrollbars=yes,status=yes");         
+            });
+        });
+        </script>
+        ';
+
+        return;
+    }
+
     $ffl_name = get_post_meta($order->get_id(), '_shipping_company', true);
     $ffl_onfile = (get_post_meta($order->get_id(), '_shipping_ffl_onfile', true ) == 'Yes');
     $ffl_license = get_post_meta($order->get_id(), '_shipping_fflno', true );
@@ -234,7 +300,6 @@ function ffl_order_meta_box_html($post_or_order_object)
             </tr>
         </table>';
 
-        $aKey = get_option('ffl_api_key_option');
         $ezCheckLink = "https://fflezcheck.atf.gov/FFLEzCheck/fflSearch?licsRegn=" . substr($ffl_license,0,1) . "&licsDis=" . substr($ffl_license,2,2) . "&licsSeq=" . substr($ffl_license,-5,5);   
         echo '<script>
                 document.getElementById("atf_ezcheck").addEventListener("click", function(){
@@ -350,7 +415,7 @@ function ffl_order_meta_box_html($post_or_order_object)
               </script>';
 }
 
-function order_contain_firearms()
+function order_requires_ffl_selector()
 {
     $contain_firearms = false;
     foreach (WC()->cart->get_cart() as $cart_item) {

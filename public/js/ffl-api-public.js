@@ -145,7 +145,7 @@ function getSelected(data) {
 
 	jQuery("#shipping_state").val(data.premise_state); // Change the value or make some change to the internal state
 	jQuery("#shipping_state").trigger("change");
-
+	
 	jQuery("#shipping_country").val("US"); // Change the value or make some change to the internal state
 	jQuery("#shipping_country").trigger("change");
 
@@ -154,8 +154,6 @@ function getSelected(data) {
 	
 	document.getElementById("shipping_state_field").style.display = 'none';
 	document.getElementById("shipping_country_field").style.display = 'none';
-
-
 	return false;
 }
 

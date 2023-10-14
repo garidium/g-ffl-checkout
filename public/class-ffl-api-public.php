@@ -102,6 +102,7 @@ class G_ffl_Api_Public
 
         wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/ffl-api-widget.js', array( 'jquery' ), $this->version, false );
         wp_enqueue_script($this->plugin_name . '_init', plugin_dir_url(__FILE__) . 'js/ffl-api-public.js', array('jquery', $this->plugin_name), $this->version, false);
+        wp_localize_script($this->plugin_name . '_init', 'ajax_object', array('ajaxurl' => admin_url('admin-ajax.php')));
     }
 
     function ffl_woo_checkout()
@@ -132,25 +133,35 @@ class G_ffl_Api_Public
                 }
             }
         }
-
+        //$fireArmCount = 0;
+        // check to see if the candr override exists
+        if (isset($_COOKIE["g_ffl_checkout_candr_override"])) {
+            $fireArmCount = 0;
+        }
         if ($fireArmCount > 0) {
             add_action(get_option('ffl_init_map_location', 'woocommerce_checkout_order_review'), array($this, 'ffl_init_map'), 10);
         }else{
             add_action('woocommerce_checkout_shipping', 'handle_no_ffl_items', 10);
-                function handle_no_ffl_items(){
-                    echo '
-                        <script>
-                            document.getElementById("ship-to-different-address-checkbox").checked = false;
-                            document.getElementById("shipping_first_name").value = "";
-                            document.getElementById("shipping_last_name").value = "";
-                            document.getElementById("shipping_company").value = "US";
-                            document.getElementById("shipping_address_1").value = "";
-                            document.getElementById("shipping_address_2").value = "";
-                            document.getElementById("shipping_city").value = "";
-                            document.getElementById("shipping_postcode").value = "";
-                            document.getElementById("shipping_state").value = "";
-                        </script>';
+            function handle_no_ffl_items(){
+                $notes = '';
+                if (isset($_COOKIE["candr_license"])) {
+                    $notes = $_COOKIE['candr_license'];
                 }
+                echo '
+                    <script>
+                        jQuery("#candr_license").val("'.$notes.'");
+                        jQuery("#candr_license").prop("readonly", true);
+                        document.getElementById("ship-to-different-address-checkbox").checked = false;
+                        document.getElementById("shipping_first_name").value = "";
+                        document.getElementById("shipping_last_name").value = "";
+                        document.getElementById("shipping_company").value = "US";
+                        document.getElementById("shipping_address_1").value = "";
+                        document.getElementById("shipping_address_2").value = "";
+                        document.getElementById("shipping_city").value = "";
+                        document.getElementById("shipping_postcode").value = "";
+                        document.getElementById("shipping_state").value = "";
+                    </script>';
+            }
         }
     }
 
@@ -160,6 +171,7 @@ class G_ffl_Api_Public
         $wMes = get_option('ffl_checkout_message') != '' ? get_option('ffl_checkout_message') : '<b>Federal law dictates that your online firearms purchase must be delivered to a federally licensed firearms dealer (FFL) before you can take possession.</b> This process is called a Transfer. Enter your zip code, radius, and FFL name (optional), then click the Find button to get a list of FFL dealers in your area. Select the FFL dealer you want the firearm shipped to. <b><u>Before Checking Out, Contact your selected FFL dealer to confirm they are currently accepting transfers</u></b>. You can also confirm transfer costs.';
         $hok = get_option('ffl_init_map_location');
         $fflLocalPickup = get_option('ffl_local_pickup');
+        $candrOverride = get_option('ffl_candr_override');
         $fflIncludeMap = get_option('ffl_include_map') == "No"?false:true;
         $customerFavoriteFFL = '';
         if(isset($_COOKIE['g_ffl_checkout_favorite_ffl'])) {
@@ -174,6 +186,7 @@ class G_ffl_Api_Public
                     let wMes = `' . wp_kses_post($wMes) . '`
                     let hok = "' . esc_attr($hok) . '"
                     let fflLocalPickup = "' . esc_attr($fflLocalPickup) . '"
+                    let candrOverride = "' . esc_attr($candrOverride) . '"
                     let fflIncludeMap = "' . esc_attr($fflIncludeMap) . '"
                     let licenseSearchValue = ""
                     let customerFavoriteFFL = "' . esc_attr($customerFavoriteFFL) . '"
@@ -186,6 +199,13 @@ class G_ffl_Api_Public
                     }
                 </script>';
     }
+}
 
-
+add_action( 'wp_ajax_candr_bypass', 'candr_bypass' );
+function candr_bypass()
+{
+    $candr = $_POST['candr'];
+    setcookie('g_ffl_checkout_candr_override', "Yes", 0, "/");
+    setcookie('candr_license', $candr, 0, "/");
+    wp_die();
 }

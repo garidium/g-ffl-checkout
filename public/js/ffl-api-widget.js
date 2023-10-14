@@ -685,6 +685,53 @@
             fispContainer.style.display='none';
         }
 
+        var candr = document.getElementById("ffl-candr-override");
+        var candrContainer = document.getElementById("ffl-candr-section");
+        
+        if (candrOverride == "Yes"){
+            candrContainer.style.display='';
+            candr.addEventListener("click", function(t) {
+                var candrLicenseNumber = document.getElementById('candr_license_number').value;
+                const pattern = /^\d{1}-\d{2}-\d{3}-03-[0-9]{1}[A-Z]{1}-[0-9A-Z]{5}$/;
+                var candr_valid = pattern.test(candrLicenseNumber);
+                if (!candr_valid){
+                    alert("The C&R License Number must be properly formatted: X-XX-XXX-03-XX-XXXXX"); 
+                    return;
+                }
+                // Select your input type file and store it in a variable
+                const input = document.getElementById("candr_upload_filename");
+                // This will upload the file after having read it
+                var file = input.files[0];
+                console.log("Uploading C&R File Name = " + file.name);
+                var newFileName = candrLicenseNumber + "." + file.name.split(".").pop();
+                fetch("https://ffl-api.garidium.com/garidium-ffls/uploads%2Fcandr%2F" + newFileName, { 
+                    method: "PUT",
+                    headers: {
+                        "x-api-key": aKey,
+                    },
+                    body: file
+                })
+                .then(
+                    success => {
+                        alert("C&R Upload Successful, The window will refresh, removing the FFL Selector. Please enter your C&R License in the Order notes section to expedite processing.");
+                        jQuery.ajax({
+                            type: "POST",
+                            url: ajax_object.ajaxurl,
+                            data:{action:"candr_bypass", candr: candrLicenseNumber},
+                            success:function(response) {
+                                window.location.reload();
+                                window.scrollTo(0, 0); 
+                            }
+                        });
+                    } 
+                ).catch(
+                    error => {alert("There was an Error uploading the C&R, please try again.");console.log(error);}
+                );
+            });
+        }else{
+            candrContainer.style.display='none';
+        }
+
         var fflFavorite = document.getElementById("ffl-favorite-search");
         var fflFavoriteContainer = document.getElementById("ffl-favorite-section");
         if (customerFavoriteFFL.length == 20){
@@ -2624,6 +2671,32 @@
                 font-weight:bold !important;
                 text-align:center !important;
             }
+            #ffl-candr-override{
+                -webkit-appearance: none;
+                -moz-appearance: none;
+                appearance: none;
+                box-shadow: inset 0 1px 1px #ebebeb;
+                border: 1px solid !important;
+                display: block;
+                -moz-osx-font-smoothing: grayscale;
+                -webkit-font-smoothing: antialiased;
+                font-smoothing: antialiased;
+                height: 45px;
+                margin: 0;
+                transition: all 100ms ease-out;
+                width: 50%;
+                -webkit-border-radius: 0px;
+                -moz-border-radius: 0px;
+                border-radius: 0px;
+                cursor: pointer;
+                width: 100%;
+                border-radius: 5px;
+                outline: none;
+                background-color: #2f2727 !important;
+                color:#EEEEEE !important;
+                font-weight:bold !important;
+                text-align:center !important;
+            }
             #ffl-local-pickup-search{
                 -webkit-appearance: none;
                 -moz-appearance: none;
@@ -2750,6 +2823,29 @@
                 </span>
             </p>
             <div>
+                <div id="ffl-candr-section" style="margin-bottom:20px;padding:5px;border:solid 2px;background:#EEEEEE;">
+                    <div class="columns">
+                        <div class="column" style="text-align:left;color:black;">
+                            Have a C&R?
+                        </div>
+                        <div class="column" style="width:100%;text-align:right;font-style:italic;">
+                            Upload your C&R
+                        </div>
+                    </div>
+                    <div class="columns" id="ffl-candr-section" style="padding:5px;border:solid 2px;background-color:white;">
+                        <div class="column" id="candr_upload_section">
+                            <input type="file" id="candr_upload_filename" style="display:none;" onchange="document.getElementById('candrUploadLable').textContent = this.files[0].name.substring(0,15);">
+                            <label style="width:100%;" id="candrUploadLable" for="candr_upload_filename" class="button alt">SELECT C&R</label>
+                        </div>
+                        <div class="column">
+                            <input style="width:100%;" autocomplete="off" type="text" id="candr_license_number" placeholder="Enter Full C&R License#" class="" value="">
+                        </div>
+                        <div class="column">
+                            <input style="width:100%;" readonly id="ffl-candr-override" placeholder="" value="UPLOAD">
+                        </div>
+                    </div>
+                </div>
+                
                 <div class="columns" id="ffl-local-pickup-section">
                     <div class="column">
                         <input readonly id="ffl-local-pickup-search" placeholder="" value="IN STORE PICKUP">

@@ -144,6 +144,7 @@ class g_ffl_Api_Admin
         register_setting('ffl-api-settings', 'ffl_checkout_message');
         register_setting('ffl-api-settings', 'ffl_init_map_location');
         register_setting('ffl-api-settings', 'ffl_include_map');
+        register_setting('ffl-api-settings', 'ffl_candr_override');
         register_setting('ffl-api-settings', 'ffl_local_pickup');
         register_setting('ffl-api-settings', 'g_ffl_plugin_name');
         register_setting('ffl-api-settings', 'g_ffl_plugin_logo_url');
@@ -222,6 +223,13 @@ class g_ffl_Api_Admin
                                 <input type="radio" id="ffl_include_map_yes" name="ffl_include_map" value="Yes" <?php echo esc_attr(get_option('ffl_include_map')=='Yes' || get_option('ffl_include_map')==''?' checked':''); ?> >Yes&nbsp;&nbsp;
                                 <input type="radio" id="ffl_include_map_no" name="ffl_include_map" value="No" <?php echo esc_attr(get_option('ffl_include_map')=='No'?' checked':''); ?> >No                               
                              </td>
+                        </tr>
+                        <tr valign="top">
+                            <th scope="row">Allow C&R Upload:</th>
+                            <td>
+                                <input type="radio" id="ffl_candr_override_yes" name="ffl_candr_override" value="Yes" <?php echo esc_attr(get_option('ffl_candr_override')=='Yes'?' checked':'');?> >Yes&nbsp;&nbsp;
+                                <input type="radio" id="ffl_candr_override_no" name="ffl_candr_override" value="No" <?php echo esc_attr(get_option('ffl_candr_override')=='No' || get_option('ffl_candr_override')==''?' checked':'');?> >No                               
+                            </td>
                         </tr>
                         <tr valign="top" id="white_label_settings_name" style="display:none;">
                             <th scope="row">Plugin Name:</th>
