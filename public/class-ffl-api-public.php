@@ -201,11 +201,3 @@ class G_ffl_Api_Public
     }
 }
 
-add_action( 'wp_ajax_candr_bypass', 'candr_bypass' );
-function candr_bypass()
-{
-    $candr = $_POST['candr'];
-    setcookie('g_ffl_checkout_candr_override', "Yes", 0, "/");
-    setcookie('candr_license', $candr, 0, "/");
-    wp_die();
-}

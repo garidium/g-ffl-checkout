@@ -713,16 +713,11 @@
                 })
                 .then(
                     success => {
-                        alert("C&R Upload Successful, The window will refresh, removing the FFL Selector. Please enter your C&R License in the Order notes section to expedite processing.");
-                        jQuery.ajax({
-                            type: "POST",
-                            url: ajax_object.ajaxurl,
-                            data:{action:"candr_bypass", candr: candrLicenseNumber},
-                            success:function(response) {
-                                window.location.reload();
-                                window.scrollTo(0, 0); 
-                            }
-                        });
+                        document.cookie = "g_ffl_checkout_candr_override=Yes; path=/";
+                        document.cookie = "candr_license=" + candrLicenseNumber + "; path=/";
+                        alert("C&R Upload Successful, The window will refresh, removing the FFL Selector.");
+                        window.location.reload();
+                        window.scrollTo(0, 0); 
                     } 
                 ).catch(
                     error => {alert("There was an Error uploading the C&R, please try again.");console.log(error);}
