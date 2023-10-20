@@ -2855,7 +2855,7 @@
             <div id="ffl_search_fields">
                 <div class="columns">
                     <div class="column">
-                        <input autocomplete="off" type="text" id="ffl-zip-code" placeholder="Zip Code" class="" value="">
+                        <input autocomplete="off" type="text" id="ffl-zip-code" placeholder="Zip Code" value="">
                     </div>
                     <div class="column">
                         <select id="ffl-radius">
