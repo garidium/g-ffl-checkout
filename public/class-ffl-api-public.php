@@ -183,7 +183,7 @@ class G_ffl_Api_Public
                 <script type="text/javascript">
                     let g_ffl_plugin_directory = "' . esc_attr(plugin_dir_url(__FILE__)) . '";    
                     let aKey = "' . esc_attr($aKey) . '";
-                    let wMes = "' . wp_kses_post($wMes) . '";
+                    let wMes = `' . wp_kses_post($wMes) . '`;
                     let hok = "' . esc_attr($hok) . '";
                     let fflLocalPickup = "' . esc_attr($fflLocalPickup) . '";
                     let candrOverride = "' . esc_attr($candrOverride) . '";
