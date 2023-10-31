@@ -259,160 +259,176 @@ function ffl_order_meta_box_html($post_or_order_object)
     $ffl_email = get_post_meta($order->get_id(), '_shipping_email', true);
     $ffl_customer = get_post_meta($order->get_id(), '_shipping_first_name', true) . ' ' . get_post_meta($order->get_id(), '_shipping_last_name', true);
 
-    if ($ffl_license ==""){
-        echo '<strong>FFL shipment is not required for this Order</strong>';
-        return;
-    }
+    if ($ffl_license == ""){
+        if ($post_id == "") {
+            echo 'You must create the order before adding a FFL';
+        } else {
+            echo '
+            <table>
+                <tr>
+                    <td>
+                        <div><a id="change_ffl" class="button alt">Add FFL to Order</a></div>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="4">
+                        <div id="change_ffl_form" style="display:none;">
+                            <br>License Number (X-XX-XXX-XX-XX-XXXXX):<br><input style="width:200px;" maxlength=20 type="text" id="new_ffl">
+                            <a id="save_new_ffl" class="button alt">Update</a>
+                            <a id="cancel_new_ffl" class="button alt">Cancel</a>
+                        </div>
+                    </td>
+                </tr>
+            </table>';
+        }
+    } else {
+        echo '
+            <p>
+            <strong>Name:</strong> ' . esc_attr($ffl_name) . '<br>
+            <strong>License Number:</strong> ' . esc_attr($ffl_license) . '<br>
+            <strong>Expiration Date:</strong> ' . esc_attr($ffl_expiration) . '<br>
+            ';
+        
+        if ($ffl_email!=""){
+            echo '<strong>Email:</strong> ' . esc_attr($ffl_email) . '<br>';
+        }
+        echo '<strong>Phone:</strong> ' . esc_attr($ffl_phone) . '<br>';
 
-    echo '
-        <p>
-        <strong>Name:</strong> ' . esc_attr($ffl_name) . '<br>
-        <strong>License Number:</strong> ' . esc_attr($ffl_license) . '<br>
-        <strong>Expiration Date:</strong> ' . esc_attr($ffl_expiration) . '<br>
-        ';
+        echo '<strong>Shipment For:</strong> ' . esc_attr($ffl_customer) . '</p>
+            <table>
+                <tr>
+                    <td>
+                        <div><a id="change_ffl" class="button alt">Change FFL</a></div>
+                    </td>
+                    <td>&nbsp;</td>
+                    <td><div><a id="atf_ezcheck" class="button alt">ATF ezCheck</a></div></td>
+                    <td>&nbsp;</td>
+                    <td><div id="ffl_upload_download"></div></td>
+                </tr>
+                <tr>
+                    <td colspan="4">
+                        <div id="change_ffl_form" style="display:none;">
+                            <br>License Number (X-XX-XXX-XX-XX-XXXXX):<br><input style="width:200px;" maxlength=20 type="text" id="new_ffl">
+                            <a id="save_new_ffl" class="button alt">Update</a>
+                            <a id="cancel_new_ffl" class="button alt">Cancel</a>
+                        </div>
+                    </td>
+                </tr>
+            </table>';
+            $ezCheckLink = "https://fflezcheck.atf.gov/FFLEzCheck/fflSearch?licsRegn=" . substr($ffl_license,0,1) . "&licsDis=" . substr($ffl_license,2,2) . "&licsSeq=" . substr($ffl_license,-5,5);   
+            echo '<script>
+                    document.getElementById("atf_ezcheck").addEventListener("click", function(){
+                        window.open("',esc_url_raw($ezCheckLink),'", "_blank", "location=yes, scrollbars=yes,status=yes"); 
+                    });
+                 </script>';
+    }
+    echo '<script>
+            document.getElementById("change_ffl").addEventListener("click", function(){
+                document.getElementById("change_ffl_form").style.display=""; 
+            });
+
+            document.getElementById("cancel_new_ffl").addEventListener("click", function(){
+                document.getElementById("change_ffl_form").style.display="none"; 
+            });
+            document.getElementById("save_new_ffl").addEventListener("click", function(){
+                var new_ffl_input = document.getElementById("new_ffl").value;
+                if (new_ffl_input.length!=20 || new_ffl_input.indexOf("-") < 0){
+                    alert("The FFL must be properly formatted!"); 
+                    return;
+                }else{
+                    document.getElementById("save_new_ffl").disabled = true;
+                    document.getElementById("change_ffl_form").innerHTML = "<br><span style=\"font-weight:bold;color:red;font-style:italic;\">Updating FFL Please wait...</span>";
+                    jQuery.ajax({
+                        type: "POST",
+                        url: "',admin_url('admin-ajax.php'),'",
+                        data:{action:"update_order_ffl", order_id: "',esc_attr($order_id),'" , new_ffl: new_ffl_input},
+                        success:function(response) {
+                            if (response!="success"){alert(response);}
+                            window.location.reload();
+                        }
+                    });
+                }    
+            });
     
-    if ($ffl_email!=""){
-        echo '<strong>Email:</strong> ' . esc_attr($ffl_email) . '<br>';
-    }
-    echo '<strong>Phone:</strong> ' . esc_attr($ffl_phone) . '<br>';
+            function sleep(ms) {
+                return new Promise(resolve => setTimeout(resolve, ms));
+            }
 
-
-    echo '
-        <strong>Shipment For:</strong> ' . esc_attr($ffl_customer) . '</p>
-        <table>
-            <tr>
-                <td>
-                    <div><a id="change_ffl" class="button alt">Change FFL</a></div>
-                </td>
-                <td>&nbsp;</td>
-                <td><div><a id="atf_ezcheck" class="button alt">ATF ezCheck</a></div></td>
-                <td>&nbsp;</td>
-                <td><div id="ffl_upload_download"></div></td>
-            </tr>
-            <tr>
-                <td colspan="4">
-                    <div id="change_ffl_form" style="display:none;">
-                        <br>License Number (X-XX-XXX-XX-XX-XXXXX):<br><input style="width:200px;" maxlength=20 type="text" id="new_ffl">
-                        <a id="save_new_ffl" class="button alt">Update</a>
-                        <a id="cancel_new_ffl" class="button alt">Cancel</a>
-                    </div>
-                </td>
-            </tr>
-        </table>';
-
-        $ezCheckLink = "https://fflezcheck.atf.gov/FFLEzCheck/fflSearch?licsRegn=" . substr($ffl_license,0,1) . "&licsDis=" . substr($ffl_license,2,2) . "&licsSeq=" . substr($ffl_license,-5,5);   
-        echo '<script>
-                document.getElementById("atf_ezcheck").addEventListener("click", function(){
-                    window.open("',esc_url_raw($ezCheckLink),'", "_blank", "location=yes, scrollbars=yes,status=yes"); 
-                });
-
-                document.getElementById("change_ffl").addEventListener("click", function(){
-                    document.getElementById("change_ffl_form").style.display=""; 
-                });
-
-                document.getElementById("cancel_new_ffl").addEventListener("click", function(){
-                    document.getElementById("change_ffl_form").style.display="none"; 
-                });
-
-                document.getElementById("save_new_ffl").addEventListener("click", function(){
-                    var new_ffl_input = document.getElementById("new_ffl").value;
-                    if (new_ffl_input.length!=20 || new_ffl_input.indexOf("-") < 0){
-                        alert("The FFL must be properly formatted!"); 
-                        return;
-                    }else{
-                        document.getElementById("save_new_ffl").disabled = true;
-                        document.getElementById("change_ffl_form").innerHTML = "<br><span style=\"font-weight:bold;color:red;font-style:italic;\">Updating FFL Please wait...</span>";
-                        jQuery.ajax({
-                            type: "POST",
-                            url: "',admin_url('admin-ajax.php'),'",
-                            data:{action:"update_order_ffl", order_id: "',esc_attr($order_id),'" , new_ffl: new_ffl_input},
-                            success:function(response) {
-                                if (response!="success"){alert(response);}
-                                window.location.reload();
+            async function reload() {
+                await sleep(10000);
+                load_ffl();
+            }
+            
+            function load_ffl(){
+                fetch("https://ffl-api.garidium.com", {
+                    method: "POST",
+                    headers: {
+                    "Accept": "application/json",
+                    "Content-Type": "application/json",
+                    "x-api-key": "',esc_attr($aKey),'",
+                    },
+                    body: JSON.stringify({"action": "get_ffl_list", "data": {"license_number": "',esc_attr($ffl_license),'"}})
+                })
+                .then(response=>response.json())
+                .then(data=>{ 
+                    var onFile = data[0].ffl_on_file;  
+                    if (onFile){
+                        document.getElementById("ffl_upload_download").innerHTML = "<a id=\"download_ffl\" class=\"button alt\" data-marker-id=\"" + data[0].short_lic_nodash + "\">Download FFL</a>";
+                        document.getElementById("download_ffl").addEventListener("click", function(){
+                            if (window.confirm("It is your responsibility to ensure the receiving FFL is valid (using ezCHeck) and is willing and able to accept transfers. Do not assume that is the case because this FFL is on-file. If you have an issue with a transfer and the FFL should be removed, please contact us at sales@garidium.com with the FFL number to remove. If the download is not working, try again, check popup-blockers.")){
+                                fetch("https://ffl-api.garidium.com/download", {
+                                    method: "POST",
+                                    headers: {
+                                    "Accept": "application/json",
+                                    "Content-Type": "application/json",
+                                    "x-api-key": "',esc_attr($aKey),'",
+                                    },
+                                    body: JSON.stringify({"fflno": "',esc_attr($ffl_short),'"})
+                                })
+                                .then(response=>response.json())
+                                .then(data=>{ 
+                                    window.open(data, "_blank", "location=yes, scrollbars=yes,status=yes");         
+                                });
                             }
                         });
+
+                    }else{
+                        document.getElementById("ffl_upload_download").innerHTML = "<strong>Upload a FFL to the g-FFL eFile System:</strong><input type=\"file\" id=\"ffl_upload_filename\"><a id=\"upload_ffl\" class=\"button alt\">Upload FFL</a>";
+                        // Select your input type file and store it in a variable
+                        const input = document.getElementById("ffl_upload_filename");
+                        // This will upload the file after having read it
+                        const upload = (file) => {
+                            console.log("Uploading File Name = " + file.name);
+                            var ext = file.name.split(".").pop();
+                            var newFileName = "',esc_attr($ffl_short),'" + "." + ext;
+                            fetch("https://ffl-api.garidium.com/garidium-ffls/uploads%2F" + newFileName, { 
+                                method: "PUT",
+                                headers: {
+                                    "x-api-key": "',esc_attr($aKey),'",
+                                },
+                                body: file
+                            })
+                            .then(
+                                success => {
+                                    alert("Upload Successful, we will process the FFL and make it available for the next order shipping to this FFL. Thank you for your contribution!");
+                                    document.getElementById("ffl_upload_download").innerHTML = "";
+                                    reload();
+                                } 
+                            ).catch(
+                                error => {alert("There was an Error uploading the FFL, please try again.");console.log(error);}
+                            );
+                        };    
+                        // Event handler executed when a file is selected
+                        const onSelectFile = () => upload(input.files[0]);
+
+                        // Add a listener on your input
+                        // It will be triggered when a file will be selected
+                        document.getElementById("upload_ffl").addEventListener("click", onSelectFile, false);
                     }    
                 });
-        
-                function sleep(ms) {
-                    return new Promise(resolve => setTimeout(resolve, ms));
-                }
-
-                async function reload() {
-                    await sleep(10000);
-                    load_ffl();
-                }
-                
-                function load_ffl(){
-                    fetch("https://ffl-api.garidium.com", {
-                        method: "POST",
-                        headers: {
-                        "Accept": "application/json",
-                        "Content-Type": "application/json",
-                        "x-api-key": "',esc_attr($aKey),'",
-                        },
-                        body: JSON.stringify({"action": "get_ffl_list", "data": {"license_number": "',esc_attr($ffl_license),'"}})
-                    })
-                    .then(response=>response.json())
-                    .then(data=>{ 
-                        var onFile = data[0].ffl_on_file;  
-                        if (onFile){
-                            document.getElementById("ffl_upload_download").innerHTML = "<a id=\"download_ffl\" class=\"button alt\" data-marker-id=\"" + data[0].short_lic_nodash + "\">Download FFL</a>";
-                            document.getElementById("download_ffl").addEventListener("click", function(){
-                                if (window.confirm("It is your responsibility to ensure the receiving FFL is valid (using ezCHeck) and is willing and able to accept transfers. Do not assume that is the case because this FFL is on-file. If you have an issue with a transfer and the FFL should be removed, please contact us at sales@garidium.com with the FFL number to remove. If the download is not working, try again, check popup-blockers.")){
-                                    fetch("https://ffl-api.garidium.com/download", {
-                                        method: "POST",
-                                        headers: {
-                                        "Accept": "application/json",
-                                        "Content-Type": "application/json",
-                                        "x-api-key": "',esc_attr($aKey),'",
-                                        },
-                                        body: JSON.stringify({"fflno": "',esc_attr($ffl_short),'"})
-                                    })
-                                    .then(response=>response.json())
-                                    .then(data=>{ 
-                                        window.open(data, "_blank", "location=yes, scrollbars=yes,status=yes");         
-                                    });
-                                }
-                            });
-
-                        }else{
-                            document.getElementById("ffl_upload_download").innerHTML = "<strong>Upload a FFL to the g-FFL eFile System:</strong><input type=\"file\" id=\"ffl_upload_filename\"><a id=\"upload_ffl\" class=\"button alt\">Upload FFL</a>";
-                            // Select your input type file and store it in a variable
-                            const input = document.getElementById("ffl_upload_filename");
-                            // This will upload the file after having read it
-                            const upload = (file) => {
-                                console.log("Uploading File Name = " + file.name);
-                                var ext = file.name.split(".").pop();
-                                var newFileName = "',esc_attr($ffl_short),'" + "." + ext;
-                                fetch("https://ffl-api.garidium.com/garidium-ffls/uploads%2F" + newFileName, { 
-                                    method: "PUT",
-                                    headers: {
-                                        "x-api-key": "',esc_attr($aKey),'",
-                                    },
-                                    body: file
-                                })
-                                .then(
-                                    success => {
-                                        alert("Upload Successful, we will process the FFL and make it available for the next order shipping to this FFL. Thank you for your contribution!");
-                                        document.getElementById("ffl_upload_download").innerHTML = "";
-                                        reload();
-                                    } 
-                                ).catch(
-                                    error => {alert("There was an Error uploading the FFL, please try again.");console.log(error);}
-                                );
-                            };    
-                            // Event handler executed when a file is selected
-                            const onSelectFile = () => upload(input.files[0]);
-
-                            // Add a listener on your input
-                            // It will be triggered when a file will be selected
-                            document.getElementById("upload_ffl").addEventListener("click", onSelectFile, false);
-                        }    
-                    });
-                }
-                load_ffl();
-              </script>';
+            }
+            load_ffl();
+            </script>';
 }
 
 function order_requires_ffl_selector()
