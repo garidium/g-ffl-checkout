@@ -216,7 +216,6 @@ function update_order_ffl()
 
 function ffl_order_meta_box_html($post_or_order_object)
 {
-    global $post_id;
     $order = ( $post_or_order_object instanceof WP_Post ) ? wc_get_order( $post_or_order_object->ID ) : $post_or_order_object;
     $order_id = $order->get_id();
     $aKey = get_option('ffl_api_key_option');
@@ -258,9 +257,10 @@ function ffl_order_meta_box_html($post_or_order_object)
     $ffl_expiration = get_post_meta($order->get_id(), '_shipping_fflexp', true);
     $ffl_email = get_post_meta($order->get_id(), '_shipping_email', true);
     $ffl_customer = get_post_meta($order->get_id(), '_shipping_first_name', true) . ' ' . get_post_meta($order->get_id(), '_shipping_last_name', true);
-
+    $status = $order->get_status();
+    
     if ($ffl_license == ""){
-        if ($post_id == "") {
+        if ($status == "auto-draft") {
             echo 'You must create the order before adding a FFL';
         } else {
             echo '
