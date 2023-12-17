@@ -108,7 +108,7 @@ function ffl_checkout_validation($data, $errors)
     if (order_requires_ffl_selector()) {
 
         if (empty($data['shipping_fflno'])) {
-            $errors->add('validation', "You must search for and select a FFL from the list.");
+            $errors->add('validation', "You must search or and select a FFL from the list. Enter a Zip Code near your FFL and click on Find FFL. If you selected a FFL ans still see this error, go to the My Account menu item and sign in first. Then try again.");
             return;
         }else{
             // set the favorite FFL cookie for this customer

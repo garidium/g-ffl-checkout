@@ -747,6 +747,7 @@
         v.addEventListener("keypress", function(t) {
             "Enter" !== t.key && "Enter" !== t.code || (N.click(), t.preventDefault(), t.stopPropagation())
         }), N.addEventListener("click", function(t) {
+            localStorage.removeItem("selectedFFL");
             //clear out shipping fields
             setNativeValue(document.getElementById("shipping_country"), "US");
             setNativeValue(document.getElementById("shipping_company"), "");

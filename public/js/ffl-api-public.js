@@ -67,6 +67,7 @@ function initFFLJs(fKey,message,hook) {
 		function(e) {
 
 			if(localStorage.getItem("selectedFFL") === null) {
+				alert("Please make sure that you select a FFL prior to Placing the Order. Enter a Zip Code for the location of your FFL and click on the Find FFL button. Then select an FFL by clicking on the row that displays your requested FFL.");
 				e.preventDefault();
 				e.stopPropagation();
 				return false;
