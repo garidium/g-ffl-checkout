@@ -2654,7 +2654,6 @@
                 height: 45px;
                 margin: 0;
                 transition: all 100ms ease-out;
-                width: 50%;
                 -webkit-border-radius: 0px;
                 -moz-border-radius: 0px;
                 border-radius: 0px;
@@ -2706,7 +2705,6 @@
                 height: 45px;
                 margin: 0;
                 transition: all 100ms ease-out;
-                width: 50%;
                 -webkit-border-radius: 0px;
                 -moz-border-radius: 0px;
                 border-radius: 0px;
@@ -2748,20 +2746,20 @@
                 border-radius: 4px;
             }
             /* Last Update */
-            .columns {
+            .ffl_checkout_columns {
                 display: flex;
                 justify-content: center;
                 //align-items: baseline;
                 padding-bottom: 5px !important;
             }
-            .column {
+            .ffl_checkout_column {
                 flex: 1;
                 margin: 2px;
             }
-            .column:first-child {
+            .ffl_checkout_column:first-child {
                 margin-left: 0;
             }
-            .column:last-child {
+            .ffl_checkout_column:last-child {
                 margin-right: 0;
             }
             @media (min-width: 320px) and (max-width: 480px) {
@@ -2820,45 +2818,45 @@
             </p>
             <div>
                 <div id="ffl-candr-section" style="margin-bottom:20px;padding:5px;border:solid 2px;background:#EEEEEE;">
-                    <div class="columns">
-                        <div class="column" style="text-align:left;color:black;">
+                    <div class="ffl_checkout_columns">
+                        <div class="ffl_checkout_column" style="text-align:left;color:black;">
                             Have a C&R?
                         </div>
-                        <div class="column" style="width:100%;text-align:right;font-style:italic;">
+                        <div class="ffl_checkout_column" style="width:100%;text-align:right;font-style:italic;">
                             Upload your C&R
                         </div>
                     </div>
-                    <div class="columns" id="ffl-candr-section" style="padding:5px;border:solid 2px;background-color:white;">
-                        <div class="column" id="candr_upload_section">
+                    <div class="ffl_checkout_columns" id="ffl-candr-section" style="padding:5px;border:solid 2px;background-color:white;">
+                        <div class="ffl_checkout_column" id="candr_upload_section">
                             <input type="file" id="candr_upload_filename" style="display:none;" onchange="document.getElementById('candrUploadLable').textContent = this.files[0].name.substring(0,15);">
                             <label style="width:100%;" id="candrUploadLable" for="candr_upload_filename" class="button alt">SELECT C&R</label>
                         </div>
-                        <div class="column">
+                        <div class="ffl_checkout_column">
                             <input style="width:100%;" autocomplete="off" type="text" id="candr_license_number" placeholder="Enter Full C&R License#" class="" value="">
                         </div>
-                        <div class="column">
+                        <div class="ffl_checkout_column">
                             <input style="width:100%;" readonly id="ffl-candr-override" placeholder="" value="UPLOAD">
                         </div>
                     </div>
                 </div>
                 
-                <div class="columns" id="ffl-local-pickup-section">
-                    <div class="column">
+                <div id="ffl-local-pickup-section" style="display:none;">
+                    <div>
                         <input readonly id="ffl-local-pickup-search" placeholder="" value="IN STORE PICKUP">
                     </div>
                 </div>
-                <div class="columns" id="ffl-favorite-section">
-                    <div class="column">
+                <div id="ffl-favorite-section" style="display:none;">
+                    <div>
                         <input readonly id="ffl-favorite-search" placeholder="" value="FIND THE LAST FFL YOU USED">
                     </div>
                 </div>
             </div>
             <div id="ffl_search_fields">
-                <div class="columns">
-                    <div class="column">
+                <div class="ffl_checkout_columns">
+                    <div class="ffl_checkout_column">
                         <input autocomplete="off" type="text" id="ffl-zip-code" placeholder="Zip Code" value="">
                     </div>
-                    <div class="column">
+                    <div class="ffl_checkout_column">
                         <select id="ffl-radius">
                             <option value="5" selected="">within 5 Miles</option>
                             <option value="10">Within 10 Miles</option>
@@ -2866,12 +2864,12 @@
                             <option value="50">Within 50 Miles</option>
                         </select>
                     </div>
-                    <div class="column">
+                    <div class="ffl_checkout_column">
                         <input readonly id="ffl-search" placeholder="FIND FFL" value="FIND FFL">
                     </div>
                 </div>
-                <div class="columns">
-                    <div class="column">
+                <div class="ffl_checkout_columns">
+                    <div class="ffl_checkout_column">
                         <input autocomplete="off" type="text" id="ffl-name-search" placeholder="FFL Name (optional)">
                     </div>
                 </div>

@@ -5,7 +5,7 @@ Donate link: https://garidium.com/product/g-ffl-api-key/
 Requires at least: 5.0
 Tested up to: 6.3
 Requires PHP: 7.0
-Stable tag: 1.4.16
+Stable tag: 1.4.17
 License: GPL v3+
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -67,6 +67,7 @@ While the plugin is free to download and install, it does require you to purchas
 6. The Download FFL will securely retrieve the FFL copy on-file. These links are not shareable and work for you as a subscriber to the g-FFL API
 
 == Changelog ==
+34. v1.4.17 Styling changes, you may need to adjust any custom CSS if you applied anything to the column or columns CSS classes
 33. v1.4.16 Added a popup message if no FFL selected
 32. v1.4.15 You can now add a FFL to a manually created order (w/HPOS Support)
 31. v1.4.14 You can now add a FFL to a manually created order
