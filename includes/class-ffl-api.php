@@ -341,13 +341,15 @@ add_action('manage_product_posts_custom_column', 'firearm_product_col_data', 2);
 function firearm_product_col_data($column)
 {
     global $post;
-    $firearm_product_ids = get_post_meta($post->ID, '_firearm_product', true);
-    if ($column == 'FIREARM') {
-        if (isset($firearm_product_ids) && !empty($firearm_product_ids)) {
-            if ($firearm_product_ids === 'yes') echo '<strong>FFL</strong>';
-            if ($firearm_product_ids === 'no') echo '<strong></strong>';
-        } else {
-            echo "Undefined";
+    if ($post) {
+        $firearm_product_ids = get_post_meta($post->ID, '_firearm_product', true);
+        if ($column == 'FIREARM') {
+            if (isset($firearm_product_ids) && !empty($firearm_product_ids)) {
+                if ($firearm_product_ids === 'yes') echo '<strong>FFL</strong>';
+                if ($firearm_product_ids === 'no') echo '<strong></strong>';
+            } else {
+                echo "Undefined";
+            }
         }
     }
 }
