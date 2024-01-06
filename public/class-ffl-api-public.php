@@ -151,7 +151,9 @@ class G_ffl_Api_Public
                     <script>
                         jQuery("#candr_license").val("'.$notes.'");
                         jQuery("#candr_license").prop("readonly", true);
-                        document.getElementById("ship-to-different-address-checkbox").checked = false;
+                        if (document.getElementById("ship-to-different-address-checkbox") != null){
+                            document.getElementById("ship-to-different-address-checkbox").checked = false;
+                        }
                         document.getElementById("shipping_first_name").value = "";
                         document.getElementById("shipping_last_name").value = "";
                         document.getElementById("shipping_company").value = "US";

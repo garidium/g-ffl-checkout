@@ -2,13 +2,18 @@ function initFFLJs(fKey,message,hook) {
 
 	if(hook === "woocommerce_before_checkout_billing_form") {
 		setTimeout(function() {
-			document.getElementById("ship-to-different-address-checkbox").disabled = true;
+			if (document.getElementById("ship-to-different-address-checkbox") != null){
+				document.getElementById("ship-to-different-address-checkbox").disabled = true;
+			}
 		},1000);
 	} else {
-		document.getElementById("ship-to-different-address-checkbox").disabled = true;
+		if (document.getElementById("ship-to-different-address-checkbox") != null){
+			document.getElementById("ship-to-different-address-checkbox").disabled = true;
+		}
 	}
-
-	document.getElementById("ship-to-different-address").style.display = 'none';
+	if (document.getElementById("ship-to-different-address") != null){
+		document.getElementById("ship-to-different-address").style.display = 'none';
+	}
 	document.getElementById("shipping_state_field").style.display = 'none';
 	document.getElementById("shipping_country_field").style.display = 'none';
 
@@ -49,7 +54,9 @@ function initFFLJs(fKey,message,hook) {
 					e.stopPropagation();
 					return false;
 				} else {
-					document.getElementById("ship-to-different-address-checkbox").disabled = false;
+					if (document.getElementById("ship-to-different-address-checkbox") != null){
+						document.getElementById("ship-to-different-address-checkbox").disabled = false;
+					}
 					jQuery("#wizard .actions a[href='#']").prop('href','#next');
 
 				}
@@ -74,7 +81,9 @@ function initFFLJs(fKey,message,hook) {
 			} else {
 
 			    if(jQuery('.woocommerce-error').length === 0) {
-                    document.getElementById("ship-to-different-address-checkbox").disabled = false;
+					if (document.getElementById("ship-to-different-address-checkbox") != null){
+						document.getElementById("ship-to-different-address-checkbox").disabled = false;
+					}
                     document.getElementById("shipping_country").disabled = false;
                     document.getElementById("shipping_state").disabled = false;
                 }

@@ -221,7 +221,7 @@ function ffl_order_meta_box_html($post_or_order_object)
     $aKey = get_option('ffl_api_key_option');
 
     // Get the "_candr_license" metadata for the order
-    $candr_license = get_post_meta($order_id, '_candr_license', true);
+    $candr_license = $order->get_meta('_candr_license', true);
 
     // Check if the metadata exists and is not empty
     if (!empty($candr_license)) {
@@ -248,15 +248,16 @@ function ffl_order_meta_box_html($post_or_order_object)
         return;
     }
 
-    $ffl_name = get_post_meta($order->get_id(), '_shipping_company', true);
-    $ffl_onfile = (get_post_meta($order->get_id(), '_shipping_ffl_onfile', true ) == 'Yes');
-    $ffl_license = get_post_meta($order->get_id(), '_shipping_fflno', true );
-    $ffl_phone = get_post_meta($order->get_id(), '_shipping_phone', true );
+    $ffl_name = $order->get_meta('_shipping_company', true);
+    $ffl_onfile = $order->get_meta('_shipping_ffl_onfile', true ) == 'Yes';
+    $ffl_license = $order->get_meta('_shipping_fflno', true );
+    $ffl_phone = $order->get_meta('_shipping_phone', true );
     $ffl_short = str_replace('-','',$ffl_license);  
     $ffl_short = substr($ffl_short, 0, 3) . substr($ffl_short, -5);
-    $ffl_expiration = get_post_meta($order->get_id(), '_shipping_fflexp', true);
-    $ffl_email = get_post_meta($order->get_id(), '_shipping_email', true);
-    $ffl_customer = get_post_meta($order->get_id(), '_shipping_first_name', true) . ' ' . get_post_meta($order->get_id(), '_shipping_last_name', true);
+    $ffl_expiration = $order->get_meta('_shipping_fflexp', true);
+    $ffl_email = $order->get_meta('_shipping_email', true);
+    $ffl_customer = $order->get_meta('_shipping_first_name', true) . ' ' . $order->get_meta('_shipping_last_name', true);
+    
     $status = $order->get_status();
     
     if ($ffl_license == ""){
