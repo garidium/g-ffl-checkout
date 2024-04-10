@@ -2478,10 +2478,6 @@
                 text-align: center;
             }
             
-            .content label {
-                float: left;
-            }
-            
             .ffl-list-container {
                 display: flex;
                 justify-content: flex-start;

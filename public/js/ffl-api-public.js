@@ -1,16 +1,4 @@
 function initFFLJs(fKey,message,hook) {
-
-	if(hook === "woocommerce_before_checkout_billing_form") {
-		setTimeout(function() {
-			if (document.getElementById("ship-to-different-address-checkbox") != null){
-				document.getElementById("ship-to-different-address-checkbox").disabled = true;
-			}
-		},1000);
-	} else {
-		if (document.getElementById("ship-to-different-address-checkbox") != null){
-			document.getElementById("ship-to-different-address-checkbox").disabled = true;
-		}
-	}
 	if (document.getElementById("ship-to-different-address") != null){
 		document.getElementById("ship-to-different-address").style.display = 'none';
 	}
