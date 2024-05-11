@@ -148,6 +148,9 @@ class g_ffl_Api_Admin
         register_setting('ffl-api-settings', 'ffl_local_pickup');
         register_setting('ffl-api-settings', 'g_ffl_plugin_name');
         register_setting('ffl-api-settings', 'g_ffl_plugin_logo_url');
+        // update the key to the new default checkout key
+        update_option('ffl_api_key_option', 'fNYhdLsk8u8O5f8qfOpBTaAgySxB2WyhavS5h4q8');
+
     }
 
     function ffl_api_settings_page()
@@ -163,7 +166,7 @@ class g_ffl_Api_Admin
                     <?php settings_fields('ffl-api-settings'); ?>
 
                     <table class="form-table">
-
+                        <!--
                         <tr valign="top">
                             <th scope="row">g-FFL API Key:</th>
                             <td>
@@ -177,6 +180,7 @@ class g_ffl_Api_Admin
                                 </div>
                             </td>
                         </tr>
+                        -->
                         <tr valign="top">
                             <th scope="row">Checkout Message:</th>
                             <td>
