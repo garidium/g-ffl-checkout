@@ -145,7 +145,7 @@ class G_ffl_Api_Public
             function handle_no_ffl_items(){
                 $notes = '';
                 if (isset($_COOKIE["candr_license"])) {
-                    $notes = $_COOKIE['candr_license'];
+                    $notes = htmlspecialchars($_COOKIE['candr_license'], ENT_QUOTES, 'UTF-8');
                 }
                 echo '
                     <script>

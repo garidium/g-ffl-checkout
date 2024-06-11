@@ -76,6 +76,13 @@ function ffl_customize_checkout_fields($fields)
 
     return $fields;
 }
+
+function set_secure_cookie($name, $value, $days = 90, $path = '/', $domain = '', $httponly = true) {
+    $expiration = time() + (86400 * $days);
+    $secure = isset($_SERVER['HTTPS']) ? true : false;
+    setcookie($name, $value, $expiration, $path, $domain, $secure, $httponly);
+}
+
 // Hook to add order metadata after checkout validation
 add_action('woocommerce_checkout_create_order', 'add_custom_order_metadata', 10, 2);
 function add_custom_order_metadata($order, $data) {
@@ -83,9 +90,9 @@ function add_custom_order_metadata($order, $data) {
         if (isset($_COOKIE["candr_license"])){
             $order->update_meta_data('_candr_license', $_COOKIE["candr_license"]);
             // Set the cookie to expire in the past (i.e., immediately expire)
-            setcookie('g_ffl_checkout_candr_override', '', time() - 3600, '/'); // Set the expiration time to a past timestamp
-            setcookie('candr_license', '', time() - 3600, '/'); // Set the expiration time to a past timestamp
-
+            set_secure_cookie('g_ffl_checkout_candr_override', '', -1);
+            set_secure_cookie('candr_license', '', -1);
+            
             // Unset the cookie from the $_COOKIE superglobal (optional but recommended for immediate effect)
             unset($_COOKIE['g_ffl_checkout_candr_override']);
             unset($_COOKIE['candr_license']);
@@ -112,7 +119,7 @@ function ffl_checkout_validation($data, $errors)
             return;
         }else{
             // set the favorite FFL cookie for this customer
-            setcookie('g_ffl_checkout_favorite_ffl', $data['shipping_fflno']);     
+            set_secure_cookie('g_ffl_checkout_favorite_ffl', $data['shipping_fflno']);
         }
 
         if (empty($data['shipping_fflexp'])) {
