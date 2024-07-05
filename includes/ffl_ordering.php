@@ -26,10 +26,7 @@ function ffl_checkout_fields($fields)
 function ffl_customize_checkout_fields($fields)
 {
     unset($fields['shipping']['shipping_address_2']);
-    
-    $fields['shipping']['shipping_company'] = array(
-        'type' => 'hidden',
-    );
+
     $fields['shipping']['shipping_address_1'] = array(
         'type' => 'hidden',
     );
@@ -73,6 +70,16 @@ function ffl_customize_checkout_fields($fields)
         'required'      => true, 
         );
 
+    $fields['shipping']['shipping_company'] = array(
+        'type' => 'hidden',
+    );
+
+    // This issue popped up on some sites where the shipping company label was still appearing for some reason
+    echo '<style>
+        label[for="shipping_company"] {
+            display: none !important;
+        }
+    </style>';
 
     return $fields;
 }

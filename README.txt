@@ -5,7 +5,7 @@ Donate link: https://garidium.com/product/g-ffl-api-key/
 Requires at least: 5.0
 Tested up to: 6.5
 Requires PHP: 7.0
-Stable tag: 1.4.22
+Stable tag: 1.4.23
 License: GPL v3+
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -67,6 +67,7 @@ While the plugin is free to download and install, it does require you to purchas
 6. The Download FFL will securely retrieve the FFL copy on-file. These links are not shareable and work for you as a subscriber to the g-FFL API
 
 == Changelog ==
+40. v1.4.23 Fixed an issue where the company name field label was appearing when it shouldn't
 39. v1.4.22 Improved Security around setting cookies
 38. v1.4.21 Security updates
 37. v1.4.20 Better compatibility with Fortis Payment Plugin
