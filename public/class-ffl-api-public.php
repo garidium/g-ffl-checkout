@@ -141,8 +141,7 @@ class G_ffl_Api_Public
         if ($fireArmCount > 0) {
             add_action(get_option('ffl_init_map_location', 'woocommerce_checkout_order_review'), array($this, 'ffl_init_map'), 10);
         }else{
-            add_action('woocommerce_checkout_shipping', 'handle_no_ffl_items', 10);
-            function handle_no_ffl_items(){
+            add_action('woocommerce_checkout_shipping', function() {
                 $notes = '';
                 if (isset($_COOKIE["candr_license"])) {
                     $notes = htmlspecialchars($_COOKIE['candr_license'], ENT_QUOTES, 'UTF-8');
@@ -164,7 +163,7 @@ class G_ffl_Api_Public
                         document.getElementById("shipping_state").value = "";
                         document.getElementById("shipping_country").value = "US";
                     </script>';
-            }
+            }, 10);	
         }
     }
 

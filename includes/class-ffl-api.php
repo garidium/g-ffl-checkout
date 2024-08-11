@@ -185,11 +185,8 @@ class G_Ffl_Api
 
         $this->loader->add_action('wp_enqueue_scripts', $plugin_public, 'enqueue_styles');
         $this->loader->add_action('wp_enqueue_scripts', $plugin_public, 'enqueue_scripts');
-
         $this->loader->add_action('woocommerce_before_checkout_form', $plugin_public, 'ffl_woo_checkout', 10);
         //$this->loader->add_action('woocommerce_before_checkout_billing_form', $plugin_public, 'ffl_woo_checkout', 11);
-
-
     }
 
 
