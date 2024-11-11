@@ -262,15 +262,15 @@ function ffl_order_meta_box_html($post_or_order_object)
         return;
     }
 
-    $ffl_name = $order->get_meta('_shipping_company', true);
+    $ffl_name = $order->get_shipping_company();
     $ffl_onfile = $order->get_meta('_shipping_ffl_onfile', true ) == 'Yes';
     $ffl_license = $order->get_meta('_shipping_fflno', true );
-    $ffl_phone = $order->get_meta('_shipping_phone', true );
+    $ffl_phone = $order->get_shipping_phone();
     $ffl_short = str_replace('-','',$ffl_license);  
     $ffl_short = substr($ffl_short, 0, 3) . substr($ffl_short, -5);
     $ffl_expiration = $order->get_meta('_shipping_fflexp', true);
     $ffl_email = $order->get_meta('_shipping_email', true);
-    $ffl_customer = $order->get_meta('_shipping_first_name', true) . ' ' . $order->get_meta('_shipping_last_name', true);
+    $ffl_customer = $order->get_shipping_first_name() . ' ' . $order->get_shipping_last_name();
     
     $status = $order->get_status();
     
@@ -448,6 +448,11 @@ function ffl_order_meta_box_html($post_or_order_object)
 
 function order_requires_ffl_selector()
 {
+    // Check if WooCommerce cart is initialized
+    if ( ! WC()->cart ) {
+        return false; // No cart available, so no firearms in the order
+    }
+
     $contain_firearms = false;
     foreach (WC()->cart->get_cart() as $cart_item) {
         $_product = wc_get_product($cart_item['data']->get_id());
