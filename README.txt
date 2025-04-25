@@ -1,11 +1,11 @@
 === g-FFL Checkout ===
 Contributors: garidium
 Tags: FFL, eCommerce checkout, WooCommerce, FFL gun dealers, map api, google maps, gun dealer
-Donate link: https://garidium.com/product/g-ffl-api-key/
+Donate link: https://fflcockpit.com
 Requires at least: 5.0
-Tested up to: 6.6
+Tested up to: 6.8
 Requires PHP: 7.0
-Stable tag: 1.4.25
+Stable tag: 1.4.26
 License: GPL v3+
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -20,17 +20,17 @@ It was built to support my business, and I know it will help yours as well. See 
 4. Secure, crowd-sourced eFile system to upload and store FFL documents, making them available for FFL's to download during order fulfillment.
 
 == API Subscription Required ==
-While the plugin is free to download and install, it does require you to purchase a license for a personalized API key. The plugin will not be useful without this key. The API key allows the plugin to connect to the required data services, providing the following features:
+While the plugin is free to download and install, it does require you to purchase a subscription. The plugin will not be useful without the subscription allows the plugin to connect to the required data services, providing the following features:
 
 1. Access to a database we manage that synchronizes weekly to the ATF FFL database
 2. Access to the eFile system to download and upload FFL documentation
 3. Access to Mapping and Geocoding features for displaying FFL locations on a map
 
 == To purchase a key, visit the g-FFL Checkout product page: ==
-[g-FFL Checkout Product Page](https://garidium.com/g-ffl-api/) 
+[g-FFL Checkout Product Page](https://fflcockpit.com/ffl-checkout/) 
 
 ==Please review our Terms and Conditions: ==
-[Terms and Conditions](https://garidium.com/terms_of_sale/)
+[Terms and Conditions](https://fflcockpit.com/terms_of_sale/)
 
 
 == Installation ==
@@ -39,7 +39,6 @@ While the plugin is free to download and install, it does require you to purchas
 3. Click on "Activate"
 4. Click on the “g-FFL Checkout” link in the admin panel
 5. Fill in the following information:
-    - g-FFL API Key
     - Set Checkout Message (change email in the message)
     - If you want to offer in-store pickup, put your FFL number in the "In-Store Pickup FFL#" field, otherwise leave it blank. This field requires the full FFL number with dashes. 
     - Select the plugin position on the checkout page
@@ -51,7 +50,7 @@ While the plugin is free to download and install, it does require you to purchas
 =Why is this plugin better than the alternatives?=
 * It was built by a FFL, actively used by that FFL. I know what the industry needs, especially those first starting out with smaller budgets.
 * The data services are built on state-of-the-art cloud-based technologies hosted on Amazon Web Services. This basically means that downtime will be minimal, and performance will be consistent.
-* The plugin doesn't require a Google Maps API key, which adds additional cost and complexity to the installation process of other plugins
+* The plugin does not require a Google Maps API key reducing the overall cost and complexity compared with other similar plugins.
 * We maintain a database of signed FFL copies for dealers that perform transfers. While its still your responsibility to ensure that the firearms your mailing go to a willing and able transfer FFL, having these FFL's on file and available for download is a big time saver in the fulfillment process
 * The Order Details page provides you the ability to Upload FFL's and also quickly check the ATF ezCheck site for the FFL the customer selected during checkout
 =How do I flag a product as FFL required?=
@@ -67,6 +66,7 @@ While the plugin is free to download and install, it does require you to purchas
 6. The Download FFL will securely retrieve the FFL copy on-file. These links are not shareable and work for you as a subscriber to the g-FFL API
 
 == Changelog ==
+43. v1.4.26 Wordpress Compatibility update
 42. v1.4.25 Minor fixes around when to check for the FFL required flag
 41. v1.4.24 Minor Bug fixes
 40. v1.4.23 Fixed an issue where the company name field label was appearing when it shouldn't

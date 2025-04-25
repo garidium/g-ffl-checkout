@@ -2838,7 +2838,7 @@
                 
                 <div id="ffl-local-pickup-section" style="display:none;">
                     <div>
-                        <input readonly id="ffl-local-pickup-search" placeholder="" value="IN STORE PICKUP">
+                        <input readonly id="ffl-local-pickup-search" placeholder="" value="CLICK HERE FOR IN STORE PICKUP">
                     </div>
                 </div>
                 <div id="ffl-favorite-section" style="display:none;">
