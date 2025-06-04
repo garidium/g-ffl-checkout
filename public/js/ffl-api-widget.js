@@ -867,6 +867,9 @@
                 if (t.data.length > 0){
                     b.classList.remove("ffl-hide");
                     document.getElementById("ffl-click-instructions").classList.remove("ffl-hide");
+                    
+                    // Dispatch the fflListPopulated event after the FFL list is populated
+                    jQuery(document).trigger('fflListPopulated');
                 }
 
                 /*

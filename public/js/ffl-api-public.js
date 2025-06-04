@@ -24,9 +24,9 @@ function initFFLJs(fKey,message,hook) {
 		'<p id="first_last_notice" class="notice" style="margin-bottom: 10px;">The First and Last name below help the FFL identify your gun when it arrives at their location. Enter <b><u>your</u></b> First and Last Name.</p>'
 	);
 
-	if(jQuery("#wizard")) {
+	if(jQuery("#wizard").length) {
 
-		if(hok === "woocommerce_before_checkout_billing_form") {
+		if(hook === "woocommerce_before_checkout_billing_form") {
 			jQuery("#ffl_container").insertBefore(".woocommerce-billing-fields");
 
 		}
@@ -170,5 +170,19 @@ function setNativeValue(element, value) {
 		valueSetter.call(element, value);
 	} else {}
 }
+
+function autoSelectSingleFFL() {
+    var fflRows = document.querySelectorAll(".ffl-list-div");
+    if (fflRows.length === 1) {
+        var singleFFL = fflRows[0];
+        singleFFL.click();
+    }
+}
+
+// Trigger autoSelectSingleFFL after FFL list is populated
+jQuery(document).on('fflListPopulated', function() {
+    autoSelectSingleFFL();
+});
+
 
 
