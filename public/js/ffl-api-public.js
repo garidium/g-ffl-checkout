@@ -64,6 +64,23 @@ function initFFLJs(fKey,message,hook) {
 	// set the checkout message
 	jQuery('.ffl_checkout_notice').html(wMes);
 	
+	// Apply consistent styling to the main FFL selector message to match other notices
+	jQuery(document).ready(function() {
+		// Wait for the FFL widget to load, then apply consistent styling
+		setTimeout(function() {
+			jQuery('#ffl_container .notice').css({
+				'background': '#f8f9fa',
+				'border-left': '3px solid #6c757d',
+				'padding': '12px',
+				'margin-bottom': '15px',
+				'color': '#495057',
+				'line-height': '1.6',
+				'border-radius': '4px',
+				'box-shadow': '0 1px 3px rgba(0,0,0,0.1)'
+			});
+		}, 500);
+	});
+	
 	jQuery("#ffl-map").ready(
 		function(){
 			 FFL.initGMap();
@@ -79,13 +96,20 @@ function initFFLJs(fKey,message,hook) {
 	if (noticeWrapper.length > 0) {
 		if (mixedCartSupport && isMixedCart) {
 			noticeWrapper.prepend(
-				'<p id="mixed_cart_notice" class="notice" style="margin-bottom: 10px; background: #e7f3ff; border-left: 4px solid #0073aa; padding: 10px;">You have both firearm and non-firearm items in your cart. <strong>Firearm items will be shipped to your selected FFL dealer below</strong>, while other items will be shipped to the address you enter here.</p>'
+				'<p id="mixed_cart_notice" class="notice" style="margin-bottom: 10px; background: #e7f3ff; border-left: 4px solid #0073aa; padding: 10px;">You have both firearm and non-firearm items in your cart. <strong>Firearm items will be shipped to your selected FFL dealer</strong>, while other items will be shipped to the shipping address you enter here.</p>'
 			);
 		}
 		
-		noticeWrapper.prepend(
-			'<p id="first_last_notice" class="notice" style="margin-bottom: 10px;">The First and Last name below help the FFL identify your gun when it arrives at their location. Enter <b><u>your</u></b> First and Last Name.</p>'
-		);
+		// Add the first/last name notice after the mixed cart notice (so it appears below it)
+		var firstLastNoticeHtml = '<p id="first_last_notice" class="notice" style="margin-bottom: 10px; background: #fff3cd; border-left: 4px solid #ffc107; padding: 10px;">The First and Last name below help the FFL identify your gun when it arrives at their location. Enter <b><u>your</u></b> First and Last Name.</p>';
+		
+		if (mixedCartSupport && isMixedCart) {
+			// For mixed carts, add it after the mixed cart notice
+			jQuery('#mixed_cart_notice').after(firstLastNoticeHtml);
+		} else {
+			// For FFL-only carts, prepend it normally
+			noticeWrapper.prepend(firstLastNoticeHtml);
+		}
 	}
 
 	if(jQuery("#wizard").length) {
@@ -194,7 +218,7 @@ function initFFLJs(fKey,message,hook) {
 }
 
 function getSelected(data) {
-	// Ensure mixed cart variables are defined
+	// Ensure mixedCart variables are defined
 	if (typeof mixedCartSupport === 'undefined') {
 		mixedCartSupport = false;
 	}
