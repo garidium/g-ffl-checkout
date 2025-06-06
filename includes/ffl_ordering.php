@@ -108,10 +108,9 @@ function ffl_add_mixed_cart_fields($fields)
         'required'      => true, 
         );
 
-    $fields['shipping']['shipping_company'] = array(
-        'type' => 'hidden',
-    );
-
+    // For mixed carts, keep company field visible for customer's shipping address
+    // The FFL name will be stored separately in shipping_ffl_name field
+    
     // Add FFL name and phone fields for order tracking
     $fields['shipping']['shipping_ffl_name'] = array(
         'type'          => 'hidden',
@@ -202,6 +201,14 @@ function add_custom_order_metadata($order, $data) {
             // Also update the actual shipping address country
             $shipping_address = $order->get_address('shipping');
             $shipping_address['country'] = $data['shipping_country'];
+            $order->set_address($shipping_address, 'shipping');
+        }
+        
+        // Ensure company field is properly saved for FFL-only orders (when not mixed cart)
+        if (!($mixed_cart_support && $is_mixed_cart) && !empty($data['shipping_company'])) {
+            // For FFL-only orders, save the company name to the shipping address
+            $shipping_address = $order->get_address('shipping');
+            $shipping_address['company'] = $data['shipping_company'];
             $order->set_address($shipping_address, 'shipping');
         }
     }
@@ -749,10 +756,10 @@ function display_ffl_info_customer_order($order) {
         echo '<address>';
         
         if (!empty($ffl_name)) {
-            echo '<p><strong>Dealer Name:</strong> ' . esc_html($ffl_name) . '</p>';
+            echo '<strong>Dealer Name:</strong> ' . esc_html($ffl_name) . '<br>';
         }
         
-        echo '<p><strong>FFL License:</strong> ' . esc_html($ffl_license) . '</p>';
+        echo '<strong>FFL License:</strong> ' . esc_html($ffl_license) . '<br>';
         
         if (!empty($ffl_phone)) {
             echo '<p><strong>Phone:</strong> ' . esc_html($ffl_phone) . '</p>';
