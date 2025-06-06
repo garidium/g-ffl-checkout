@@ -89,6 +89,13 @@ function ffl_customize_checkout_fields($fields)
         'required'      => false, 
         );
 
+    // For FFL-only carts, make company field hidden but ensure it's included in form submission
+    // It will be populated with FFL dealer name by JavaScript
+    $fields['shipping']['shipping_company'] = array(
+        'type'          => 'hidden',
+        'required'      => false,
+    );
+
     return $fields;
 }
 
@@ -163,6 +170,13 @@ function add_custom_order_metadata($order, $data) {
     if (order_requires_ffl_selector()) {
         $mixed_cart_support = get_option('ffl_mixed_cart_support') === 'Yes';
         $is_mixed_cart = order_contains_mixed_cart();
+        
+        // Debug: Log all shipping data
+        error_log('Order Creation Debug - Order ID: ' . $order->get_id());
+        error_log('shipping_company data: ' . (isset($data['shipping_company']) ? $data['shipping_company'] : 'NOT SET'));
+        error_log('shipping_fflno data: ' . (isset($data['shipping_fflno']) ? $data['shipping_fflno'] : 'NOT SET'));
+        error_log('Mixed cart support: ' . ($mixed_cart_support ? 'Yes' : 'No'));
+        error_log('Is mixed cart: ' . ($is_mixed_cart ? 'Yes' : 'No'));
         
         if ($mixed_cart_support && $is_mixed_cart) {
             $order->update_meta_data('_is_mixed_cart_order', 'yes');
@@ -740,6 +754,7 @@ function debug_ffl_fields($order_id) {
     error_log('Shipping Country (meta): ' . $order->get_meta('_shipping_country'));
     error_log('Shipping State (address): ' . $order->get_shipping_state());
     error_log('Shipping Country (address): ' . $order->get_shipping_country());
+    error_log('Shipping Company (address): ' . $order->get_shipping_company());
 }
 
 // Display FFL information on customer order view

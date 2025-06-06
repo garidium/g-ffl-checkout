@@ -150,6 +150,9 @@ function initFFLJs(fKey,message,hook) {
 				if (document.getElementById("shipping_postcode") != null) {
 					document.getElementById("shipping_postcode").disabled = false;
 				}
+				if (document.getElementById("shipping_company") != null) {
+					document.getElementById("shipping_company").disabled = false;
+				}
 				if (document.getElementById("shipping_phone") != null) {
 					document.getElementById("shipping_phone").disabled = false;
 				}
