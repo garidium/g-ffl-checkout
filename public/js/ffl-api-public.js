@@ -36,11 +36,17 @@ function initFFLJs(fKey,message,hook) {
 		return 'FFL Dealer';
 	}
 	
-	// Only hide shipping fields if mixed cart support is disabled or it's not a mixed cart
+	// Always hide ship-to-different-address checkbox and set to checked for any cart with FFL items
+	if (document.getElementById("ship-to-different-address") != null){
+		document.getElementById("ship-to-different-address").style.display = 'none';
+	}
+	
+	if (document.getElementById("ship-to-different-address-checkbox") != null){
+		document.getElementById("ship-to-different-address-checkbox").checked = true;
+	}
+	
+	// Only hide state/country fields if mixed cart support is disabled or it's not a mixed cart
 	if (!mixedCartSupport || !isMixedCart) {
-		if (document.getElementById("ship-to-different-address") != null){
-			document.getElementById("ship-to-different-address").style.display = 'none';
-		}
 		if (document.getElementById("shipping_state_field") != null) {
 			document.getElementById("shipping_state_field").style.display = 'none';
 		}
