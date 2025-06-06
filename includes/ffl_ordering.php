@@ -16,9 +16,19 @@ function ffl_checkout_fields($fields)
         );
         return $fields;
     }
-    if (order_requires_ffl_selector()){
-        return ffl_customize_checkout_fields($fields);   
-    }else{
+    
+    if (order_requires_ffl_selector()) {
+        $mixed_cart_support = get_option('ffl_mixed_cart_support') === 'Yes';
+        $is_mixed_cart = order_contains_mixed_cart();
+        
+        // If mixed cart support is enabled and this is a mixed cart, show shipping fields
+        if ($mixed_cart_support && $is_mixed_cart) {
+            return ffl_add_mixed_cart_fields($fields);
+        } else {
+            // Original FFL-only behavior - hide shipping fields
+            return ffl_customize_checkout_fields($fields);   
+        }
+    } else {
         return $fields;
     }
 }
@@ -33,14 +43,12 @@ function ffl_customize_checkout_fields($fields)
     $fields['shipping']['shipping_city'] = array(
         'type' => 'hidden',
     );
-    /*
     $fields['shipping']['shipping_state'] = array(
         'type' => 'hidden',
     );
     $fields['shipping']['shipping_country'] = array(
         'type' => 'hidden',
     );
-    */
     $fields['shipping']['shipping_postcode'] = array(
         'type' => 'hidden',
     );
@@ -67,12 +75,58 @@ function ffl_customize_checkout_fields($fields)
 
     $fields['shipping']['shipping_ffl_onfile'] = array(
         'type'          => 'hidden',
+        'required'      => false, 
+        );
+
+    // Add FFL name and phone fields for order tracking
+    $fields['shipping']['shipping_ffl_name'] = array(
+        'type'          => 'hidden',
+        'required'      => false, 
+        );
+
+    $fields['shipping']['shipping_ffl_phone'] = array(
+        'type'          => 'hidden',
+        'required'      => false, 
+        );
+
+    return $fields;
+}
+
+function ffl_add_mixed_cart_fields($fields)
+{
+    // For mixed carts, keep shipping fields visible but add FFL-specific hidden fields
+    unset($fields['shipping']['shipping_address_2']);
+
+    // Add FFL-specific fields as hidden
+    $fields['shipping']['shipping_fflno'] = array(
+        'type'          => 'hidden',
+        'required'      => true, 
+        );
+
+    $fields['shipping']['shipping_fflexp'] = array(
+        'type'          => 'hidden',
         'required'      => true, 
         );
 
     $fields['shipping']['shipping_company'] = array(
         'type' => 'hidden',
     );
+
+    // Add FFL name and phone fields for order tracking
+    $fields['shipping']['shipping_ffl_name'] = array(
+        'type'          => 'hidden',
+        'required'      => false, 
+        );
+
+    $fields['shipping']['shipping_ffl_phone'] = array(
+        'type'          => 'hidden',
+        'required'      => false, 
+        );
+
+    $fields['shipping']['shipping_ffl_onfile'] = array(
+        'type'          => 'hidden',
+        'required'      => false, 
+        );
 
     // This issue popped up on some sites where the shipping company label was still appearing for some reason
     echo '<style>
@@ -105,6 +159,52 @@ function add_custom_order_metadata($order, $data) {
             unset($_COOKIE['candr_license']);
         }
     }
+    
+    // Track mixed cart orders for better order management
+    if (order_requires_ffl_selector()) {
+        $mixed_cart_support = get_option('ffl_mixed_cart_support') === 'Yes';
+        $is_mixed_cart = order_contains_mixed_cart();
+        
+        if ($mixed_cart_support && $is_mixed_cart) {
+            $order->update_meta_data('_is_mixed_cart_order', 'yes');
+            $order->add_order_note('Mixed cart order: FFL items will be shipped to selected dealer, other items to customer address.');
+        }
+        
+        // Store FFL metadata for the order
+        if (!empty($data['shipping_fflno'])) {
+            $order->update_meta_data('_shipping_fflno', $data['shipping_fflno']);
+        }
+        if (!empty($data['shipping_fflexp'])) {
+            $order->update_meta_data('_shipping_fflexp', $data['shipping_fflexp']);
+        }
+        if (!empty($data['shipping_ffl_onfile'])) {
+            $order->update_meta_data('_shipping_ffl_onfile', $data['shipping_ffl_onfile']);
+        }
+        if (!empty($data['shipping_ffl_name'])) {
+            $order->update_meta_data('_shipping_ffl_name', $data['shipping_ffl_name']);
+        }
+        if (!empty($data['shipping_ffl_phone'])) {
+            $order->update_meta_data('_shipping_ffl_phone', $data['shipping_ffl_phone']);
+        }
+        
+        // Ensure shipping state is saved for FFL orders
+        if (!empty($data['shipping_state'])) {
+            $order->update_meta_data('_shipping_state', $data['shipping_state']);
+            // Also update the actual shipping address state
+            $shipping_address = $order->get_address('shipping');
+            $shipping_address['state'] = $data['shipping_state'];
+            $order->set_address($shipping_address, 'shipping');
+        }
+        
+        // Ensure shipping country is saved for FFL orders
+        if (!empty($data['shipping_country'])) {
+            $order->update_meta_data('_shipping_country', $data['shipping_country']);
+            // Also update the actual shipping address country
+            $shipping_address = $order->get_address('shipping');
+            $shipping_address['country'] = $data['shipping_country'];
+            $order->set_address($shipping_address, 'shipping');
+        }
+    }
 }
 
 add_action('woocommerce_after_checkout_validation', 'ffl_checkout_validation', 10, 2);
@@ -120,7 +220,10 @@ function ffl_checkout_validation($data, $errors)
     }
 
     if (order_requires_ffl_selector()) {
+        $mixed_cart_support = get_option('ffl_mixed_cart_support') === 'Yes';
+        $is_mixed_cart = order_contains_mixed_cart();
 
+        // Validate FFL selection
         if (empty($data['shipping_fflno'])) {
             $errors->add('validation', "You must search or and select a FFL from the list. Enter a Zip Code near your FFL and click on Find FFL. If you selected a FFL ans still see this error, go to the My Account menu item and sign in first. Then try again.");
             return;
@@ -132,6 +235,29 @@ function ffl_checkout_validation($data, $errors)
         if (empty($data['shipping_fflexp'])) {
             $errors->add('validation', "FFL Expiration Data Required.");
             return;
+        }
+
+        // Additional validation for mixed carts
+        if ($mixed_cart_support && $is_mixed_cart) {
+            // Ensure customer shipping address is complete for non-FFL items
+            $required_fields = ['shipping_first_name', 'shipping_last_name', 'shipping_address_1', 'shipping_city', 'shipping_postcode', 'shipping_state', 'shipping_country'];
+            
+            foreach ($required_fields as $field) {
+                if (empty($data[$field])) {
+                    $field_label = str_replace('shipping_', '', $field);
+                    $field_label = str_replace('_', ' ', $field_label);
+                    $field_label = ucwords($field_label);
+                    $errors->add('validation', "Mixed cart requires complete shipping address. Please fill in: {$field_label}");
+                    break;
+                }
+            }
+
+            // Warn if customer address matches FFL address (potential confusion)
+            if (!empty($data['shipping_address_1']) && !empty($data['shipping_fflno'])) {
+                // This is a soft warning - could be enhanced with actual FFL address comparison
+                // For now, we'll add this as a comment for future enhancement
+                // TODO: Compare customer address with selected FFL address and warn if they match
+            }
         }
     }
 }
@@ -201,6 +327,8 @@ function update_order_ffl()
         $order->update_meta_data('_shipping_ffl_onfile', $ffl['ffl_on_file']?"Yes":"No");
         $order->update_meta_data('is_vat_exempt', 'no');
         
+        $order->update_meta_data('_shipping_ffl_name', ffl_get_best_name($ffl));
+        $order->update_meta_data('_shipping_ffl_phone', $ffl['voice_phone']);
     
         // Update shipping fields
         $shipping_address = array(
@@ -446,6 +574,88 @@ function ffl_order_meta_box_html($post_or_order_object)
             </script>';
 }
 
+// Display FFL information in order admin area
+add_action('woocommerce_admin_order_data_after_shipping_address', 'display_ffl_info_in_order_admin');
+function display_ffl_info_in_order_admin($order) {
+    $ffl_license = $order->get_meta('_shipping_fflno');
+    $ffl_name = $order->get_meta('_shipping_ffl_name');
+    $ffl_phone = $order->get_meta('_shipping_ffl_phone');
+    $ffl_expiry = $order->get_meta('_shipping_fflexp');
+    $ffl_on_file = $order->get_meta('_shipping_ffl_onfile');
+    
+    // Only display if we have FFL information
+    if (!empty($ffl_license)) {
+        echo '<h3>FFL Information</h3>';
+        echo '<div class="ffl-info-box" style="background: #f9f9f9; padding: 15px; border: 1px solid #ddd; margin: 10px 0;">';
+        
+        if (!empty($ffl_name)) {
+            echo '<p><strong>Name:</strong> ' . esc_html($ffl_name) . '</p>';
+        }
+        
+        echo '<p><strong>License Number:</strong> ' . esc_html($ffl_license) . '</p>';
+        
+        if (!empty($ffl_expiry)) {
+            echo '<p><strong>Expiration Date:</strong> ' . esc_html($ffl_expiry) . '</p>';
+        }
+        
+        if (!empty($ffl_phone)) {
+            echo '<p><strong>Phone:</strong> ' . esc_html($ffl_phone) . '</p>';
+        }
+        
+        if (!empty($ffl_on_file)) {
+            echo '<p><strong>FFL On File:</strong> ' . esc_html($ffl_on_file) . '</p>';
+        }
+        
+        // Show shipping information based on order type
+        $is_mixed_cart = $order->get_meta('_is_mixed_cart_order');
+        if ($is_mixed_cart === 'yes') {
+            echo '<p style="color: #0073aa; font-weight: bold;">Mixed Cart Order: FFL items ship to dealer, other items to customer address.</p>';
+        } else {
+            echo '<p style="color: #d63638; font-weight: bold;">FFL-Only Order: All items ship to dealer.</p>';
+        }
+        
+        echo '</div>';
+    }
+}
+
+// Also display FFL info in order emails
+add_action('woocommerce_email_order_meta', 'display_ffl_info_in_email', 10, 3);
+function display_ffl_info_in_email($order, $sent_to_admin, $plain_text) {
+    $ffl_license = $order->get_meta('_shipping_fflno');
+    $ffl_name = $order->get_meta('_shipping_ffl_name');
+    $ffl_phone = $order->get_meta('_shipping_ffl_phone');
+    
+    // Only display if we have FFL information
+    if (!empty($ffl_license)) {
+        if ($plain_text) {
+            echo "\n" . "FFL INFORMATION:\n";
+            if (!empty($ffl_name)) {
+                echo "Name: " . $ffl_name . "\n";
+            }
+            echo "License Number: " . $ffl_license . "\n";
+            if (!empty($ffl_phone)) {
+                echo "Phone: " . $ffl_phone . "\n";
+            }
+            echo "\n";
+        } else {
+            echo '<h3>FFL Information</h3>';
+            echo '<div style="background: #f9f9f9; padding: 15px; border: 1px solid #ddd; margin: 10px 0;">';
+            
+            if (!empty($ffl_name)) {
+                echo '<p><strong>Name:</strong> ' . esc_html($ffl_name) . '</p>';
+            }
+            
+            echo '<p><strong>License Number:</strong> ' . esc_html($ffl_license) . '</p>';
+            
+            if (!empty($ffl_phone)) {
+                echo '<p><strong>Phone:</strong> ' . esc_html($ffl_phone) . '</p>';
+            }
+            
+            echo '</div>';
+        }
+    }
+}
+
 function order_requires_ffl_selector()
 {
     // Check if WooCommerce cart is initialized
@@ -470,4 +680,110 @@ function order_requires_ffl_selector()
         }
     }
     return $contain_firearms;
+}
+
+function order_contains_mixed_cart()
+{
+    // Check if WooCommerce cart is initialized
+    if ( ! WC()->cart ) {
+        return false; // No cart available
+    }
+
+    $has_firearms = false;
+    $has_non_firearms = false;
+    
+    foreach (WC()->cart->get_cart() as $cart_item) {
+        $_product = wc_get_product($cart_item['data']->get_id());
+        if (isset($_product->get_data()['parent_id']) && $_product->get_data()['parent_id'] != 0) {
+            $_parent_product = wc_get_product($_product->get_data()['parent_id']);
+            $firearm = $_parent_product->get_meta('_firearm_product');
+        } else {
+            $firearm = $_product->get_meta('_firearm_product');
+        }
+        
+        if (isset($firearm) && $firearm === 'yes') {
+            $has_firearms = true;
+        } else {
+            $has_non_firearms = true;
+        }
+        
+        // If we have both, it's a mixed cart
+        if ($has_firearms && $has_non_firearms) {
+            return true;
+        }
+    }
+    
+    return false;
+}
+
+// Debug function to check FFL field values
+add_action('woocommerce_checkout_order_processed', 'debug_ffl_fields', 10, 1);
+function debug_ffl_fields($order_id) {
+    $order = wc_get_order($order_id);
+    
+    // Log FFL field values for debugging
+    error_log('FFL Debug - Order ID: ' . $order_id);
+    error_log('FFL License: ' . $order->get_meta('_shipping_fflno'));
+    error_log('FFL Name: ' . $order->get_meta('_shipping_ffl_name'));
+    error_log('FFL Phone: ' . $order->get_meta('_shipping_ffl_phone'));
+    error_log('FFL Expiry: ' . $order->get_meta('_shipping_fflexp'));
+    error_log('FFL On File: ' . $order->get_meta('_shipping_ffl_onfile'));
+    error_log('Mixed Cart: ' . $order->get_meta('_is_mixed_cart_order'));
+    error_log('Shipping State (meta): ' . $order->get_meta('_shipping_state'));
+    error_log('Shipping Country (meta): ' . $order->get_meta('_shipping_country'));
+    error_log('Shipping State (address): ' . $order->get_shipping_state());
+    error_log('Shipping Country (address): ' . $order->get_shipping_country());
+}
+
+// Display FFL information on customer order view
+add_action('woocommerce_order_details_after_customer_details', 'display_ffl_info_customer_order');
+function display_ffl_info_customer_order($order) {
+    $ffl_license = $order->get_meta('_shipping_fflno');
+    $ffl_name = $order->get_meta('_shipping_ffl_name');
+    $ffl_phone = $order->get_meta('_shipping_ffl_phone');
+    
+    // Only display if we have FFL information
+    if (!empty($ffl_license)) {
+        echo '<section class="woocommerce-customer-details">';
+        echo '<h2 class="woocommerce-column__title">FFL Dealer Information</h2>';
+        echo '<address>';
+        
+        if (!empty($ffl_name)) {
+            echo '<p><strong>Dealer Name:</strong> ' . esc_html($ffl_name) . '</p>';
+        }
+        
+        echo '<p><strong>FFL License:</strong> ' . esc_html($ffl_license) . '</p>';
+        
+        if (!empty($ffl_phone)) {
+            echo '<p><strong>Phone:</strong> ' . esc_html($ffl_phone) . '</p>';
+        }
+        
+        // Show shipping information based on order type
+        $is_mixed_cart = $order->get_meta('_is_mixed_cart_order');
+        if ($is_mixed_cart === 'yes') {
+            echo '<p style="color: #0073aa;"><em>Your firearm items will be shipped to this dealer. Other items will be sent to your shipping address.</em></p>';
+        } else {
+            echo '<p style="color: #d63638;"><em>All items will be shipped to this FFL dealer.</em></p>';
+        }
+        
+        echo '</address>';
+        echo '</section>';
+    }
+}
+
+// Helper function to get the best available FFL name from FFL data array
+function ffl_get_best_name($ffl) {
+    $fields = ['list_name', 'company_name', 'business_name', 'name', 'trading_name', 'license_name'];
+    foreach ($fields as $field) {
+        if (!empty($ffl[$field])) {
+            return trim($ffl[$field]);
+        }
+    }
+    if (!empty($ffl['first_name']) && !empty($ffl['last_name'])) {
+        return trim($ffl['first_name'] . ' ' . $ffl['last_name']);
+    }
+    if (!empty($ffl['license_number'])) {
+        return 'FFL #' . $ffl['license_number'];
+    }
+    return 'FFL Dealer';
 }

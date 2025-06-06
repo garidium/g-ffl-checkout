@@ -614,7 +614,7 @@
             }
             var i = new mapboxgl.Marker(markerColor)
                 .setLngLat([n.lng, n.lat])
-                .setPopup(new mapboxgl.Popup().setHTML('<div id="popupContent"><h4 style="font-weight:bold;">' + e.list_name + "</h3>"+ (e.ffl_on_file?"<font color=#09bb00><b>Preferred Dealer:</b> We have the FFL on-file. Contact Dealer for Transfer Details.</font>":"<font color=red><b>Dealer Contact Required</b> for Transfer Details. We need a signed copy of their FFL.</font>") + "<br>" + e.premise_street + "<br>" + e.premise_city + ", " + e.premise_state + " " + e.premise_zip_code + "<br/>" + phone + (e.email!=null?"<br/>" + e.email:"") + "</div>"))
+                .setPopup(new mapboxgl.Popup().setHTML('<div id="popupContent"><h4 style="font-weight:bold;">' + (e.list_name && e.list_name.trim() !== '' ? e.list_name.trim() : e.company_name && e.company_name.trim() !== '' ? e.company_name.trim() : e.business_name && e.business_name.trim() !== '' ? e.business_name.trim() : e.name && e.name.trim() !== '' ? e.name.trim() : e.trading_name && e.trading_name.trim() !== '' ? e.trading_name.trim() : e.license_name && e.license_name.trim() !== '' ? e.license_name.trim() : (e.first_name && e.last_name) ? (e.first_name + ' ' + e.last_name).trim() : e.license_number ? 'FFL #' + e.license_number : 'FFL Dealer') + "</h3>"+ (e.ffl_on_file?"<font color=#09bb00><b>Preferred Dealer:</b> We have the FFL on-file. Contact Dealer for Transfer Details.</font>":"<font color=red><b>Dealer Contact Required</b> for Transfer Details. We need a signed copy of their FFL.</font>") + "<br>" + e.premise_street + "<br>" + e.premise_city + ", " + e.premise_state + " " + e.premise_zip_code + "<br/>" + phone + (e.email!=null?"<br/>" + e.email:"") + "</div>"))
                 .addTo(r);
             
             i.getElement().addEventListener("click", function() {
@@ -804,7 +804,16 @@
                         }
                         
                         var p = encodeURIComponent(JSON.stringify(s)),
-                            g = "<div id=" + s.license_number + '><button class="ffl-list-div" data-marker-id=' + s.license_number + " data-content=" + p + "><b>" + s.list_name + "</b>  ";
+                            // Get the best available FFL name with fallback logic
+                            displayName = s.list_name && s.list_name.trim() !== '' ? s.list_name.trim() :
+                                         s.company_name && s.company_name.trim() !== '' ? s.company_name.trim() :
+                                         s.business_name && s.business_name.trim() !== '' ? s.business_name.trim() :
+                                         s.name && s.name.trim() !== '' ? s.name.trim() :
+                                         s.trading_name && s.trading_name.trim() !== '' ? s.trading_name.trim() :
+                                         s.license_name && s.license_name.trim() !== '' ? s.license_name.trim() :
+                                         (s.first_name && s.last_name) ? (s.first_name + ' ' + s.last_name).trim() :
+                                         s.license_number ? 'FFL #' + s.license_number : 'FFL Dealer',
+                            g = "<div id=" + s.license_number + '><button class="ffl-list-div" data-marker-id=' + s.license_number + " data-content=" + p + "><b>" + displayName + "</b>  ";
                             var icon_url = g_ffl_plugin_directory + "includes/images/ffl_required.png";
                             var icon_text = "We need a signed copy of the FFL emailed to us";
                             if (s.ffl_on_file){

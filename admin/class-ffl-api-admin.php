@@ -148,6 +148,7 @@ class g_ffl_Api_Admin
         register_setting('ffl-api-settings', 'ffl_local_pickup');
         register_setting('ffl-api-settings', 'g_ffl_plugin_name');
         register_setting('ffl-api-settings', 'g_ffl_plugin_logo_url');
+        register_setting('ffl-api-settings', 'ffl_mixed_cart_support');
         // update the key to the new default checkout key
         update_option('ffl_api_key_option', 'fNYhdLsk8u8O5f8qfOpBTaAgySxB2WyhavS5h4q8');
 
@@ -233,6 +234,14 @@ class g_ffl_Api_Admin
                             <td>
                                 <input type="radio" id="ffl_candr_override_yes" name="ffl_candr_override" value="Yes" <?php echo esc_attr(get_option('ffl_candr_override')=='Yes'?' checked':'');?> >Yes&nbsp;&nbsp;
                                 <input type="radio" id="ffl_candr_override_no" name="ffl_candr_override" value="No" <?php echo esc_attr(get_option('ffl_candr_override')=='No' || get_option('ffl_candr_override')==''?' checked':'');?> >No                               
+                            </td>
+                        </tr>
+                        <tr valign="top">
+                            <th scope="row">Enable Mixed Cart Support:</th>
+                            <td>
+                                <input type="radio" id="ffl_mixed_cart_support_yes" name="ffl_mixed_cart_support" value="Yes" <?php echo esc_attr(get_option('ffl_mixed_cart_support')=='Yes'?' checked':'');?> >Yes&nbsp;&nbsp;
+                                <input type="radio" id="ffl_mixed_cart_support_no" name="ffl_mixed_cart_support" value="No" <?php echo esc_attr(get_option('ffl_mixed_cart_support')=='No' || get_option('ffl_mixed_cart_support')==''?' checked':'');?> >No
+                                <p class="description">When enabled, customers can have both FFL and non-FFL items in their cart. Shipping fields remain visible for non-FFL items while FFL items are sent to the selected dealer.</p>                               
                             </td>
                         </tr>
                         <tr valign="top" id="white_label_settings_name" style="display:none;">

@@ -1,9 +1,53 @@
 function initFFLJs(fKey,message,hook) {
-	if (document.getElementById("ship-to-different-address") != null){
-		document.getElementById("ship-to-different-address").style.display = 'none';
+	// Ensure mixed cart variables are defined
+	if (typeof mixedCartSupport === 'undefined') {
+		mixedCartSupport = false;
 	}
-	document.getElementById("shipping_state_field").style.display = 'none';
-	document.getElementById("shipping_country_field").style.display = 'none';
+	if (typeof isMixedCart === 'undefined') {
+		isMixedCart = false;
+	}
+	
+	// Helper function to get the best available FFL name from data
+	function getFflDisplayName(data) {
+		// Try fields in order of preference
+		var nameFields = ['list_name', 'company_name', 'business_name', 'name', 'trading_name', 'license_name'];
+		
+		for (var i = 0; i < nameFields.length; i++) {
+			var field = nameFields[i];
+			if (data[field] && data[field].trim() !== '') {
+				return data[field].trim();
+			}
+		}
+		
+		// Last resort: try to construct from first/last name
+		if (data.first_name && data.last_name) {
+			var fullName = (data.first_name + ' ' + data.last_name).trim();
+			if (fullName !== '') {
+				return fullName;
+			}
+		}
+		
+		// Final fallback: use license number if available
+		if (data.license_number) {
+			return 'FFL #' + data.license_number;
+		}
+		
+		// Absolute last resort
+		return 'FFL Dealer';
+	}
+	
+	// Only hide shipping fields if mixed cart support is disabled or it's not a mixed cart
+	if (!mixedCartSupport || !isMixedCart) {
+		if (document.getElementById("ship-to-different-address") != null){
+			document.getElementById("ship-to-different-address").style.display = 'none';
+		}
+		if (document.getElementById("shipping_state_field") != null) {
+			document.getElementById("shipping_state_field").style.display = 'none';
+		}
+		if (document.getElementById("shipping_country_field") != null) {
+			document.getElementById("shipping_country_field").style.display = 'none';
+		}
+	}
 
 	FFL.init({
 		container : 'ffl_container',
@@ -19,10 +63,24 @@ function initFFLJs(fKey,message,hook) {
 			 FFL.initGMap();
 	});
 
-	jQuery('.woocommerce-shipping-fields__field-wrapper').find('input').val(null);
-	jQuery('.woocommerce-shipping-fields__field-wrapper').prepend(
-		'<p id="first_last_notice" class="notice" style="margin-bottom: 10px;">The First and Last name below help the FFL identify your gun when it arrives at their location. Enter <b><u>your</u></b> First and Last Name.</p>'
-	);
+	// Clear shipping fields only if not mixed cart
+	if (!mixedCartSupport || !isMixedCart) {
+		jQuery('.woocommerce-shipping-fields__field-wrapper').find('input').val(null);
+	}
+	
+	// Add notices based on cart type
+	var noticeWrapper = jQuery('.woocommerce-shipping-fields__field-wrapper');
+	if (noticeWrapper.length > 0) {
+		if (mixedCartSupport && isMixedCart) {
+			noticeWrapper.prepend(
+				'<p id="mixed_cart_notice" class="notice" style="margin-bottom: 10px; background: #e7f3ff; border-left: 4px solid #0073aa; padding: 10px;">You have both firearm and non-firearm items in your cart. <strong>Firearm items will be shipped to your selected FFL dealer below</strong>, while other items will be shipped to the address you enter here.</p>'
+			);
+		}
+		
+		noticeWrapper.prepend(
+			'<p id="first_last_notice" class="notice" style="margin-bottom: 10px;">The First and Last name below help the FFL identify your gun when it arrives at their location. Enter <b><u>your</u></b> First and Last Name.</p>'
+		);
+	}
 
 	if(jQuery("#wizard").length) {
 
@@ -60,6 +118,12 @@ function initFFLJs(fKey,message,hook) {
 
 	jQuery('form.woocommerce-checkout').on('checkout_place_order',
 		function(e) {
+			// Prevent submission if FFL fields are currently being updated
+			if (typeof window.fflUpdatingFields !== 'undefined' && window.fflUpdatingFields === true) {
+				e.preventDefault();
+				e.stopPropagation();
+				return false;
+			}
 
 			if(localStorage.getItem("selectedFFL") === null) {
 				alert("Please make sure that you select a FFL prior to Placing the Order. Enter a Zip Code for the location of your FFL and click on the Find FFL button. Then select an FFL by clicking on the row that displays your requested FFL.");
@@ -67,16 +131,50 @@ function initFFLJs(fKey,message,hook) {
 				e.stopPropagation();
 				return false;
 			} else {
-
-			    if(jQuery('.woocommerce-error').length === 0) {
-					if (document.getElementById("ship-to-different-address-checkbox") != null){
-						document.getElementById("ship-to-different-address-checkbox").disabled = false;
-					}
-                    document.getElementById("shipping_country").disabled = false;
-                    document.getElementById("shipping_state").disabled = false;
-                }
-
-
+				// Always enable all hidden fields before form submission to ensure they are included
+				if (document.getElementById("ship-to-different-address-checkbox") != null){
+					document.getElementById("ship-to-different-address-checkbox").disabled = false;
+				}
+				if (document.getElementById("shipping_country") != null) {
+					document.getElementById("shipping_country").disabled = false;
+				}
+				if (document.getElementById("shipping_state") != null) {
+					document.getElementById("shipping_state").disabled = false;
+				}
+				if (document.getElementById("shipping_address_1") != null) {
+					document.getElementById("shipping_address_1").disabled = false;
+				}
+				if (document.getElementById("shipping_city") != null) {
+					document.getElementById("shipping_city").disabled = false;
+				}
+				if (document.getElementById("shipping_postcode") != null) {
+					document.getElementById("shipping_postcode").disabled = false;
+				}
+				if (document.getElementById("shipping_phone") != null) {
+					document.getElementById("shipping_phone").disabled = false;
+				}
+				if (document.getElementById("shipping_email") != null) {
+					document.getElementById("shipping_email").disabled = false;
+				}
+				// Enable FFL-specific fields
+				if (document.getElementById("shipping_fflno") != null) {
+					document.getElementById("shipping_fflno").disabled = false;
+				}
+				if (document.getElementById("shipping_fflexp") != null) {
+					document.getElementById("shipping_fflexp").disabled = false;
+				}
+				if (document.getElementById("shipping_ffl_onfile") != null) {
+					document.getElementById("shipping_ffl_onfile").disabled = false;
+				}
+				if (document.getElementById("shipping_ffl_name") != null) {
+					document.getElementById("shipping_ffl_name").disabled = false;
+				}
+				if (document.getElementById("shipping_ffl_phone") != null) {
+					document.getElementById("shipping_ffl_phone").disabled = false;
+				}
+				
+				// Allow form submission to proceed
+				return true;
 			}
 
 		} );
@@ -87,6 +185,20 @@ function initFFLJs(fKey,message,hook) {
 }
 
 function getSelected(data) {
+	// Ensure mixed cart variables are defined
+	if (typeof mixedCartSupport === 'undefined') {
+		mixedCartSupport = false;
+	}
+	if (typeof isMixedCart === 'undefined') {
+		isMixedCart = false;
+	}
+	
+	// Prevent any automatic form submission during FFL selection
+	if (typeof window.fflUpdatingFields === 'undefined') {
+		window.fflUpdatingFields = false;
+	}
+	window.fflUpdatingFields = true;
+	
 	jQuery("#shipping_country").prop("disabled",false);
 	jQuery("#shipping_state").prop("disabled",false);
 	
@@ -100,62 +212,167 @@ function getSelected(data) {
 	localStorage.setItem("selectedFFL",data.license_number);
 	document.getElementById( "place_order" ).disabled = false
 
-	var company = document.getElementById("shipping_company");
-	setNativeValue(company,data.list_name);
-	company.readOnly = true;
+	// For mixed carts, don't overwrite shipping address fields
+	if (mixedCartSupport && isMixedCart) {
+		// Only set FFL-specific fields, leave shipping address fields alone
+		var fflEmail = document.getElementById("shipping_email");
+		if (fflEmail) {
+			setNativeValue(fflEmail,data.email);
+			fflEmail.readOnly = false;
+		}
 
-	var address1 = document.getElementById("shipping_address_1");
-	setNativeValue(address1,data.premise_street);
-	address1.readOnly = true;
+		var fflPhone = document.getElementById("shipping_phone");
+		if (fflPhone) {
+			setNativeValue(fflPhone,data.voice_phone);
+			fflPhone.readOnly = true;
+		}
+	} else {
+		// Original FFL-only behavior - set all shipping fields to FFL address
+		var company = document.getElementById("shipping_company");
+		if (company) {
+			setNativeValue(company,data.list_name);
+			company.readOnly = true;
+		}
 
-	var city = document.getElementById("shipping_city");
-	setNativeValue(city,data.premise_city);
-	city.readOnly = true;
+		var address1 = document.getElementById("shipping_address_1");
+		if (address1) {
+			setNativeValue(address1,data.premise_street);
+			address1.readOnly = true;
+		}
 
-	var postalCode = document.getElementById("shipping_postcode");
-	setNativeValue(postalCode,data.premise_zip_code);
-	postalCode.readOnly = true;
+		var city = document.getElementById("shipping_city");
+		if (city) {
+			setNativeValue(city,data.premise_city);
+			city.readOnly = true;
+		}
 
-	var fflEmail = document.getElementById("shipping_email");
-	setNativeValue(fflEmail,data.email);
-	fflEmail.readOnly = false;
+		var postalCode = document.getElementById("shipping_postcode");
+		if (postalCode) {
+			setNativeValue(postalCode,data.premise_zip_code);
+			postalCode.readOnly = true;
+		}
 
-	var fflPhone = document.getElementById("shipping_phone");
-	setNativeValue(fflPhone,data.voice_phone);
-	fflPhone.readOnly = true;
+		var fflEmail = document.getElementById("shipping_email");
+		if (fflEmail) {
+			setNativeValue(fflEmail,data.email);
+			fflEmail.readOnly = false;
+		}
 
+		var fflPhone = document.getElementById("shipping_phone");
+		if (fflPhone) {
+			setNativeValue(fflPhone,data.voice_phone);
+			fflPhone.readOnly = true;
+		}
+	}
+
+	// Always set FFL-specific fields regardless of cart type
 	var fflLicense = document.getElementById("shipping_fflno");
-	setNativeValue(fflLicense,data.license_number);
-	fflLicense.readOnly = true;
+	if (fflLicense) {
+		setNativeValue(fflLicense,data.license_number);
+		fflLicense.readOnly = true;
+	}
 
 	var fflExpiry = document.getElementById("shipping_fflexp");
-	setNativeValue(fflExpiry, data.expiration_date.substring(0,10));
-	fflExpiry.readOnly = true;
+	if (fflExpiry) {
+		setNativeValue(fflExpiry, data.expiration_date.substring(0,10));
+		fflExpiry.readOnly = true;
+	}
 	
 	var fflOnFile = document.getElementById("shipping_ffl_onfile");
-	if (data.ffl_on_file){	
-		setNativeValue(fflOnFile, "Yes");
-	}else{
-		setNativeValue(fflOnFile, "No");
-	}		
-	fflOnFile.readOnly = true;
-	
+	if (fflOnFile) {
+		if (data.ffl_on_file){	
+			setNativeValue(fflOnFile, "Yes");
+		}else{
+			setNativeValue(fflOnFile, "No");
+		}		
+		fflOnFile.readOnly = true;
+	}
 
-	jQuery("#shipping_state").val(data.premise_state); // Change the value or make some change to the internal state
-	jQuery("#shipping_state").trigger("change");
+	// Always set FFL name and phone for order tracking
+	var fflName = document.getElementById("shipping_ffl_name");
+	if (fflName) {
+		// Use fallback logic to get the best available FFL name
+		var nameFields = ['list_name', 'company_name', 'business_name', 'name', 'trading_name', 'license_name'];
+		var displayName = 'FFL Dealer'; // fallback
+		
+		for (var i = 0; i < nameFields.length; i++) {
+			var field = nameFields[i];
+			if (data[field] && data[field].trim() !== '') {
+				displayName = data[field].trim();
+				break;
+			}
+		}
+		
+		// Last resort: try to construct from first/last name
+		if (displayName === 'FFL Dealer' && data.first_name && data.last_name) {
+			var fullName = (data.first_name + ' ' + data.last_name).trim();
+			if (fullName !== '') {
+				displayName = fullName;
+			}
+		}
+		
+		// Final fallback: use license number if available
+		if (displayName === 'FFL Dealer' && data.license_number) {
+			displayName = 'FFL #' + data.license_number;
+		}
+		
+		setNativeValue(fflName, displayName);
+		fflName.readOnly = true;
+	}
+
+	var fflPhoneField = document.getElementById("shipping_ffl_phone");
+	if (fflPhoneField) {
+		setNativeValue(fflPhoneField, data.voice_phone);
+		fflPhoneField.readOnly = true;
+	}
 	
-	jQuery("#shipping_country").val("US"); // Change the value or make some change to the internal state
-	jQuery("#shipping_country").trigger("change");
+	// Always set shipping_state field when FFL is selected
+	var shippingState = document.getElementById("shipping_state");
+	if (shippingState) {
+		setNativeValue(shippingState, data.premise_state);
+		shippingState.readOnly = true;
+		shippingState.disabled = false;
+	}
+	
+	// Set values without triggering automatic form submission
+	// Use a flag to temporarily disable checkout processing
+	window.fflUpdatingFields = true;
+	
+	// Set values using native setters to avoid triggering validation
+	jQuery("#shipping_state").val(data.premise_state);
+	jQuery("#shipping_country").val("US");
+	
+	// Re-enable processing after a short delay and trigger change events safely
+	setTimeout(function() {
+		window.fflUpdatingFields = false;
+		jQuery("#shipping_state").trigger("change");
+		jQuery("#shipping_country").trigger("change");
+	}, 250);
 
 	//jQuery("#shipping_country").prop("disabled",true);
 	//jQuery("#shipping_state").prop("disabled",true);
 	
-	document.getElementById("shipping_state_field").style.display = 'none';
-	document.getElementById("shipping_country_field").style.display = 'none';
+	// Only hide state and country fields if not a mixed cart
+	if (!mixedCartSupport || !isMixedCart) {
+		if (document.getElementById("shipping_state_field") != null) {
+			document.getElementById("shipping_state_field").style.display = 'none';
+		}
+		if (document.getElementById("shipping_country_field") != null) {
+			document.getElementById("shipping_country_field").style.display = 'none';
+		}
+	}
+	
+	// Prevent any automatic form submission
 	return false;
 }
 
 function setNativeValue(element, value) {
+	// Check if element exists and is not null
+	if (!element || element === null || element === undefined) {
+		console.warn('setNativeValue: Element is null or undefined');
+		return;
+	}
+
 	var _ref = Object.getOwnPropertyDescriptor(element, 'value') || {},
 		valueSetter = _ref.set;
 
@@ -168,7 +385,10 @@ function setNativeValue(element, value) {
 		prototypeValueSetter.call(element, value);
 	} else if (valueSetter) {
 		valueSetter.call(element, value);
-	} else {}
+	} else {
+		// Fallback for elements that don't have value setters
+		element.value = value;
+	}
 }
 
 function autoSelectSingleFFL() {

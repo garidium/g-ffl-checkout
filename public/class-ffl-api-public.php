@@ -175,6 +175,8 @@ class G_ffl_Api_Public
         $fflLocalPickup = get_option('ffl_local_pickup');
         $candrOverride = get_option('ffl_candr_override');
         $fflIncludeMap = get_option('ffl_include_map') == "No"?false:true;
+        $mixedCartSupport = get_option('ffl_mixed_cart_support') === 'Yes';
+        $isMixedCart = function_exists('order_contains_mixed_cart') ? order_contains_mixed_cart() : false;
         $customerFavoriteFFL = '';
         if(isset($_COOKIE['g_ffl_checkout_favorite_ffl'])) {
             $customerFavoriteFFL = $_COOKIE['g_ffl_checkout_favorite_ffl'];
@@ -190,6 +192,8 @@ class G_ffl_Api_Public
                     let fflLocalPickup = "' . esc_attr($fflLocalPickup) . '";
                     let candrOverride = "' . esc_attr($candrOverride) . '";
                     let fflIncludeMap = "' . esc_attr($fflIncludeMap) . '";
+                    let mixedCartSupport = ' . ($mixedCartSupport ? 'true' : 'false') . ';
+                    let isMixedCart = ' . ($isMixedCart ? 'true' : 'false') . ';
                     let licenseSearchValue = "";
                     let customerFavoriteFFL = "' . esc_attr($customerFavoriteFFL) . '";
                     localStorage.removeItem("selectedFFL");
